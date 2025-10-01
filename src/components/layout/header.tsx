@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -5,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon, ShieldPlus } from 'lucide-react';
+import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon, ShieldPlus, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -161,6 +162,9 @@ export function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-2">
+            <Button variant="ghost" size="icon" aria-label="Notifications">
+              <Bell className="h-5 w-5" />
+            </Button>
             <LanguageSelector />
             {user ? (
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
