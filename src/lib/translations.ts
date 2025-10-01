@@ -23,7 +23,7 @@ export const translations = {
     },
     bookingConfirmation: "Your tele-consultation request has been received. You will get an SMS with the doctor's details and appointment time shortly.",
     nav: {
-      home: 'Home',
+      home: 'Health Guide',
       chatbot: 'Chatbot',
       services: 'Services',
       about: 'About',
@@ -34,11 +34,34 @@ export const translations = {
       disclaimer: 'Disclaimer: This chatbot provides general health guidance. For emergencies, please visit a certified doctor or hospital.',
       copyright: '© {year} Sehat Sathi. All rights reserved.',
     },
-    home: {
+    landing: {
       heroTitle: 'Your Health Assistant, Anytime, Anywhere',
       heroSubtitle: 'Providing rural India with instant, reliable healthcare guidance and access to government initiatives.',
-      startChatting: 'Use as Guest',
       signIn: 'Sign In with Phone',
+      startChatting: 'Use as Guest',
+      featuresTitle: 'What We Offer',
+      featuresSubtitle: 'Your one-stop solution for accessible rural healthcare.',
+      features: [
+        {
+          title: 'AI Health Chatbot',
+          description: 'Get instant answers to your health queries in your local language, 24/7.',
+        },
+        {
+          title: 'Health Information',
+          description: 'Access easy-to-understand health tips and government guidelines to stay informed.',
+        },
+        {
+          title: 'Service Locator',
+          description: 'Find and book appointments at nearby hospitals and health centers.',
+        },
+      ],
+      ctaTitle: 'Your Journey to Better Health Starts Here',
+      ctaSubtitle: 'Explore our comprehensive health guide for tips on staying healthy.',
+      ctaButton: 'Explore Health Guide',
+    },
+    healthGuide: {
+      title: 'Your Guide to a Healthy Life',
+      subtitle: 'Information and tips from trusted sources to help you and your family stay healthy.',
       precautionsTitle: 'General Health Precautions',
       precautionsSubtitle: 'Follow these simple steps to prevent common illnesses and stay healthy.',
       precautions: [
@@ -71,9 +94,24 @@ export const translations = {
           description: 'Ensure you get 7-8 hours of sound sleep every night to keep your body and mind refreshed.',
         },
       ],
-      guidelinesTitle: "Government Health Guidelines",
-      guidelinesSubtitle: "Stay updated with the latest health advisories and guidelines from the Ministry of Health and Family Welfare.",
-      guidelinesButton: "Visit MoHFW Website",
+      govGuidelinesTitle: "Key Government & WHO Health Guidelines",
+      govGuidelinesSubtitle: "Important health advisories to protect yourself and your community.",
+      govGuidelines: [
+        {
+            title: 'Control of Communicable Diseases',
+            description: 'Isolate individuals with infectious diseases like TB or flu. Follow public health advice during outbreaks.',
+        },
+        {
+            title: 'Routine Immunization',
+            description: 'Ensure all children and adults get vaccinations as per the National Immunization Schedule.',
+        },
+        {
+            title: 'Maternal and Child Health',
+            description: 'Pregnant women should have regular check-ups, institutional delivery, and post-natal care.',
+        },
+      ],
+      whoLink: 'Visit WHO India Website',
+      mohfwLink: "Visit MoHFW Website",
     },
     about: {
       title: 'About Sehat Sathi',
@@ -239,7 +277,7 @@ export const translations = {
     },
     bookingConfirmation: 'आपका टेली-परामर्श अनुरोध प्राप्त हो गया है। आपको शीघ्र ही डॉक्टर के विवरण और अपॉइंटमेंट के समय के साथ एक एसएमएस मिलेगा।',
     nav: {
-      home: 'होम',
+      home: 'स्वास्थ्य गाइड',
       chatbot: 'चैटबॉट',
       services: 'सेवाएं',
       about: 'हमारे बारे में',
@@ -250,46 +288,84 @@ export const translations = {
       disclaimer: 'अस्वीकरण: यह चैटबॉट सामान्य स्वास्थ्य मार्गदर्शन प्रदान करता है। आपात स्थिति के लिए, कृपया किसी प्रमाणित डॉक्टर या अस्पताल में जाएँ।',
       copyright: '© {year} सेहत साथी। सर्वाधिकार सुरक्षित।',
     },
-    home: {
+    landing: {
       heroTitle: 'आपका स्वास्थ्य सहायक, कभी भी, कहीं भी',
       heroSubtitle: 'ग्रामीण भारत को तत्काल, विश्वसनीय स्वास्थ्य मार्गदर्शन और सरकारी पहलों तक पहुंच प्रदान करना।',
-      startChatting: 'अतिथि के रूप में उपयोग करें',
       signIn: 'फोन से साइन इन करें',
-      precautionsTitle: 'सामान्य स्वास्थ्य सावधानियां',
-      precautionsSubtitle: 'आम बीमारियों से बचने और स्वस्थ रहने के लिए इन सरल उपायों का पालन करें।',
-      precautions: [
+      startChatting: 'अतिथि के रूप में उपयोग करें',
+      featuresTitle: 'हम क्या प्रदान करते हैं',
+      featuresSubtitle: 'सुलभ ग्रामीण स्वास्थ्य सेवा के लिए आपका वन-स्टॉप समाधान।',
+      features: [
         {
-          title: 'स्वच्छ पानी पिएं',
-          description: 'टाइफाइड और हैजा जैसी जलजनित बीमारियों से बचने के लिए हमेशा उबला हुआ या फिल्टर किया हुआ पानी पिएं।',
+          title: 'एआई स्वास्थ्य चैटबॉट',
+          description: 'अपनी स्थानीय भाषा में अपने स्वास्थ्य प्रश्नों के त्वरित उत्तर प्राप्त करें, 24/7।',
         },
         {
-          title: 'स्वच्छ भोजन करें',
-          description: 'हमेशा ताजा पका हुआ भोजन करें। सड़क विक्रेताओं से बासी या खुला भोजन करने से बचें।',
+          title: 'स्वास्थ्य जानकारी',
+          description: 'सूचित रहने के लिए आसानी से समझ में आने वाले स्वास्थ्य सुझाव और सरकारी दिशानिर्देश प्राप्त करें।',
         },
         {
-          title: 'व्यक्तिगत स्वच्छता बनाए रखें',
-          description: 'नियमित रूप से साबुन से हाथ धोएं, खासकर खाने से पहले और शौचालय का उपयोग करने के बाद।',
-        },
-      ],
-      healthyHabitsTitle: 'स्वस्थ जीवन शैली के लिए सुझाव',
-      healthyHabitsSubtitle: 'दीर्घकालिक स्वास्थ्य के लिए इन आदतों को अपनी दिनचर्या में शामिल करें।',
-      healthyHabits: [
-        {
-          title: 'संतुलित आहार',
-          description: 'आवश्यक पोषक तत्वों के लिए अपने दैनिक भोजन में फल, सब्जियां, अनाज और प्रोटीन का मिश्रण शामिल करें।',
-        },
-        {
-          title: 'नियमित व्यायाम',
-          description: 'हर दिन कम से कम 30 मिनट की शारीरिक गतिविधि जैसे चलना, योग या साइकिल चलाना शामिल करें।',
-        },
-        {
-          title: 'पर्याप्त नींद',
-          description: 'अपने शरीर और दिमाग को तरोताजा रखने के लिए हर रात 7-8 घंटे की अच्छी नींद सुनिश्चित करें।',
+          title: 'सेवा लोकेटर',
+          description: 'आस-पास के अस्पतालों और स्वास्थ्य केंद्रों पर अपॉइंटमेंट खोजें और बुक करें।',
         },
       ],
-      guidelinesTitle: "सरकारी स्वास्थ्य दिशानिर्देश",
-      guidelinesSubtitle: "स्वास्थ्य और परिवार कल्याण मंत्रालय से नवीनतम स्वास्थ्य सलाह और दिशानिर्देशों के साथ अपडेट रहें।",
-      guidelinesButton: "MoHFW वेबसाइट पर जाएं",
+      ctaTitle: 'बेहतर स्वास्थ्य की आपकी यात्रा यहाँ से शुरू होती है',
+      ctaSubtitle: 'स्वस्थ रहने के सुझावों के लिए हमारे व्यापक स्वास्थ्य गाइड का अन्वेषण करें।',
+      ctaButton: 'स्वास्थ्य गाइड देखें',
+    },
+    healthGuide: {
+        title: 'स्वस्थ जीवन के लिए आपका गाइड',
+        subtitle: 'आपको और आपके परिवार को स्वस्थ रहने में मदद करने के लिए विश्वसनीय स्रोतों से जानकारी और सुझाव।',
+        precautionsTitle: 'सामान्य स्वास्थ्य सावधानियां',
+        precautionsSubtitle: 'आम बीमारियों से बचने और स्वस्थ रहने के लिए इन सरल उपायों का पालन करें।',
+        precautions: [
+            {
+            title: 'स्वच्छ पानी पिएं',
+            description: 'टाइफाइड और हैजा जैसी जलजनित बीमारियों से बचने के लिए हमेशा उबला हुआ या फिल्टर किया हुआ पानी पिएं।',
+            },
+            {
+            title: 'स्वच्छ भोजन करें',
+            description: 'हमेशा ताजा पका हुआ भोजन करें। सड़क विक्रेताओं से बासी या खुला भोजन करने से बचें।',
+            },
+            {
+            title: 'व्यक्तिगत स्वच्छता बनाए रखें',
+            description: 'नियमित रूप से साबुन से हाथ धोएं, खासकर खाने से पहले और शौचालय का उपयोग करने के बाद।',
+            },
+        ],
+        healthyHabitsTitle: 'स्वस्थ जीवन शैली के लिए सुझाव',
+        healthyHabitsSubtitle: 'दीर्घकालिक स्वास्थ्य के लिए इन आदतों को अपनी दिनचर्या में शामिल करें।',
+        healthyHabits: [
+            {
+            title: 'संतुलित आहार',
+            description: 'आवश्यक पोषक तत्वों के लिए अपने दैनिक भोजन में फल, सब्जियां, अनाज और प्रोटीन का मिश्रण शामिल करें।',
+            },
+            {
+            title: 'नियमित व्यायाम',
+            description: 'हर दिन कम से कम 30 मिनट की शारीरिक गतिविधि जैसे चलना, योग या साइकिल चलाना शामिल करें।',
+            },
+            {
+            title: 'पर्याप्त नींद',
+            description: 'अपने शरीर और दिमाग को तरोताजा रखने के लिए हर रात 7-8 घंटे की अच्छी नींद सुनिश्चित करें।',
+            },
+        ],
+        govGuidelinesTitle: "प्रमुख सरकारी और डब्ल्यूएचओ स्वास्थ्य दिशानिर्देश",
+        govGuidelinesSubtitle: "स्वयं और अपने समुदाय की सुरक्षा के लिए महत्वपूर्ण स्वास्थ्य सलाह।",
+        govGuidelines: [
+            {
+                title: 'संचारी रोगों का नियंत्रण',
+                description: 'टीबी या फ्लू जैसे संक्रामक रोगों वाले व्यक्तियों को अलग करें। प्रकोप के दौरान सार्वजनिक स्वास्थ्य सलाह का पालन करें।',
+            },
+            {
+                title: 'नियमित टीकाकरण',
+                description: 'सुनिश्चित करें कि सभी बच्चों और वयस्कों को राष्ट्रीय टीकाकरण सारणी के अनुसार टीके लगें।',
+            },
+            {
+                title: 'मातृ एवं शिशु स्वास्थ्य',
+                description: 'गर्भवती महिलाओं को नियमित जांच, संस्थागत प्रसव और प्रसवोत्तर देखभाल करवानी चाहिए।',
+            },
+        ],
+        whoLink: 'डब्ल्यूएचओ इंडिया वेबसाइट पर जाएं',
+        mohfwLink: "MoHFW वेबसाइट पर जाएं",
     },
     about: {
       title: 'सेहत साथी के बारे में',
@@ -455,7 +531,7 @@ export const translations = {
     },
     bookingConfirmation: 'तुमची टेली-कन्सल्टेशन विनंती प्राप्त झाली आहे। तुम्हाला लवकरच डॉक्टरचे तपशील आणि भेटीच्या वेळेसह एक एसएमएस मिळेल।',
     nav: {
-      home: 'होम',
+      home: 'आरोग्य मार्गदर्शक',
       chatbot: 'चॅटबॉट',
       services: 'सेवा',
       about: 'बद्दल',
@@ -466,11 +542,34 @@ export const translations = {
       disclaimer: 'अस्वीकरण: हा चॅटबॉट सामान्य आरोग्य मार्गदर्शन प्रदान करतो। आपत्कालीन परिस्थितीसाठी, कृपया प्रमाणित डॉक्टर किंवा रुग्णालयाला भेट द्या।',
       copyright: '© {year} सेहत साथी। सर्व हक्क राखीव।',
     },
-    home: {
+    landing: {
       heroTitle: 'तुमचा आरोग्य सहाय्यक, कधीही, कुठेही',
       heroSubtitle: 'ग्रामीण भारताला त्वरित, विश्वसनीय आरोग्य मार्गदर्शन आणि सरकारी उपक्रमांमध्ये प्रवेश प्रदान करणे।',
-      startChatting: 'अतिथी म्हणून वापरा',
       signIn: 'फोनने साइन इन करा',
+      startChatting: 'अतिथी म्हणून वापरा',
+      featuresTitle: 'आम्ही काय ऑफर करतो',
+      featuresSubtitle: 'प्रवेशयोग्य ग्रामीण आरोग्यसेवेसाठी तुमचे वन-स्टॉप समाधान।',
+      features: [
+        {
+          title: 'एआय आरोग्य चॅटबॉट',
+          description: 'तुमच्या आरोग्यविषयक प्रश्नांची तुमच्या स्थानिक भाषेत त्वरित उत्तरे मिळवा, २४/७।',
+        },
+        {
+          title: 'आरोग्य माहिती',
+          description: 'माहितीपूर्ण राहण्यासाठी समजण्यास सोप्या आरोग्य टिप्स आणि सरकारी मार्गदर्शक तत्त्वे मिळवा।',
+        },
+        {
+          title: 'सेवा शोधक',
+          description: 'जवळपासची रुग्णालये आणि आरोग्य केंद्रांवर भेटी शोधा आणि बुक करा।',
+        },
+      ],
+      ctaTitle: 'उत्तम आरोग्यासाठी तुमचा प्रवास इथून सुरू होतो',
+      ctaSubtitle: 'निरोगी राहण्याच्या टिप्ससाठी आमचे सर्वसमावेशक आरोग्य मार्गदर्शक एक्सप्लोर करा।',
+      ctaButton: 'आरोग्य मार्गदर्शक एक्सप्लोर करा',
+    },
+    healthGuide: {
+      title: 'निरोगी आयुष्यासाठी तुमचे मार्गदर्शक',
+      subtitle: 'तुम्ही आणि तुमचे कुटुंब निरोगी राहण्यास मदत करण्यासाठी विश्वसनीय स्त्रोतांकडून माहिती आणि टिप्स।',
       precautionsTitle: 'सामान्य आरोग्यविषयक खबरदारी',
       precautionsSubtitle: 'सामान्य आजार टाळण्यासाठी आणि निरोगी राहण्यासाठी या सोप्या चरणांचे अनुसरण करा.',
       precautions: [
@@ -503,9 +602,24 @@ export const translations = {
           description: 'तुमचे शरीर आणि मन ताजेतवाने ठेवण्यासाठी दररोज रात्री ७-८ तास शांत झोप घ्या.',
         },
       ],
-      guidelinesTitle: "सरकारी आरोग्य मार्गदर्शक तत्त्वे",
-      guidelinesSubtitle: "आरोग्य आणि कुटुंब कल्याण मंत्रालयाच्या नवीनतम आरोग्य सल्ला आणि मार्गदर्शक तत्त्वांसह अद्ययावत रहा.",
-      guidelinesButton: "MoHFW वेबसाइटला भेट द्या",
+      govGuidelinesTitle: "मुख्य सरकारी आणि डब्ल्यूएचओ आरोग्य मार्गदर्शक तत्त्वे",
+      govGuidelinesSubtitle: "स्वतःचे आणि आपल्या समुदायाचे संरक्षण करण्यासाठी महत्त्वपूर्ण आरोग्य सूचना.",
+      govGuidelines: [
+        {
+            title: 'संसर्गजन्य रोगांचे नियंत्रण',
+            description: 'टीबी किंवा फ्लू सारख्या संसर्गजन्य रोग असलेल्या व्यक्तींना वेगळे करा. प्रादुर्भावाच्या काळात सार्वजनिक आरोग्य सल्ल्याचे पालन करा.',
+        },
+        {
+            title: 'नियमित लसीकरण',
+            description: 'राष्ट्रीय लसीकरण वेळापत्रकानुसार सर्व मुलांना आणि प्रौढांना लसीकरण मिळेल याची खात्री करा.',
+        },
+        {
+            title: 'मातृ आणि बाल आरोग्य',
+            description: 'गर्भवती महिलांनी नियमित तपासणी, संस्थात्मक प्रसूती आणि प्रसूतीनंतरची काळजी घ्यावी.',
+        },
+      ],
+      whoLink: 'डब्ल्यूएचओ इंडिया वेबसाइटला भेट द्या',
+      mohfwLink: "MoHFW वेबसाइटला भेट द्या",
     },
     about: {
       title: 'सेहत साथी बद्दल',

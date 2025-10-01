@@ -46,7 +46,7 @@ export function Header() {
   const t = translations[language];
 
   const navItems = [
-    { href: '/', label: t.nav.home },
+    { href: '/health-guide', label: t.nav.home },
     { href: '/chatbot', label: t.nav.chatbot },
     { href: '/services', label: t.nav.services },
     { href: '/map', label: t.nav.map },
