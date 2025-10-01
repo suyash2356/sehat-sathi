@@ -5,83 +5,61 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth } from '@/lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { auth, googleProvider } from '@/lib/firebase';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from 'firebase/auth';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Phone, KeyRound } from 'lucide-react';
+import { Mail, KeyRound } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
-const phoneSchema = z.object({
-  phoneNumber: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
+const signUpSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-const otpSchema = z.object({
-    otp: z.string().min(6, { message: 'OTP must be 6 digits.' }),
+const signInSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z.string().min(1, { message: 'Password is required.' }),
 });
 
-declare global {
-    interface Window {
-        recaptchaVerifier: RecaptchaVerifier;
-        confirmationResult: any;
-    }
-}
 
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authType, setAuthType] = useState<'login' | 'signup'>('login');
 
-  const phoneForm = useForm<z.infer<typeof phoneSchema>>({
-    resolver: zodResolver(phoneSchema),
-    defaultValues: { phoneNumber: '' },
+  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: { email: '', password: '' },
   });
 
-  const otpForm = useForm<z.infer<typeof otpSchema>>({
-    resolver: zodResolver(otpSchema),
-    defaultValues: { otp: '' },
+  const signInForm = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: { email: '', password: '' },
   });
-  
-  const setupRecaptcha = () => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          console.log("Recaptcha verified");
-        },
-      });
-    }
-  };
 
-  async function onPhoneSubmit(values: z.infer<typeof phoneSchema>) {
+  const handleGoogleSignIn = async () => {
     setIsSubmitting(true);
-    setupRecaptcha();
-    const appVerifier = window.recaptchaVerifier;
-    const phoneNumber = `+91${values.phoneNumber}`;
-
     try {
-      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      window.confirmationResult = confirmationResult;
-      setStep('otp');
+      await signInWithPopup(auth, googleProvider);
       toast({
-        title: 'OTP Sent',
-        description: `An OTP has been sent to ${phoneNumber}.`,
+        title: 'Sign-in Successful',
+        description: 'You have been successfully logged in with Google.',
       });
+      router.push('/chatbot');
     } catch (error: any) {
-      console.error("Error sending OTP: ", error);
-      let errorMessage = 'Failed to send OTP. Please try again.';
-      if (error.code === 'auth/invalid-phone-number') {
-        errorMessage = 'The phone number you entered is not valid.';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Too many requests. Please try again later.';
-      }
+      console.error("Google sign-in error:", error);
       toast({
-        title: 'Error',
-        description: errorMessage,
+        title: 'Google Sign-In Failed',
+        description: 'Could not sign you in with Google. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -89,20 +67,43 @@ export default function LoginPage() {
     }
   }
 
-  async function onOtpSubmit(values: z.infer<typeof otpSchema>) {
+  async function onSignUpSubmit(values: z.infer<typeof signUpSchema>) {
     setIsSubmitting(true);
     try {
-      await window.confirmationResult.confirm(values.otp);
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
       toast({
-        title: 'Sign-in Successful',
+        title: 'Account Created',
+        description: 'Your account has been successfully created. You are now logged in.',
+      });
+      router.push('/chatbot');
+    } catch (error: any) {
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        description = 'This email is already in use. Please sign in instead.';
+      }
+      toast({
+        title: 'Sign-Up Failed',
+        description,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function onSignInSubmit(values: z.infer<typeof signInSchema>) {
+    setIsSubmitting(true);
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      toast({
+        title: 'Sign-In Successful',
         description: 'You have been successfully logged in.',
       });
       router.push('/chatbot');
-    } catch (error) {
-      console.error("Error verifying OTP: ", error);
+    } catch (error: any) {
       toast({
-        title: 'Invalid OTP',
-        description: 'The OTP you entered is incorrect. Please try again.',
+        title: 'Sign-In Failed',
+        description: 'Invalid email or password. Please check your credentials and try again.',
         variant: 'destructive',
       });
     } finally {
@@ -112,66 +113,101 @@ export default function LoginPage() {
 
   return (
     <div className="container py-12 md:py-24 flex items-center justify-center">
-        <div id="recaptcha-container"></div>
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl md:text-3xl font-bold font-headline">
-            {step === 'phone' ? 'Sign In / Sign Up' : 'Enter OTP'}
+            {authType === 'login' ? 'Welcome Back' : 'Create an Account'}
           </CardTitle>
           <CardDescription>
-            {step === 'phone' ? 'Enter your phone number to continue.' : 'Check your phone for the 6-digit code.'}
+            {authType === 'login' ? 'Sign in to continue to Sehat Sathi.' : 'Join Sehat Sathi to get health guidance.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {step === 'phone' ? (
-            <Form {...phoneForm}>
-              <form onSubmit={phoneForm.handleSubmit(onPhoneSubmit)} className="space-y-6">
+          {authType === 'login' ? (
+            <Form {...signInForm}>
+              <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-6">
                 <FormField
-                  control={phoneForm.control}
-                  name="phoneNumber"
+                  control={signInForm.control}
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2"><Phone className="h-4 w-4"/> Mobile Number</FormLabel>
+                      <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
                       <FormControl>
-                        <div className="flex items-center">
-                            <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">+91</span>
-                            <Input type="tel" placeholder="10-digit mobile number" {...field} className="rounded-l-none" />
-                        </div>
+                         <Input type="email" placeholder="your.email@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={signInForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
+                      <FormControl>
+                         <Input type="password" placeholder="••••••••" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Sending OTP...' : 'Get OTP'}
+                  {isSubmitting ? 'Signing In...' : 'Sign In'}
                 </Button>
               </form>
             </Form>
           ) : (
-             <Form {...otpForm}>
-              <form onSubmit={otpForm.handleSubmit(onOtpSubmit)} className="space-y-6">
+             <Form {...signUpForm}>
+              <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-6">
                 <FormField
-                  control={otpForm.control}
-                  name="otp"
+                  control={signUpForm.control}
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4" />One-Time Password</FormLabel>
+                      <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="Enter 6-digit OTP" {...field} maxLength={6} />
+                         <Input type="email" placeholder="your.email@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                 <FormField
+                  control={signUpForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
+                      <FormControl>
+                         <Input type="password" placeholder="At least 6 characters" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Verifying...' : 'Verify & Sign In'}
-                </Button>
-                 <Button variant="link" size="sm" onClick={() => { setStep('phone'); phoneForm.reset(); otpForm.reset(); }} className="w-full">
-                    Use a different number
+                  {isSubmitting ? 'Creating Account...' : 'Sign Up'}
                 </Button>
               </form>
             </Form>
           )}
+
+          <Separator className="my-6" />
+          
+           <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
+                <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 109.8 512 0 402.2 0 261.8 0 121.3 109.8 8 244 8c66.8 0 126 25.4 169.2 67.2L347.5 151C318.8 123.5 284.3 108 244 108c-88.3 0-160 71.7-160 160s71.7 160 160 160c97.2 0 132.3-70.2 135-108.3H244v-64h244z"></path></svg>
+                Sign In with Google
+            </Button>
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              {authType === 'login' ? "Don't have an account?" : "Already have an account?"}
+              <Button variant="link" size="sm" onClick={() => setAuthType(authType === 'login' ? 'signup' : 'login')}>
+                {authType === 'login' ? 'Sign Up' : 'Sign In'}
+              </Button>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
