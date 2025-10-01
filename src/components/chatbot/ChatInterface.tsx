@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { SendHorizonal, Bot, User, Languages, Mic, MicOff } from 'lucide-react';
+import { SendHorizonal, Bot, User, Languages, Mic, MicOff, Paperclip, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
@@ -21,6 +22,7 @@ type Message = {
   text: string | React.ReactNode;
   sender: 'bot' | 'user';
   audioUrl?: string;
+  imageUrl?: string;
 };
 
 const formSchema = z.object({
@@ -80,8 +82,10 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const t = translations[language];
@@ -115,13 +119,14 @@ export function ChatInterface() {
     }
   }, [messages]);
 
-  const addMessage = (text: string | React.ReactNode, sender: 'bot' | 'user', audioUrl?: string) => {
-    setMessages((prev) => [...prev, { id: Date.now(), text, sender, audioUrl }]);
+  const addMessage = (text: string | React.ReactNode, sender: 'bot' | 'user', options?: { audioUrl?: string, imageUrl?: string }) => {
+    setMessages((prev) => [...prev, { id: Date.now(), text, sender, ...options }]);
   };
 
-  const processUserMessage = async (userMessage: string) => {
-    addMessage(userMessage, 'user');
+  const processUserMessage = async (userMessage: string, photoDataUri?: string) => {
+    addMessage(userMessage, 'user', { imageUrl: photoDataUri });
     setIsTyping(true);
+    if(photoDataUri) setUploadedImage(null);
 
     const lowerCaseMessage = userMessage.toLowerCase();
     let botResponseText: string;
@@ -141,6 +146,7 @@ export function ChatInterface() {
         const result = await personalizedHealthGuidance({
           symptoms: userMessage,
           medicalHistory: 'none provided',
+          photoDataUri: photoDataUri,
         });
         botResponseText = result.advice;
         botResponse = result.advice;
@@ -153,7 +159,7 @@ export function ChatInterface() {
     
     try {
       const ttsResult = await textToSpeech(botResponseText);
-      addMessage(botResponse, 'bot', ttsResult.audio);
+      addMessage(botResponse, 'bot', { audioUrl: ttsResult.audio });
     } catch (error) {
       console.error('TTS Error:', error);
       addMessage(botResponse, 'bot');
@@ -189,7 +195,7 @@ export function ChatInterface() {
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         form.setValue('message', transcript);
-        processUserMessage(transcript);
+        processUserMessage(transcript, uploadedImage ?? undefined);
         form.reset();
       };
       
@@ -220,9 +226,20 @@ export function ChatInterface() {
       recognitionRef.current = recognition;
     }
   };
+  
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    processUserMessage(values.message);
+    processUserMessage(values.message, uploadedImage ?? undefined);
     form.reset();
   }
 
@@ -266,6 +283,15 @@ export function ChatInterface() {
                     : 'bg-secondary rounded-bl-none'
                 )}
               >
+                {msg.imageUrl && (
+                  <Image
+                    src={msg.imageUrl}
+                    alt="Uploaded content"
+                    width={200}
+                    height={200}
+                    className="rounded-md mb-2"
+                  />
+                )}
                 {typeof msg.text === 'string' ? parseMarkdownLinks(msg.text) : msg.text}
               </div>
               {msg.sender === 'user' && <User className="h-6 w-6 shrink-0 text-muted-foreground" />}
@@ -287,6 +313,19 @@ export function ChatInterface() {
       </ScrollArea>
 
       <div className="p-4 border-t bg-background rounded-b-lg">
+        {uploadedImage && (
+          <div className="relative mb-2 w-24 h-24">
+            <Image src={uploadedImage} alt="Preview" layout="fill" objectFit="cover" className="rounded-md" />
+            <Button
+              size="icon"
+              variant="destructive"
+              className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+              onClick={() => setUploadedImage(null)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-2">
             <FormField
@@ -300,6 +339,16 @@ export function ChatInterface() {
                 </FormItem>
               )}
             />
+             <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              className="hidden"
+            />
+            <Button type="button" size="icon" variant="ghost" onClick={() => fileInputRef.current?.click()} className="rounded-full">
+              <Paperclip className="h-5 w-5" />
+            </Button>
             <Button type="button" size="icon" onClick={toggleRecording} className={cn("rounded-full", isRecording ? "bg-red-500 hover:bg-red-600" : "")}>
               {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
             </Button>
