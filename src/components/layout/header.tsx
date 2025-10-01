@@ -151,11 +151,6 @@ export function Header() {
         </div>
         
         <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center space-x-2">
-                <BotMessageSquare className="h-6 w-6 text-primary" />
-                <span className="font-bold font-headline">{t.appName}</span>
-            </Link>
-
             <div className="flex items-center gap-2">
                 <LanguageSelector />
                 {user ? (
@@ -170,6 +165,11 @@ export function Header() {
                 )
                 )}
             </div>
+
+            <Link href="/" className="flex items-center space-x-2">
+                <BotMessageSquare className="h-6 w-6 text-primary" />
+                <span className="font-bold font-headline">{t.appName}</span>
+            </Link>
         </div>
       </div>
     </header>
