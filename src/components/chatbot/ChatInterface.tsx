@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import { personalizedHealthGuidance } from '@/ai/flows/personalized-health-guidance';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { translations } from '@/lib/translations';
+import { useChatLanguage, setChatLanguage as setGlobalLanguage } from '@/hooks/use-chat-language';
 
 type Message = {
   id: number;
@@ -73,10 +74,9 @@ function parseMarkdownLinks(text: string) {
   }
 
 export function ChatInterface() {
+  const { language, setLanguage } = useChatLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'hi' | 'mr'>('en');
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   const t = translations[language];
@@ -89,7 +89,7 @@ export function ChatInterface() {
         sender: 'bot',
       },
     ]);
-  }, [t.greeting]);
+  }, [t]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -145,7 +145,7 @@ export function ChatInterface() {
 
   const toggleLanguage = (lang: 'en' | 'hi' | 'mr') => {
     setLanguage(lang);
-    setShowLanguageMenu(false);
+    setGlobalLanguage(lang);
     addMessage(translations[lang].languageSet, 'bot');
   }
 
@@ -165,18 +165,6 @@ export function ChatInterface() {
             </p>
           </div>
         </div>
-        <div className="relative">
-          <Button variant="ghost" size="icon" onClick={() => setShowLanguageMenu(!showLanguageMenu)}>
-            <Languages className="h-5 w-5"/>
-          </Button>
-          {showLanguageMenu && (
-            <div className="absolute right-0 mt-2 w-32 bg-popover border rounded-md shadow-lg z-10">
-              <button onClick={() => toggleLanguage('en')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-t-md">{t.menu.english}</button>
-              <button onClick={() => toggleLanguage('hi')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent">{t.menu.hindi}</button>
-              <button onClick={() => toggleLanguage('mr')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-b-md">{t.menu.marathi}</button>
-            </div>
-          )}
-        </div>
       </div>
       
       <ScrollArea className="flex-1" viewportRef={scrollViewportRef}>
@@ -195,7 +183,7 @@ export function ChatInterface() {
                     : 'bg-secondary rounded-bl-none'
                 )}
               >
-                {msg.text}
+                {typeof msg.text === 'string' ? parseMarkdownLinks(msg.text) : msg.text}
               </div>
               {msg.sender === 'user' && <User className="h-6 w-6 shrink-0 text-muted-foreground" />}
             </div>

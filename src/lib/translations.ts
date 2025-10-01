@@ -9,6 +9,9 @@ export const translations = {
       english: 'English',
       hindi: 'हिंदी',
       marathi: 'मराठी',
+      en: 'English',
+      hi: 'हिंदी',
+      mr: 'मराठी',
     },
     emergency: {
       title: 'This could be an emergency!',
@@ -30,6 +33,9 @@ export const translations = {
       english: 'English',
       hindi: 'हिंदी',
       marathi: 'मराठी',
+      en: 'English',
+      hi: 'हिंदी',
+      mr: 'मराठी',
     },
     emergency: {
       title: 'यह एक आपात स्थिति हो सकती है!',
@@ -51,6 +57,9 @@ export const translations = {
       english: 'English',
       hindi: 'हिंदी',
       marathi: 'मराठी',
+      en: 'English',
+      hi: 'हिंदी',
+      mr: 'मराठी',
     },
     emergency: {
       title: 'ही एक आणीबाणी असू शकते!',
