@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { HeartPulse, ShieldCheck, Baby, ShieldPlus, Syringe, Activity, Search } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
+import { states } from '@/lib/states-districts';
 
 const initiativeIcons = [
   <HeartPulse key="ayushman" className="h-8 w-8 text-primary" />,
@@ -42,6 +42,7 @@ export default function ServicesPage() {
   const [filteredInitiatives, setFilteredInitiatives] = useState<Initiative[]>([]);
   const [isFilterActive, setIsFilterActive] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [districts, setDistricts] = useState<string[]>([]);
 
   const allInitiatives = t.initiatives.map((initiative, index) => ({
     ...initiative,
@@ -54,9 +55,29 @@ export default function ServicesPage() {
       age: 18,
       gender: 'female',
       state: 'Maharashtra',
-      district: 'Pune',
+      district: '',
     },
   });
+
+  const selectedState = form.watch('state');
+
+  useEffect(() => {
+    const stateData = states.find(s => s.state === selectedState);
+    if (stateData) {
+      setDistricts(stateData.districts);
+      form.setValue('district', ''); // Reset district when state changes
+    } else {
+      setDistricts([]);
+    }
+  }, [selectedState, form]);
+  
+  // Set initial districts for default state
+  useEffect(() => {
+    const defaultStateData = states.find(s => s.state === form.getValues('state'));
+    if (defaultStateData) {
+      setDistricts(defaultStateData.districts);
+    }
+  }, []); // Run only once on mount
 
   function onSubmit(values: FilterValues) {
     const { age, gender } = values;
@@ -73,12 +94,17 @@ export default function ServicesPage() {
     setFilteredInitiatives(results);
     setIsFilterActive(true);
     setIsDialogOpen(false);
-    form.reset();
   }
   
   const handleReset = () => {
     setIsFilterActive(false);
     setFilteredInitiatives([]);
+    form.reset({
+      age: 18,
+      gender: 'female',
+      state: 'Maharashtra',
+      district: '',
+    });
   }
 
   const displayedInitiatives = isFilterActive ? filteredInitiatives : allInitiatives;
@@ -169,9 +195,11 @@ export default function ServicesPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Maharashtra">Maharashtra</SelectItem>
-                              <SelectItem value="Delhi">Delhi</SelectItem>
-                              <SelectItem value="Karnataka">Karnataka</SelectItem>
+                              {states.map(state => (
+                                <SelectItem key={state.state} value={state.state}>
+                                  {state.state}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -184,16 +212,18 @@ export default function ServicesPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t.myServicesFormDistrict}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value} disabled={!selectedState}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select your district" />
+                                <SelectValue placeholder={selectedState ? "Select your district" : "Select a state first"} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Pune">Pune</SelectItem>
-                              <SelectItem value="Mumbai">Mumbai</SelectItem>
-                              <SelectItem value="Nagpur">Nagpur</SelectItem>
+                              {districts.map(district => (
+                                <SelectItem key={district} value={district}>
+                                  {district}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
