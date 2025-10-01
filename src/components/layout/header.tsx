@@ -276,13 +276,15 @@ export function Header() {
                   <AlertDialogTitle className="flex items-center gap-2 font-headline">
                     <AlertTriangle className="text-destructive" /> {t.emergency.confirmTitle}
                   </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t.emergency.confirmMessage}
-                    <div className="my-4 p-4 bg-destructive/10 border border-destructive/50 rounded-lg text-center">
-                        <p className="font-semibold text-destructive">{t.emergency.emergencyNumberText}</p>
-                        <p className="text-2xl font-bold tracking-widest text-destructive">112</p>
+                  <AlertDialogDescription asChild>
+                    <div>
+                      {t.emergency.confirmMessage}
+                      <div className="my-4 p-4 bg-destructive/10 border border-destructive/50 rounded-lg text-center">
+                          <div className="font-semibold text-destructive">{t.emergency.emergencyNumberText}</div>
+                          <div className="text-2xl font-bold tracking-widest text-destructive">112</div>
+                      </div>
+                      {t.emergency.confirmSubtext}
                     </div>
-                    {t.emergency.confirmSubtext}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -313,3 +315,5 @@ export function Header() {
     </header>
   );
 }
+
+    
