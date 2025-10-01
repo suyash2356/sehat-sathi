@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm, type UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,13 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Stethoscope, Video, Hospital } from 'lucide-react';
+import { Stethoscope, Video, Hospital, HeartPulse, Baby, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { GoogleMapEmbed, type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
 import React from 'react';
-
 
 const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -25,6 +24,12 @@ const bookingSchema = z.object({
 });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
+
+const initiativeIcons = [
+  <HeartPulse key="ayushman" className="h-10 w-10 text-primary" />,
+  <ShieldCheck key="mission" className="h-10 w-10 text-primary" />,
+  <Baby key="matru" className="h-10 w-10 text-primary" />,
+];
 
 export default function ServicesPage() {
   const { toast } = useToast();
@@ -57,6 +62,24 @@ export default function ServicesPage() {
     bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
+  const initiatives = [
+    {
+      title: t.initiatives[0].title,
+      description: t.initiatives[0].description,
+      icon: initiativeIcons[0]
+    },
+    {
+      title: t.initiatives[1].title,
+      description: t.initiatives[1].description,
+      icon: initiativeIcons[1]
+    },
+    {
+      title: t.initiatives[2].title,
+      description: t.initiatives[2].description,
+      icon: initiativeIcons[2]
+    },
+  ]
+
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
@@ -65,9 +88,34 @@ export default function ServicesPage() {
           {t.subtitle}
         </p>
       </div>
-
+      
       <div className="grid gap-12">
-        
+        <section id="initiatives" className="py-16 md:py-24 bg-card rounded-lg shadow-lg">
+          <div className="container">
+              <div className="text-center mb-12">
+                  <h2 className="text-3xl md:text-4xl font-bold font-headline">{t.initiativesTitle}</h2>
+                  <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+                      {t.initiativesSubtitle}
+                  </p>
+              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {initiatives.map((initiative, index) => (
+                <Card key={index} className="text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col bg-background">
+                  <CardHeader className="items-center p-6">
+                    <div className="p-4 bg-primary/10 rounded-full mb-4">
+                      {initiative.icon}
+                    </div>
+                    <CardTitle className="font-headline">{initiative.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                      <p className="text-muted-foreground">{initiative.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <Card className="shadow-lg overflow-hidden">
           <CardHeader>
             <div className="flex items-center gap-4">

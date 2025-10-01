@@ -3,9 +3,10 @@
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Target, Lightbulb, Users, HeartPulse } from 'lucide-react';
+import { Target, Lightbulb, Users, HeartPulse, HelpCircle } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const aboutImage = PlaceHolderImages.find(p => p.id === 'about-us');
 
@@ -80,6 +81,26 @@ export default function AboutPage() {
             <h2 className="text-2xl font-bold font-headline flex items-center gap-2"><HeartPulse className="text-accent"/> {t.visionTitle}</h2>
             <p className="text-muted-foreground">{t.visionDescription}</p>
         </div>
+      </div>
+
+      <div className="mt-16">
+        <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold font-headline flex items-center justify-center gap-3">
+              <HelpCircle className="h-8 w-8 text-primary"/>
+              {t.faqTitle}
+            </h2>
+            <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">{t.faqSubtitle}</p>
+        </div>
+        <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
+          {t.faqs.map((faq, index) => (
+            <AccordionItem key={index} value={`item-${index + 1}`}>
+              <AccordionTrigger className="text-lg text-left">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-base text-muted-foreground">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </div>
   );
