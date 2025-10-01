@@ -1,22 +1,29 @@
+'use client';
+
 import Link from 'next/link';
 import { BotMessageSquare } from 'lucide-react';
-
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/chatbot', label: 'Chatbot' },
-  { href: '/services', label: 'Services' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-];
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
 
 export function Footer() {
+  const { language } = useChatLanguage();
+  const t = translations[language];
+
+  const navItems = [
+    { href: '/', label: t.nav.home },
+    { href: '/chatbot', label: t.nav.chatbot },
+    { href: '/services', label: t.nav.services },
+    { href: '/about', label: t.nav.about },
+    { href: '/contact', label: t.nav.contact },
+  ];
+
   return (
     <footer className="bg-card border-t mt-auto">
       <div className="container py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <Link href="/" className="flex items-center space-x-2">
             <BotMessageSquare className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg font-headline">Sehat Sathi</span>
+            <span className="font-bold text-lg font-headline">{t.appName}</span>
           </Link>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium">
             {navItems.map((item) => (
@@ -32,10 +39,10 @@ export function Footer() {
         </div>
         <div className="mt-8 text-center text-xs text-muted-foreground border-t border-border pt-8">
           <p className="font-semibold">
-            Disclaimer: This chatbot provides general health guidance. For emergencies, please visit a certified doctor or hospital.
+            {t.footer.disclaimer}
           </p>
           <p className="mt-2">
-            &copy; {new Date().getFullYear()} Sehat Sathi. All rights reserved.
+            {t.footer.copyright.replace('{year}', new Date().getFullYear().toString())}
           </p>
         </div>
       </div>

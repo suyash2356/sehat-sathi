@@ -1,17 +1,24 @@
+'use client';
+
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Target, Lightbulb, Users, HeartPulse } from 'lucide-react';
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
 
 const aboutImage = PlaceHolderImages.find(p => p.id === 'about-us');
 
 export default function AboutPage() {
+  const { language } = useChatLanguage();
+  const t = translations[language].about;
+
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-headline">About Sehat Sathi</h1>
+        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-          Bridging the healthcare gap in rural India with technology.
+          {t.subtitle}
         </p>
       </div>
 
@@ -21,15 +28,15 @@ export default function AboutPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3 font-headline">
                 <Target className="h-6 w-6 text-destructive" />
-                The Problem We Address
+                {t.problemTitle}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-lg font-semibold">
-                India faces an 80% shortfall of specialists in rural Community Health Centers.
+                {t.problemShortfall}
               </p>
               <p className="mt-2 text-muted-foreground">
-                This critical gap means millions lack access to timely and reliable medical advice, leading to preventable health complications. Distance, cost, and lack of information are major barriers to quality healthcare.
+                {t.problemDescription}
               </p>
             </CardContent>
           </Card>
@@ -38,15 +45,15 @@ export default function AboutPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-3 font-headline">
                 <Lightbulb className="h-6 w-6 text-primary" />
-                Our Solution
+                {t.solutionTitle}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-lg font-semibold">
-                An AI-powered chatbot on a mobile-friendly website.
+                {t.solutionApp}
               </p>
               <p className="mt-2 text-muted-foreground">
-                Sehat Sathi provides instant, accessible, and easy-to-understand health guidance. By leveraging AI and supporting local languages, we put a virtual health assistant in everyone's pocket, breaking down barriers to information.
+                {t.solutionDescription}
               </p>
             </CardContent>
           </Card>
@@ -66,12 +73,12 @@ export default function AboutPage() {
 
       <div className="mt-16 grid md:grid-cols-2 gap-8 bg-card p-8 rounded-lg shadow-md">
         <div className="space-y-2">
-            <h2 className="text-2xl font-bold font-headline flex items-center gap-2"><Users className="text-accent"/> Our Mission</h2>
-            <p className="text-muted-foreground">To empower individuals in rural communities with the knowledge and tools to make informed decisions about their health, ensuring no one is left behind due to a lack of access.</p>
+            <h2 className="text-2xl font-bold font-headline flex items-center gap-2"><Users className="text-accent"/> {t.missionTitle}</h2>
+            <p className="text-muted-foreground">{t.missionDescription}</p>
         </div>
         <div className="space-y-2">
-            <h2 className="text-2xl font-bold font-headline flex items-center gap-2"><HeartPulse className="text-accent"/> Our Vision</h2>
-            <p className="text-muted-foreground">A future where every person in rural India has immediate access to primary healthcare guidance, leading to healthier communities and a stronger nation.</p>
+            <h2 className="text-2xl font-bold font-headline flex items-center gap-2"><HeartPulse className="text-accent"/> {t.visionTitle}</h2>
+            <p className="text-muted-foreground">{t.visionDescription}</p>
         </div>
       </div>
     </div>

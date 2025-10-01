@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Mail, Phone, MessageSquare } from 'lucide-react';
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
 
 const contactSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -19,6 +21,9 @@ const contactSchema = z.object({
 
 export default function ContactPage() {
   const { toast } = useToast();
+  const { language } = useChatLanguage();
+  const t = translations[language].contact;
+
   const form = useForm<z.infer<typeof contactSchema>>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
@@ -32,17 +37,17 @@ export default function ContactPage() {
     console.log(values);
     form.reset();
     toast({
-      title: 'Message Sent!',
-      description: 'Thank you for contacting us. We will get back to you shortly.',
+      title: t.successToastTitle,
+      description: t.successToastDescription,
     });
   }
 
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-headline">Get In Touch</h1>
+        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
-          Have questions or feedback? We'd love to hear from you.
+          {t.subtitle}
         </p>
       </div>
 
@@ -51,7 +56,7 @@ export default function ContactPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3 font-headline">
               <MessageSquare className="h-6 w-6 text-primary" />
-              Send us a Message
+              {t.formTitle}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -62,9 +67,9 @@ export default function ContactPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>{t.formNameLabel}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Your Name" {...field} />
+                        <Input placeholder={t.formNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -75,9 +80,9 @@ export default function ContactPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email Address</FormLabel>
+                      <FormLabel>{t.formEmailLabel}</FormLabel>
                       <FormControl>
-                        <Input type="email" placeholder="your.email@example.com" {...field} />
+                        <Input type="email" placeholder={t.formEmailPlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -88,24 +93,24 @@ export default function ContactPage() {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your Message</FormLabel>
+                      <FormLabel>{t.formMessageLabel}</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="How can we help you?" {...field} rows={5} />
+                        <Textarea placeholder={t.formMessagePlaceholder} {...field} rows={5} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Send Message</Button>
+                <Button type="submit">{t.sendButton}</Button>
               </form>
             </Form>
           </CardContent>
         </Card>
 
         <div className="space-y-8 mt-4 md:mt-0">
-            <h3 className="text-xl font-semibold font-headline">Contact Information</h3>
+            <h3 className="text-xl font-semibold font-headline">{t.contactInfoTitle}</h3>
             <p className="text-muted-foreground">
-              For direct support, you can reach out to us via email. Please note, for medical emergencies, contact a hospital directly.
+              {t.contactInfoDescription}
             </p>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
@@ -113,7 +118,7 @@ export default function ContactPage() {
                   <Mail className="h-6 w-6 text-primary"/>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Support Email</h4>
+                  <h4 className="font-semibold">{t.supportEmail}</h4>
                   <a href="mailto:support@sehatsathi.example.com" className="text-muted-foreground hover:text-primary transition-colors">support@sehatsathi.example.com</a>
                 </div>
               </div>
@@ -122,8 +127,8 @@ export default function ContactPage() {
                   <Phone className="h-6 w-6 text-primary"/>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Emergency Helpline (Dummy)</h4>
-                  <p className="text-muted-foreground">+91-123-456-7890 (Please use official emergency numbers)</p>
+                  <h4 className="font-semibold">{t.emergencyHelpline}</h4>
+                  <p className="text-muted-foreground">{t.emergencyNumber}</p>
                 </div>
               </div>
             </div>

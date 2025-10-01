@@ -9,8 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { MapPin, Stethoscope, Video } from 'lucide-react';
+import { MapPin, Stethoscope, Video, Hospital } from 'lucide-react';
 import Link from 'next/link';
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
+
 
 const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -18,26 +21,16 @@ const bookingSchema = z.object({
   issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
 });
 
-const hospitals = [
-    {
-        name: 'Community Health Center, Ramgarh',
-        address: 'Ramgarh, Sitapur District, Uttar Pradesh',
-        mapLink: 'https://www.google.com/maps'
-    },
-    {
-        name: 'District Hospital, Sitapur',
-        address: 'NH 24, Sitapur, Uttar Pradesh',
-        mapLink: 'https://www.google.com/maps'
-    },
-    {
-        name: 'Primary Health Sub-center, Devipur',
-        address: 'Devipur Village, Near Ramgarh, Uttar Pradesh',
-        mapLink: 'https://www.google.com/maps'
-    }
-]
-
 export default function ServicesPage() {
   const { toast } = useToast();
+  const { language } = useChatLanguage();
+  const t = translations[language].services;
+
+  const hospitals = t.hospitals.map(h => ({
+    ...h,
+    mapLink: 'https://www.google.com/maps' 
+  }));
+
   const form = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
@@ -51,8 +44,8 @@ export default function ServicesPage() {
     console.log(values);
     form.reset();
     toast({
-      title: 'Booking Confirmed!',
-      description: "We've received your request. You'll get an SMS shortly.",
+      title: t.bookingToastTitle,
+      description: t.bookingToastDescription,
       variant: 'default',
     });
   }
@@ -60,9 +53,9 @@ export default function ServicesPage() {
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-headline">Our Services</h1>
+        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
-          Accessible healthcare solutions designed for you.
+          {t.subtitle}
         </p>
       </div>
 
@@ -72,21 +65,19 @@ export default function ServicesPage() {
           <CardHeader>
             <div className="flex items-center gap-4">
               <Stethoscope className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">AI-Powered Health Guidance</CardTitle>
+              <CardTitle className="text-2xl font-headline">{t.aiTitle}</CardTitle>
             </div>
             <CardDescription className="pt-2">
-              Have a health question? Get instant, reliable advice from our AI assistant. It's like having a health expert in your pocket, available 24/7.
+              {t.aiDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="mb-4">Our chatbot can help with:</p>
+            <p className="mb-4">{t.aiHelpTitle}</p>
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                <li>Understanding symptoms</li>
-                <li>First-aid for minor injuries</li>
-                <li>Information about common illnesses</li>
+                {t.aiHelpItems.map((item, index) => <li key={index}>{item}</li>)}
             </ul>
             <Button asChild className="mt-6">
-              <Link href="/chatbot">Ask Our Chatbot</Link>
+              <Link href="/chatbot">{t.aiButton}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -95,10 +86,10 @@ export default function ServicesPage() {
           <CardHeader>
             <div className="flex items-center gap-4">
               <Video className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">Book a Tele-Consultation</CardTitle>
+              <CardTitle className="text-2xl font-headline">{t.bookingTitle}</CardTitle>
             </div>
             <CardDescription className="pt-2">
-              Connect with a certified doctor from the comfort of your home. Fill out the form below to request an appointment.
+              {t.bookingDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,9 +100,9 @@ export default function ServicesPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>{t.formNameLabel}</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Ramesh Kumar" {...field} />
+                        <Input placeholder={t.formNamePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -122,9 +113,9 @@ export default function ServicesPage() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel>{t.formPhoneLabel}</FormLabel>
                       <FormControl>
-                        <Input type="tel" placeholder="10-digit mobile number" {...field} />
+                        <Input type="tel" placeholder={t.formPhonePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -135,15 +126,15 @@ export default function ServicesPage() {
                   name="issue"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Health Issue</FormLabel>
+                      <FormLabel>{t.formIssueLabel}</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Briefly describe your health concern..." {...field} />
+                        <Textarea placeholder={t.formIssuePlaceholder} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Request Booking</Button>
+                <Button type="submit">{t.bookingButton}</Button>
               </form>
             </Form>
           </CardContent>
@@ -153,10 +144,10 @@ export default function ServicesPage() {
           <CardHeader>
             <div className="flex items-center gap-4">
               <Hospital className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">Hospital & Clinic Locator</CardTitle>
+              <CardTitle className="text-2xl font-headline">{t.locatorTitle}</CardTitle>
             </div>
              <CardDescription className="pt-2">
-              Find government healthcare facilities near you.
+              {t.locatorDescription}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -170,7 +161,7 @@ export default function ServicesPage() {
                     <Button asChild variant="outline" className="mt-2 sm:mt-0 shrink-0 bg-background">
                         <a href={hospital.mapLink} target="_blank" rel="noopener noreferrer">
                             <MapPin className="mr-2 h-4 w-4" />
-                            View on Map
+                            {t.mapButton}
                         </a>
                     </Button>
                 </div>
