@@ -170,7 +170,7 @@ export const translations = {
       bookingToastTitle: 'Booking Confirmed!',
       bookingToastDescription: "We've received your request. You'll get an SMS shortly.",
       locatorTitle: 'Hospital & Clinic Locator',
-      locatorDescription: 'Find government healthcare facilities near you in Maharashtra.',
+      locatorDescription: 'Find government and private healthcare facilities near you in Maharashtra.',
       hospitals: [
         {
           name: 'District General Hospital, Pune',
@@ -386,7 +386,7 @@ export const translations = {
       bookingToastTitle: 'बुकिंग की पुष्टि हुई!',
       bookingToastDescription: 'हमें आपका अनुरोध मिल गया है। आपको शीघ्र ही एक एसएमएस मिलेगा।',
       locatorTitle: 'अस्पताल और क्लिनिक लोकेटर',
-      locatorDescription: 'महाराष्ट्र में अपने आस-पास सरकारी स्वास्थ्य सुविधाएं खोजें।',
+      locatorDescription: 'महाराष्ट्र में अपने आस-पास सरकारी और निजी स्वास्थ्य सुविधाएं खोजें।',
       hospitals: [
         {
           name: 'जिला सामान्य अस्पताल, पुणे',
@@ -564,7 +564,7 @@ export const translations = {
       title: 'आमच्या सेवा',
       subtitle: 'तुमच्यासाठी डिझाइन केलेली प्रवेशयोग्य आरोग्यसेवा समाधाने।',
       initiativesTitle: 'सरकारी आरोग्य उपक्रम',
-      initiativesSubtitle: 'देशभरात सार्वजनिक आरोग्य सुधारण्याच्या उद्देशाने असलेल्या प्रमुख कार्यक्रमांबद्दल जाणून घ्या.',
+      initiativesSubtitle: 'देशभरात सार्वजनिक आरोग्य सुधारण्याच्या उद्देशाने असलेल्या प्रमुख कार्यक्रमांबद्दल जाणून घ्या।',
       initiatives: [
         {
             title: "आयुष्मान भारत",
@@ -602,7 +602,7 @@ export const translations = {
       bookingToastTitle: 'बुकिंगची पुष्टी झाली!',
       bookingToastDescription: 'आम्हाला तुमची विनंती मिळाली आहे। तुम्हाला लवकरच एक एसएमएस मिळेल।',
       locatorTitle: 'रुग्णालय आणि क्लिनिक लोकेटर',
-      locatorDescription: 'महाराष्ट्रामध्ये तुमच्या जवळच्या सरकारी आरोग्य सुविधा शोधा।',
+      locatorDescription: 'महाराष्ट्रामध्ये तुमच्या जवळच्या सरकारी आणि खाजगी आरोग्य सुविधा शोधा।',
       hospitals: [
         {
           name: 'जिल्हा सामान्य रुग्णालय, पुणे',

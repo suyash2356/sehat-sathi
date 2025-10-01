@@ -13,6 +13,7 @@ export function Footer() {
     { href: '/', label: t.nav.home },
     { href: '/chatbot', label: t.nav.chatbot },
     { href: '/services', label: t.nav.services },
+    { href: '/map', label: t.nav.map },
     { href: '/about', label: t.nav.about },
     { href: '/contact', label: t.nav.contact },
   ];

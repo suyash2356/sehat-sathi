@@ -49,29 +49,17 @@ export function Header() {
     { href: '/', label: t.nav.home },
     { href: '/chatbot', label: t.nav.chatbot },
     { href: '/services', label: t.nav.services },
+    { href: '/map', label: t.nav.map },
     { href: '/about', label: t.nav.about },
     { href: '/contact', label: t.nav.contact },
   ];
   
-  const handleMapClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    if (pathname !== '/services') {
-      router.push('/services#hospital-locator');
-    } else {
-      e.preventDefault();
-      const mapElement = document.getElementById('hospital-locator');
-      if (mapElement) {
-        mapElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    setIsOpen(false);
-  };
-
   const NavLink = ({ href, label, className, onClick }: { href: string; label: string, className?: string, onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void }) => (
     <Link
       href={href}
       className={cn(
         'font-medium transition-colors hover:text-primary',
-        pathname === href && !onClick ? 'text-primary' : 'text-foreground/80',
+        pathname === href ? 'text-primary' : 'text-foreground/80',
         className
       )}
       onClick={(e) => {
@@ -118,7 +106,6 @@ export function Header() {
           {navItems.map((item) => (
             <NavLink key={item.href} {...item} />
           ))}
-           <NavLink href="/services#hospital-locator" label={t.nav.map} onClick={handleMapClick} />
         </nav>
         <div className="flex-1 flex justify-end items-center gap-2">
             <LanguageSelector />
@@ -158,7 +145,6 @@ export function Header() {
                 {navItems.map((item) => (
                   <NavLink key={item.href} {...item} className="text-lg" />
                 ))}
-                 <NavLink href="/services#hospital-locator" label={t.nav.map} className="text-lg" onClick={handleMapClick} />
                 <div className="text-lg font-medium text-foreground/80 pl-0">
                   <LanguageSelector inSheet={true} />
                 </div>

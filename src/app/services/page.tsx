@@ -1,66 +1,19 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
-import { Stethoscope, Video, Hospital, HeartPulse, Baby, ShieldCheck } from 'lucide-react';
-import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { HeartPulse, ShieldCheck, Baby } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
-import { GoogleMapEmbed, type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
-import React from 'react';
-
-const bookingSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
-  issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
-  hospital: z.string().optional(),
-});
-
-type BookingFormValues = z.infer<typeof bookingSchema>;
 
 const initiativeIcons = [
-  <HeartPulse key="ayushman" className="h-10 w-10 text-primary" />,
-  <ShieldCheck key="mission" className="h-10 w-10 text-primary" />,
-  <Baby key="matru" className="h-10 w-10 text-primary" />,
+  <HeartPulse key="ayushman" className="h-12 w-12 text-primary" />,
+  <ShieldCheck key="mission" className="h-12 w-12 text-primary" />,
+  <Baby key="matru" className="h-12 w-12 text-primary" />,
 ];
 
 export default function ServicesPage() {
-  const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].services;
-  const bookingFormRef = React.useRef<HTMLFormElement>(null);
-
-  const form = useForm<BookingFormValues>({
-    resolver: zodResolver(bookingSchema),
-    defaultValues: {
-      name: '',
-      phone: '',
-      issue: '',
-      hospital: '',
-    },
-  });
-
-  function onSubmit(values: BookingFormValues) {
-    console.log(values);
-    form.reset();
-    toast({
-      title: t.bookingToastTitle,
-      description: t.bookingToastDescription,
-      variant: 'default',
-    });
-  }
-  
-  const handleBookAppointment = (hospital: HospitalType) => {
-    form.setValue('hospital', hospital.name);
-    bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }
 
   const initiatives = [
     {
@@ -83,157 +36,26 @@ export default function ServicesPage() {
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.title}</h1>
-        <p className="mt-2 text-lg text-muted-foreground max-w-2xl mx-auto">
-          {t.subtitle}
+        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.initiativesTitle}</h1>
+        <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+          {t.initiativesSubtitle}
         </p>
       </div>
       
-      <div className="grid gap-12">
-        <section id="initiatives" className="py-16 md:py-24 bg-card rounded-lg shadow-lg">
-          <div className="container">
-              <div className="text-center mb-12">
-                  <h2 className="text-3xl md:text-4xl font-bold font-headline">{t.initiativesTitle}</h2>
-                  <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
-                      {t.initiativesSubtitle}
-                  </p>
-              </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {initiatives.map((initiative, index) => (
-                <Card key={index} className="text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col bg-background">
-                  <CardHeader className="items-center p-6">
-                    <div className="p-4 bg-primary/10 rounded-full mb-4">
-                      {initiative.icon}
-                    </div>
-                    <CardTitle className="font-headline">{initiative.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                      <p className="text-muted-foreground">{initiative.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <Card className="shadow-lg overflow-hidden">
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <Stethoscope className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">{t.aiTitle}</CardTitle>
-            </div>
-            <CardDescription className="pt-2">
-              {t.aiDescription}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="mb-4">{t.aiHelpTitle}</p>
-            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                {t.aiHelpItems.map((item, index) => <li key={index}>{item}</li>)}
-            </ul>
-            <Button asChild className="mt-6">
-              <Link href="/chatbot">{t.aiButton}</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg overflow-hidden" ref={bookingFormRef}>
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <Video className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">{t.bookingTitle}</CardTitle>
-            </div>
-            <CardDescription className="pt-2">
-              {t.bookingDescription}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formNameLabel}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formNamePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formPhoneLabel}</FormLabel>
-                      <FormControl>
-                        <Input type="tel" placeholder={t.formPhonePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={form.control}
-                  name="hospital"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formHospitalLabel}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t.formHospitalPlaceholder} {...field} disabled />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="issue"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t.formIssueLabel}</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder={t.formIssuePlaceholder} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit">{t.bookingButton}</Button>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg overflow-hidden" id="hospital-locator">
-          <CardHeader>
-            <div className="flex items-center gap-4">
-              <Hospital className="h-8 w-8 text-primary" />
-              <CardTitle className="text-2xl font-headline">{t.locatorTitle}</CardTitle>
-            </div>
-             <CardDescription className="pt-2">
-              {t.locatorDescription}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <GoogleMapEmbed 
-                hospitals={t.hospitals} 
-                onBookAppointment={handleBookAppointment}
-                translations={
-                    {
-                        specialties: t.mapSpecialties,
-                        timings: t.mapTimings,
-                        contact: t.mapContact,
-                        bookAppointment: t.mapButton
-                    }
-                }
-            />
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {initiatives.map((initiative, index) => (
+            <Card key={index} className="text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col bg-card">
+              <CardHeader className="items-center p-6">
+                <div className="p-5 bg-primary/10 rounded-full mb-4">
+                  {initiative.icon}
+                </div>
+                <CardTitle className="font-headline text-xl">{initiative.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                  <p className="text-muted-foreground">{initiative.description}</p>
+              </CardContent>
+            </Card>
+          ))}
       </div>
     </div>
   );
