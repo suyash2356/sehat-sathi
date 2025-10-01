@@ -19,13 +19,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Mail, KeyRound } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
-const signUpSchema = z.object({
+const authSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-const signInSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' }),
+const signInSchema = authSchema.omit({ password: true }).extend({
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
@@ -36,13 +35,8 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authType, setAuthType] = useState<'login' | 'signup'>('login');
 
-  const signUpForm = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: { email: '', password: '' },
-  });
-
-  const signInForm = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof authSchema>>({
+    resolver: zodResolver(authType === 'login' ? signInSchema : authSchema),
     defaultValues: { email: '', password: '' },
   });
 
@@ -66,50 +60,57 @@ export default function LoginPage() {
       setIsSubmitting(false);
     }
   }
+  
+  const handleAuthTypeChange = (type: 'login' | 'signup') => {
+    setAuthType(type);
+    form.reset(); 
+    // We need to change the resolver dynamically
+    // The easiest way is to trigger a re-render with the new authType
+  };
 
-  async function onSignUpSubmit(values: z.infer<typeof signUpSchema>) {
+  async function onSubmit(values: z.infer<typeof authSchema>) {
     setIsSubmitting(true);
-    try {
-      await createUserWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: 'Account Created',
-        description: 'Your account has been successfully created. You are now logged in.',
-      });
-      router.push('/chatbot');
-    } catch (error: any) {
-      let description = 'An unexpected error occurred. Please try again.';
-      if (error.code === 'auth/email-already-in-use') {
-        description = 'This email is already in use. Please sign in instead.';
+    if (authType === 'signup') {
+      try {
+        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: 'Account Created',
+          description: 'Your account has been successfully created. You are now logged in.',
+        });
+        router.push('/chatbot');
+      } catch (error: any) {
+        let description = 'An unexpected error occurred. Please try again.';
+        if (error.code === 'auth/email-already-in-use') {
+          description = 'This email is already in use. Please sign in instead.';
+        }
+        toast({
+          title: 'Sign-Up Failed',
+          description,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-      toast({
-        title: 'Sign-Up Failed',
-        description,
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
+    } else { // Sign-in
+      try {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        toast({
+          title: 'Sign-In Successful',
+          description: 'You have been successfully logged in.',
+        });
+        router.push('/chatbot');
+      } catch (error: any) {
+        toast({
+          title: 'Sign-In Failed',
+          description: 'Invalid email or password. Please check your credentials and try again.',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   }
 
-  async function onSignInSubmit(values: z.infer<typeof signInSchema>) {
-    setIsSubmitting(true);
-    try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: 'Sign-In Successful',
-        description: 'You have been successfully logged in.',
-      });
-      router.push('/chatbot');
-    } catch (error: any) {
-      toast({
-        title: 'Sign-In Failed',
-        description: 'Invalid email or password. Please check your credentials and try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
 
   return (
     <div className="container py-12 md:py-24 flex items-center justify-center">
@@ -123,75 +124,42 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {authType === 'login' ? (
-            <Form {...signInForm}>
-              <form onSubmit={signInForm.handleSubmit(onSignInSubmit)} className="space-y-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
+                    <FormControl>
+                        <Input type="email" placeholder="your.email@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
                 <FormField
-                  control={signInForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
-                      <FormControl>
-                         <Input type="email" placeholder="your.email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={signInForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
-                      <FormControl>
-                         <Input type="password" placeholder="••••••••" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Signing In...' : 'Sign In'}
-                </Button>
-              </form>
-            </Form>
-          ) : (
-             <Form {...signUpForm}>
-              <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-6">
-                <FormField
-                  control={signUpForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
-                      <FormControl>
-                         <Input type="email" placeholder="your.email@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                 <FormField
-                  control={signUpForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
-                      <FormControl>
-                         <Input type="password" placeholder="At least 6 characters" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? 'Creating Account...' : 'Sign Up'}
-                </Button>
-              </form>
-            </Form>
-          )}
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
+                    <FormControl>
+                        <Input type="password" placeholder={authType === 'signup' ? 'At least 6 characters' : '••••••••'} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting
+                  ? authType === 'login' ? 'Signing In...' : 'Creating Account...'
+                  : authType === 'login' ? 'Sign In' : 'Sign Up'
+                }
+              </Button>
+            </form>
+          </Form>
 
           <Separator className="my-6" />
           
@@ -203,7 +171,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               {authType === 'login' ? "Don't have an account?" : "Already have an account?"}
-              <Button variant="link" size="sm" onClick={() => setAuthType(authType === 'login' ? 'signup' : 'login')}>
+              <Button variant="link" size="sm" onClick={() => handleAuthTypeChange(authType === 'login' ? 'signup' : 'login')}>
                 {authType === 'login' ? 'Sign Up' : 'Sign In'}
               </Button>
             </p>
