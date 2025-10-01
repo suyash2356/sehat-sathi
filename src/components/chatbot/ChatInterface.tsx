@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { personalizedHealthGuidance } from '@/ai/flows/personalized-health-guidance';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { translations } from '@/lib/translations';
 
 type Message = {
   id: number;
@@ -22,21 +23,21 @@ const formSchema = z.object({
   message: z.string().min(1, 'Message cannot be empty'),
 });
 
-const dummyHospitals = `
-Here are some nearby hospitals:
-1. **Community Health Center, Ramgarh** - [View on Map](https://www.google.com/maps)
-2. **District Hospital, Sitapur** - [View on Map](https://www.google.com/maps)
-3. **Primary Health Sub-center, Devipur** - [View on Map](https://www.google.com/maps)
+const dummyHospitals = (lang: 'en' | 'hi' | 'mr') => `
+${translations[lang].hospitals.title}
+1. **Community Health Center, Ramgarh** - [${translations[lang].hospitals.mapLink}](https://www.google.com/maps)
+2. **District Hospital, Sitapur** - [${translations[lang].hospitals.mapLink}](https://www.google.com/maps)
+3. **Primary Health Sub-center, Devipur** - [${translations[lang].hospitals.mapLink}](https://www.google.com/maps)
 `;
 
-const bookingConfirmation = "Your tele-consultation request has been received. You will get an SMS with the doctor's details and appointment time shortly.";
+const bookingConfirmation = (lang: 'en' | 'hi' | 'mr') => translations[lang].bookingConfirmation;
 
-const emergencyMessage = `
+const emergencyMessage = (lang: 'en' | 'hi' | 'mr') => `
 <div class="flex items-start gap-2">
   <div class="text-destructive pt-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
   <div>
-    <h4 class="font-bold text-destructive">This could be an emergency!</h4>
-    <p>Please seek immediate medical attention. Go to the nearest hospital or call emergency services.</p>
+    <h4 class="font-bold text-destructive">${translations[lang].emergency.title}</h4>
+    <p>${translations[lang].emergency.message}</p>
   </div>
 </div>
 `;
@@ -72,17 +73,23 @@ function parseMarkdownLinks(text: string) {
   }
 
 export function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: 'Hello! I am Sehat Sathi. How can I help you today? You can ask me about health issues, book a consultation, or find nearby hospitals.',
-      sender: 'bot',
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+  const [language, setLanguage] = useState<'en' | 'hi' | 'mr'>('en');
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+
+  const t = translations[language];
+
+  useEffect(() => {
+    setMessages([
+      {
+        id: 1,
+        text: t.greeting,
+        sender: 'bot',
+      },
+    ]);
+  }, [t.greeting]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -109,11 +116,11 @@ export function ChatInterface() {
       let botResponse: string | React.ReactNode;
 
       if (lowerCaseMessage.includes('chest pain') || lowerCaseMessage.includes('emergency')) {
-        botResponse = <div dangerouslySetInnerHTML={{ __html: emergencyMessage }} />;
+        botResponse = <div dangerouslySetInnerHTML={{ __html: emergencyMessage(language) }} />;
       } else if (lowerCaseMessage.includes('hospital') || lowerCaseMessage.includes('clinic')) {
-        botResponse = parseMarkdownLinks(dummyHospitals);
+        botResponse = parseMarkdownLinks(dummyHospitals(language));
       } else if (lowerCaseMessage.includes('book') || lowerCaseMessage.includes('consultation')) {
-        botResponse = bookingConfirmation;
+        botResponse = bookingConfirmation(language);
       } else {
         try {
           const result = await personalizedHealthGuidance({
@@ -136,10 +143,10 @@ export function ChatInterface() {
     form.reset();
   }
 
-  const toggleLanguage = (lang: 'en' | 'hi') => {
+  const toggleLanguage = (lang: 'en' | 'hi' | 'mr') => {
     setLanguage(lang);
     setShowLanguageMenu(false);
-    addMessage(lang === 'en' ? 'Language set to English.' : 'भाषा हिंदी में बदल दी गई है।', 'bot');
+    addMessage(translations[lang].languageSet, 'bot');
   }
 
   return (
@@ -148,13 +155,13 @@ export function ChatInterface() {
         <div className="flex items-center gap-3">
           <Bot className="h-8 w-8 text-primary" />
           <div>
-            <h2 className="font-bold text-lg font-headline">Sehat Sathi</h2>
+            <h2 className="font-bold text-lg font-headline">{t.appName}</h2>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              Online
+              {t.online}
             </p>
           </div>
         </div>
@@ -164,8 +171,9 @@ export function ChatInterface() {
           </Button>
           {showLanguageMenu && (
             <div className="absolute right-0 mt-2 w-32 bg-popover border rounded-md shadow-lg z-10">
-              <button onClick={() => toggleLanguage('en')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-t-md">English</button>
-              <button onClick={() => toggleLanguage('hi')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-b-md">हिंदी</button>
+              <button onClick={() => toggleLanguage('en')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-t-md">{t.menu.english}</button>
+              <button onClick={() => toggleLanguage('hi')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent">{t.menu.hindi}</button>
+              <button onClick={() => toggleLanguage('mr')} className="w-full text-left px-4 py-2 text-sm hover:bg-accent rounded-b-md">{t.menu.marathi}</button>
             </div>
           )}
         </div>
@@ -216,7 +224,7 @@ export function ChatInterface() {
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormControl>
-                    <Input placeholder={language === 'en' ? "Type your message..." : "अपना संदेश लिखें..."} {...field} autoComplete="off" className="rounded-full px-4" />
+                    <Input placeholder={t.inputPlaceholder} {...field} autoComplete="off" className="rounded-full px-4" />
                   </FormControl>
                 </FormItem>
               )}
