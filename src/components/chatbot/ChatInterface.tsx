@@ -4,12 +4,13 @@ import { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { SendHorizonal, Bot, User, Languages } from 'lucide-react';
+import { SendHorizonal, Bot, User, Languages, Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { cn } from '@/lib/utils';
 import { personalizedHealthGuidance } from '@/ai/flows/personalized-health-guidance';
+import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { translations } from '@/lib/translations';
 import { useChatLanguage, setChatLanguage as setGlobalLanguage } from '@/hooks/use-chat-language';
@@ -18,6 +19,7 @@ type Message = {
   id: number;
   text: string | React.ReactNode;
   sender: 'bot' | 'user';
+  audioUrl?: string;
 };
 
 const formSchema = z.object({
@@ -60,7 +62,6 @@ function parseMarkdownLinks(text: string) {
               </p>
             );
           }
-          // Support for simple bolding with **text**
           const boldMatch = line.match(/\*\*(.*?)\*\*/);
           if (boldMatch) {
             const preText = line.substring(0, boldMatch.index);
@@ -71,13 +72,15 @@ function parseMarkdownLinks(text: string) {
         })}
       </div>
     );
-  }
+}
 
 export function ChatInterface() {
   const { language, setLanguage } = useChatLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   const t = translations[language];
 
@@ -101,41 +104,100 @@ export function ChatInterface() {
       scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
     }
   }, [messages, isTyping]);
+  
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.sender === 'bot' && lastMessage.audioUrl) {
+      const audio = new Audio(lastMessage.audioUrl);
+      audio.play();
+    }
+  }, [messages]);
 
-  const addMessage = (text: string | React.ReactNode, sender: 'bot' | 'user') => {
-    setMessages((prev) => [...prev, { id: Date.now(), text, sender }]);
+  const addMessage = (text: string | React.ReactNode, sender: 'bot' | 'user', audioUrl?: string) => {
+    setMessages((prev) => [...prev, { id: Date.now(), text, sender, audioUrl }]);
   };
 
   const processUserMessage = async (userMessage: string) => {
     addMessage(userMessage, 'user');
     setIsTyping(true);
-    
-    setTimeout(async () => {
-      const lowerCaseMessage = userMessage.toLowerCase();
 
-      let botResponse: string | React.ReactNode;
+    const lowerCaseMessage = userMessage.toLowerCase();
+    let botResponseText: string;
+    let botResponse: string | React.ReactNode;
 
-      if (lowerCaseMessage.includes('chest pain') || lowerCaseMessage.includes('emergency')) {
-        botResponse = <div dangerouslySetInnerHTML={{ __html: emergencyMessage(language) }} />;
-      } else if (lowerCaseMessage.includes('hospital') || lowerCaseMessage.includes('clinic')) {
-        botResponse = parseMarkdownLinks(dummyHospitals(language));
-      } else if (lowerCaseMessage.includes('book') || lowerCaseMessage.includes('consultation')) {
-        botResponse = bookingConfirmation(language);
-      } else {
-        try {
-          const result = await personalizedHealthGuidance({
-            symptoms: userMessage,
-            medicalHistory: 'none provided',
-          });
-          botResponse = result.advice;
-        } catch (error) {
-          console.error(error);
-          botResponse = "I'm having trouble connecting right now. Please try again later.";
-        }
+    if (lowerCaseMessage.includes('chest pain') || lowerCaseMessage.includes('emergency')) {
+      botResponseText = translations[language].emergency.title + " " + translations[language].emergency.message;
+      botResponse = <div dangerouslySetInnerHTML={{ __html: emergencyMessage(language) }} />;
+    } else if (lowerCaseMessage.includes('hospital') || lowerCaseMessage.includes('clinic')) {
+      botResponseText = dummyHospitals(language).replace(/\[.*?\]\(.*?\)/g, '');
+      botResponse = parseMarkdownLinks(dummyHospitals(language));
+    } else if (lowerCaseMessage.includes('book') || lowerCaseMessage.includes('consultation')) {
+      botResponseText = bookingConfirmation(language);
+      botResponse = bookingConfirmation(language);
+    } else {
+      try {
+        const result = await personalizedHealthGuidance({
+          symptoms: userMessage,
+          medicalHistory: 'none provided',
+        });
+        botResponseText = result.advice;
+        botResponse = result.advice;
+      } catch (error) {
+        console.error(error);
+        botResponseText = "I'm having trouble connecting right now. Please try again later.";
+        botResponse = botResponseText;
       }
+    }
+    
+    try {
+      const ttsResult = await textToSpeech(botResponseText);
+      addMessage(botResponse, 'bot', ttsResult.audio);
+    } catch (error) {
+      console.error('TTS Error:', error);
       addMessage(botResponse, 'bot');
-      setIsTyping(false);
-    }, 1000 + Math.random() * 500);
+    }
+    
+    setIsTyping(false);
+  };
+
+  const toggleRecording = () => {
+    if (isRecording) {
+      recognitionRef.current?.stop();
+      setIsRecording(false);
+    } else {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Your browser does not support Speech Recognition. Please try Chrome or Firefox.");
+        return;
+      }
+      
+      const recognition = new SpeechRecognition();
+      recognition.lang = language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      
+      recognition.onstart = () => {
+        setIsRecording(true);
+      };
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        form.setValue('message', transcript);
+        processUserMessage(transcript);
+        form.reset();
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+      
+      recognition.start();
+      recognitionRef.current = recognition;
+    }
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -217,6 +279,9 @@ export function ChatInterface() {
                 </FormItem>
               )}
             />
+            <Button type="button" size="icon" onClick={toggleRecording} className={cn("rounded-full", isRecording ? "bg-red-500 hover:bg-red-600" : "")}>
+              {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+            </Button>
             <Button type="submit" size="icon" disabled={isTyping} className="rounded-full">
               <SendHorizonal className="h-5 w-5" />
             </Button>
