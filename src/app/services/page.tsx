@@ -9,10 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { MapPin, Stethoscope, Video, Hospital } from 'lucide-react';
+import { Stethoscope, Video, Hospital } from 'lucide-react';
 import Link from 'next/link';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
+import { GoogleMapEmbed } from '@/components/services/GoogleMapEmbed';
 
 
 const bookingSchema = z.object({
@@ -25,11 +26,6 @@ export default function ServicesPage() {
   const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].services;
-
-  const hospitals = t.hospitals.map(h => ({
-    ...h,
-    mapLink: 'https://www.google.com/maps' 
-  }));
 
   const form = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
@@ -151,22 +147,7 @@ export default function ServicesPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              {hospitals.map((hospital, index) => (
-                <div key={index} className="flex flex-col sm:flex-row gap-4 justify-between items-start p-4 border rounded-lg bg-secondary/30">
-                    <div>
-                        <h4 className="font-semibold">{hospital.name}</h4>
-                        <p className="text-sm text-muted-foreground">{hospital.address}</p>
-                    </div>
-                    <Button asChild variant="outline" className="mt-2 sm:mt-0 shrink-0 bg-background">
-                        <a href={hospital.mapLink} target="_blank" rel="noopener noreferrer">
-                            <MapPin className="mr-2 h-4 w-4" />
-                            {t.mapButton}
-                        </a>
-                    </Button>
-                </div>
-              ))}
-            </div>
+            <GoogleMapEmbed hospitals={t.hospitals} />
           </CardContent>
         </Card>
 

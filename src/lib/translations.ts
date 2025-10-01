@@ -113,19 +113,31 @@ export const translations = {
       bookingToastTitle: 'Booking Confirmed!',
       bookingToastDescription: "We've received your request. You'll get an SMS shortly.",
       locatorTitle: 'Hospital & Clinic Locator',
-      locatorDescription: 'Find government healthcare facilities near you.',
+      locatorDescription: 'Find government healthcare facilities near you in Maharashtra.',
       hospitals: [
         {
-          name: 'Community Health Center, Ramgarh',
-          address: 'Ramgarh, Sitapur District, Uttar Pradesh'
+          name: 'District General Hospital, Pune',
+          address: 'Near Pune Railway Station, Pune, Maharashtra',
+          lat: 18.5204,
+          lng: 73.8567,
         },
         {
-          name: 'District Hospital, Sitapur',
-          address: 'NH 24, Sitapur, Uttar Pradesh'
+          name: 'Rural Hospital, Manchar',
+          address: 'Manchar, Ambegaon Taluka, Pune District, Maharashtra',
+          lat: 19.0066,
+          lng: 73.9338,
         },
         {
-          name: 'Primary Health Sub-center, Devipur',
-          address: 'Devipur Village, Near Ramgarh, Uttar Pradesh'
+          name: 'Primary Health Centre, Khed',
+          address: 'Khed, Pune District, Maharashtra',
+          lat: 18.8473,
+          lng: 73.8760,
+        },
+        {
+            name: 'Sub District Hospital, Baramati',
+            address: 'Baramati, Pune District, Maharashtra',
+            lat: 18.1581,
+            lng: 74.5746,
         }
       ],
       mapButton: 'View on Map',
@@ -245,19 +257,31 @@ export const translations = {
       bookingToastTitle: 'बुकिंग की पुष्टि हुई!',
       bookingToastDescription: 'हमें आपका अनुरोध मिल गया है। आपको शीघ्र ही एक एसएमएस मिलेगा।',
       locatorTitle: 'अस्पताल और क्लिनिक लोकेटर',
-      locatorDescription: 'अपने आस-पास सरकारी स्वास्थ्य सुविधाएं खोजें।',
+      locatorDescription: 'महाराष्ट्र में अपने आस-पास सरकारी स्वास्थ्य सुविधाएं खोजें।',
       hospitals: [
         {
-          name: 'सामुदायिक स्वास्थ्य केंद्र, रामगढ़',
-          address: 'रामगढ़, सीतापुर जिला, उत्तर प्रदेश'
+          name: 'जिला सामान्य अस्पताल, पुणे',
+          address: 'पुणे रेलवे स्टेशन के पास, पुणे, महाराष्ट्र',
+          lat: 18.5204,
+          lng: 73.8567,
         },
         {
-          name: 'जिला अस्पताल, सीतापुर',
-          address: 'एनएच 24, सीतापुर, उत्तर प्रदेश'
+          name: 'ग्रामीण अस्पताल, मंचर',
+          address: 'मंचर, आंबेगांव तालुका, पुणे जिला, महाराष्ट्र',
+          lat: 19.0066,
+          lng: 73.9338,
         },
         {
-          name: 'प्राथमिक स्वास्थ्य उप-केंद्र, देवीपुर',
-          address: 'देवीपुर गांव, रामगढ़ के पास, उत्तर प्रदेश'
+          name: 'प्राथमिक स्वास्थ्य केंद्र, खेड़',
+          address: 'खेड़, पुणे जिला, महाराष्ट्र',
+          lat: 18.8473,
+          lng: 73.8760,
+        },
+        {
+            name: 'उप जिला अस्पताल, बारामती',
+            address: 'बारामती, पुणे जिला, महाराष्ट्र',
+            lat: 18.1581,
+            lng: 74.5746,
         }
       ],
       mapButton: 'नक्शे पर देखें',
@@ -377,19 +401,31 @@ export const translations = {
       bookingToastTitle: 'बुकिंगची पुष्टी झाली!',
       bookingToastDescription: 'आम्हाला तुमची विनंती मिळाली आहे। तुम्हाला लवकरच एक एसएमएस मिळेल।',
       locatorTitle: 'रुग्णालय आणि क्लिनिक लोकेटर',
-      locatorDescription: 'तुमच्या जवळच्या सरकारी आरोग्य सुविधा शोधा।',
+      locatorDescription: 'महाराष्ट्रामध्ये तुमच्या जवळच्या सरकारी आरोग्य सुविधा शोधा।',
       hospitals: [
         {
-          name: 'सामुदायिक आरोग्य केंद्र, रामगड',
-          address: 'रामगड, सीतापूर जिल्हा, उत्तर प्रदेश'
+          name: 'जिल्हा सामान्य रुग्णालय, पुणे',
+          address: 'पुणे रेल्वे स्टेशन जवळ, पुणे, महाराष्ट्र',
+          lat: 18.5204,
+          lng: 73.8567,
         },
         {
-          name: 'जिल्हा रुग्णालय, सीतापूर',
-          address: 'एनएच २४, सीतापूर, उत्तर प्रदेश'
+          name: 'ग्रामीण रुग्णालय, मंचर',
+          address: 'मंचर, आंबेगाव तालुका, पुणे जिल्हा, महाराष्ट्र',
+          lat: 19.0066,
+          lng: 73.9338,
         },
         {
-          name: 'प्राथमिक आरोग्य उप-केंद्र, देवीपुर',
-          address: 'देवीपुर गाव, रामगड जवळ, उत्तर प्रदेश'
+          name: 'प्राथमिक आरोग्य केंद्र, खेड',
+          address: 'खेड, पुणे जिल्हा, महाराष्ट्र',
+          lat: 18.8473,
+          lng: 73.8760,
+        },
+        {
+            name: 'उप जिल्हा रुग्णालय, बारामती',
+            address: 'बारामती, पुणे जिल्हा, महाराष्ट्र',
+            lat: 18.1581,
+            lng: 74.5746,
         }
       ],
       mapButton: 'नकाशावर पहा',
