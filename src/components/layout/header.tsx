@@ -117,8 +117,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between">
-        <div className="flex items-center">
+      <div className="container flex h-14 items-center">
+        <div className="flex flex-1 items-center justify-start">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -150,26 +150,26 @@ export function Header() {
           </Sheet>
         </div>
         
-        <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-                <LanguageSelector />
-                {user ? (
-                <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
-                    <LogOut className="h-5 w-5" />
-                </Button>
-                ) : (
-                pathname !== '/login' && (
-                    <Button asChild variant="outline" size="sm">
-                    <Link href="/login">Login</Link>
-                    </Button>
-                )
-                )}
-            </div>
+        <div className="flex flex-1 items-center justify-center">
+          <Link href="/" className="flex items-center space-x-2">
+              <BotMessageSquare className="h-7 w-7 text-primary" />
+              <span className="text-xl font-bold font-headline">{t.appName}</span>
+          </Link>
+        </div>
 
-            <Link href="/" className="flex items-center space-x-2">
-                <BotMessageSquare className="h-6 w-6 text-primary" />
-                <span className="font-bold font-headline">{t.appName}</span>
-            </Link>
+        <div className="flex flex-1 items-center justify-end gap-2">
+            <LanguageSelector />
+            {user ? (
+            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
+                <LogOut className="h-5 w-5" />
+            </Button>
+            ) : (
+            pathname !== '/login' && (
+                <Button asChild variant="outline" size="sm">
+                <Link href="/login">Login</Link>
+                </Button>
+            )
+            )}
         </div>
       </div>
     </header>
