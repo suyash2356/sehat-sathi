@@ -45,8 +45,11 @@ export function GoogleMapEmbed({ hospitals, onBookAppointment, translations }: G
 
   const [selectedHospital, setSelectedHospital] = React.useState<Hospital | null>(null);
 
+  if (!process.env.GOOGLE_MAPS_API_KEY) {
+    return <div className="text-destructive font-semibold p-4 bg-destructive/10 rounded-md">The Google Maps API key is missing. Please add the `GOOGLE_MAPS_API_KEY` to your .env file and restart the server.</div>;
+  }
+  
   if (!isLoaded) return <div>Loading map...</div>;
-  if (!process.env.GOOGLE_MAPS_API_KEY) return <div className="text-destructive font-semibold">Google Maps API key is missing. Please add it to your .env file.</div>;
 
   return (
     <GoogleMap
