@@ -1,3 +1,4 @@
+
 export const translations = {
   en: {
     greeting: 'Hello! I am Sehat Sathi. How can I help you today? You can ask me about health issues, book a consultation, or find nearby hospitals.',
@@ -70,14 +71,88 @@ export const translations = {
         {
           title: 'Drink Clean Water',
           description: 'Always drink boiled or filtered water to avoid waterborne diseases like typhoid and cholera.',
+          details: [
+            {
+              title: 'Why is clean water important?',
+              content: [
+                'Contaminated water contains harmful germs like bacteria, viruses, and parasites.',
+                'These germs can cause diseases such as diarrhea, cholera, typhoid, and dysentery, which are major health risks in rural areas.',
+                'Clean water is essential for digestion, hydration, and overall body function.'
+              ]
+            },
+            {
+              title: 'Simple ways to purify drinking water at home:',
+              content: [
+                'Boiling: Bring water to a rolling boil for at least 1 minute. This is the most effective method to kill most germs.',
+                'Filtering: Use a clean cloth (like a dhoti or sari folded multiple times) to filter out visible impurities before boiling.',
+                'Sunlight (SODIS method): Fill clear plastic bottles with water and leave them in direct sunlight for at least 6 hours. The UV rays help kill germs.',
+                'Chlorine tablets: Follow the instructions on the package. These are often distributed by health workers.'
+              ]
+            },
+            {
+              title: 'Tips for safe water storage:',
+              content: [
+                'Store purified water in a clean, covered container with a narrow mouth to prevent contamination from hands or utensils.',
+                'Use a long-handled ladle to take water out; do not dip your hands or unwashed glasses into the container.',
+              ]
+            }
+          ]
         },
         {
           title: 'Eat Hygienic Food',
           description: 'Consume freshly cooked food. Avoid stale or uncovered food from street vendors.',
+          details: [
+            {
+                title: 'Key Food Safety Practices:',
+                content: [
+                    'Cook food thoroughly, especially meat, poultry, and eggs, to kill harmful bacteria.',
+                    'Always wash fruits and vegetables with clean water before eating or cooking.',
+                    'Keep raw and cooked food separate to prevent cross-contamination.',
+                    'Reheat cooked food thoroughly until it is steaming hot before eating leftovers.'
+                ]
+            },
+            {
+                title: 'Tips for a hygienic kitchen:',
+                content: [
+                    'Wash your hands with soap and water before, during, and after preparing food.',
+                    'Keep your kitchen surfaces, utensils, and cutting boards clean.',
+                    'Protect your kitchen and food from insects, pests, and other animals by keeping food covered.',
+                ]
+            },
+            {
+                title: 'Caution with Street Food:',
+                content: [
+                    'If you eat street food, choose vendors that appear clean and cook food fresh in front of you.',
+                    'Avoid food that has been sitting out in the open, uncovered, and exposed to flies.',
+                ]
+            }
+          ]
         },
         {
           title: 'Maintain Personal Hygiene',
           description: 'Wash your hands with soap regularly, especially before eating and after using the toilet.',
+          details: [
+            {
+                title: 'The Six Steps of Handwashing:',
+                content: [
+                    'Wet your hands with clean, running water.',
+                    'Apply soap and lather well, covering all surfaces of your hands and wrists.',
+                    'Scrub for at least 20 seconds. Remember to clean the back of your hands, between your fingers, and under your nails.',
+                    'Rinse your hands thoroughly under clean, running water.',
+                    'Dry your hands with a clean cloth or air dry them.',
+                    'Handwashing is critical after using the toilet, after coughing or sneezing, before eating, and before and after caring for someone who is sick.'
+                ]
+            },
+            {
+                title: 'Other Important Hygiene Habits:',
+                content: [
+                    'Bathe daily to keep your body clean and free from infections.',
+                    'Brush your teeth twice a day to prevent cavities and gum disease.',
+                    'Keep your nails trimmed and clean to prevent the spread of germs.',
+                    'Always wear clean clothes.'
+                ]
+            }
+          ]
         },
       ],
       healthyHabitsTitle: 'Tips for a Healthy Lifestyle',
@@ -86,14 +161,74 @@ export const translations = {
         {
           title: 'Balanced Diet',
           description: 'Include a mix of fruits, vegetables, grains, and proteins in your daily meals for essential nutrients.',
+          details: [
+            {
+              title: 'What is a Balanced Diet?',
+              content: [
+                'It means eating a variety of foods from all major food groups in the right proportions.',
+                'Carbohydrates (Energy): Roti, rice, bajra, jowar.',
+                'Proteins (Body-building): Dal (lentils), beans, chickpeas, eggs, milk, and curd.',
+                'Vitamins & Minerals (Protection): All seasonal fruits and vegetables, especially leafy greens like spinach and fenugreek.',
+                'Fats (Energy Reserve): Use oil, ghee, and nuts in moderation.'
+              ]
+            },
+            {
+              title: 'Practical Tips for a Balanced Diet:',
+              content: [
+                'Try to have at least three different food groups in each main meal.',
+                'Eat seasonal fruits and vegetables as they are fresh, cheap, and nutritious.',
+                'Reduce intake of sugar, salt, and processed/fried foods.',
+                'Drink plenty of clean water throughout the day to stay hydrated.'
+              ]
+            }
+          ]
         },
         {
           title: 'Regular Exercise',
           description: 'Engage in at least 30 minutes of physical activity like walking, yoga, or cycling every day.',
+           details: [
+            {
+              title: 'Benefits of Regular Physical Activity:',
+              content: [
+                'Strengthens muscles and bones, reducing the risk of injuries.',
+                'Improves heart health and blood circulation.',
+                'Helps in maintaining a healthy weight and controlling blood sugar.',
+                'Reduces stress and improves mental well-being.'
+              ]
+            },
+            {
+              title: 'Simple Activities You Can Do:',
+              content: [
+                'Brisk Walking: A simple 30-minute walk around your village is a great start.',
+                'Yoga and Stretching: Simple asanas can improve flexibility and reduce body aches.',
+                'Farming and Household Chores: Daily physical labor is also a good form of exercise.',
+                'Cycling: If you have a bicycle, use it for short-distance travel.'
+              ]
+            }
+          ]
         },
         {
           title: 'Adequate Sleep',
           description: 'Ensure you get 7-8 hours of sound sleep every night to keep your body and mind refreshed.',
+           details: [
+            {
+              title: 'Why is Sleep Important?',
+              content: [
+                'During sleep, your body repairs itself and builds energy for the next day.',
+                'Good sleep improves concentration, memory, and decision-making abilities.',
+                'Lack of sleep can weaken your immunity, making you more prone to illness.',
+              ]
+            },
+            {
+              title: 'Tips for Better Sleep:',
+              content: [
+                'Try to sleep and wake up at the same time every day to set a routine.',
+                'Ensure your sleeping area is dark, quiet, and cool.',
+                'Avoid heavy meals, caffeine (tea/coffee), and using mobile phones just before bedtime.',
+                'Relaxing activities like listening to soft music or reading can help you fall asleep.',
+              ]
+            }
+          ]
         },
       ],
       govGuidelinesTitle: "Key Government & WHO Health Guidelines",
@@ -102,14 +237,76 @@ export const translations = {
         {
             title: 'Control of Communicable Diseases',
             description: 'Isolate individuals with infectious diseases like TB or flu. Follow public health advice during outbreaks.',
+            details: [
+              {
+                title: 'Understanding Communicable Diseases:',
+                content: [
+                  'These are illnesses that spread from one person to another, such as the common cold, flu, tuberculosis (TB), and COVID-19.',
+                  'They can spread through air (coughing, sneezing), direct contact, or contaminated surfaces.',
+                ]
+              },
+              {
+                title: 'Key Prevention Measures:',
+                content: [
+                  'Isolation: If someone is sick, they should stay home and avoid close contact with others to prevent spreading the illness.',
+                  'Cover Your Cough/Sneeze: Use a handkerchief or your elbow to cover your mouth and nose.',
+                  'Ventilation: Keep windows and doors open to allow fresh air to circulate, reducing the concentration of germs indoors.',
+                  'Community Responsibility: Follow all guidelines issued by ASHA workers or local health authorities during disease outbreaks (e.g., during monsoon or flu season).'
+                ]
+              }
+          ]
         },
         {
             title: 'Routine Immunization',
             description: 'Ensure all children and adults get vaccinations as per the National Immunization Schedule.',
+             details: [
+              {
+                title: 'Why Vaccination is a Lifesaver:',
+                content: [
+                  'Vaccines protect children from serious and life-threatening diseases like polio, measles, tetanus, and diphtheria.',
+                  'It is one of the most effective and safest public health interventions.',
+                  'Following the immunization schedule is crucial for a child\'s long-term health.',
+                ]
+              },
+              {
+                title: 'National Immunization Schedule:',
+                content: [
+                  'Contact your local Anganwadi or ASHA worker to get the complete and updated immunization chart for your child.',
+                  'Vaccines are provided free of cost at government health centers.',
+                  'Ensure you keep the immunization card safe and bring it to every health visit.'
+                ]
+              }
+          ]
         },
         {
             title: 'Maternal and Child Health',
             description: 'Pregnant women should have regular check-ups, institutional delivery, and post-natal care.',
+             details: [
+              {
+                title: 'Care During Pregnancy (Antenatal Care):',
+                content: [
+                  'Register your pregnancy early at the nearest health center.',
+                  'Complete at least four antenatal check-ups to monitor your health and the baby\'s growth.',
+                  'Take iron and folic acid tablets as advised by the health worker to prevent anemia.',
+                  'Eat a nutritious diet and get adequate rest.'
+                ]
+              },
+              {
+                title: 'Safe Delivery (Institutional Delivery):',
+                content: [
+                  'Always plan to deliver your baby at a hospital or primary health center.',
+                  'This ensures that a skilled health provider is present to handle any complications, protecting both mother and child.',
+                  'Government schemes like Janani Suraksha Yojana (JSY) provide cash assistance for institutional deliveries.'
+                ]
+              },
+              {
+                title: 'Care After Delivery (Postnatal Care):',
+                content: [
+                  'Both mother and newborn should have regular health check-ups after delivery.',
+                  'Start breastfeeding within the first hour of birth. Exclusive breastfeeding for the first 6 months is crucial for the baby\'s health.',
+                ]
+              }
+          ]
         },
       ],
       whoLink: 'Visit WHO India Website',
@@ -146,6 +343,14 @@ export const translations = {
         {
           question: 'Is my personal information safe?',
           answer: 'We prioritize your privacy. Your conversations with the chatbot are anonymous. For tele-consultation, we only collect the necessary information to connect you with a doctor, and this data is handled securely.'
+        },
+        {
+          question: 'What kind of health information does Sehat Sathi provide?',
+          answer: 'We provide general information on common health conditions, first-aid, preventive care, healthy lifestyle tips, and details about government health schemes. This is not a substitute for a professional medical diagnosis.'
+        },
+        {
+          question: 'How do I find a nearby hospital?',
+          answer: 'You can use the "Hospital Locator" feature in our app or simply ask the chatbot to "find nearby hospitals." It will provide a list of facilities in your area.'
         }
       ]
     },
@@ -371,32 +576,166 @@ export const translations = {
         precautionsSubtitle: 'आम बीमारियों से बचने और स्वस्थ रहने के लिए इन सरल उपायों का पालन करें।',
         precautions: [
             {
-            title: 'स्वच्छ पानी पिएं',
-            description: 'टाइफाइड और हैजा जैसी जलजनित बीमारियों से बचने के लिए हमेशा उबला हुआ या फिल्टर किया हुआ पानी पिएं।',
+              title: 'स्वच्छ पानी पिएं',
+              description: 'टाइफाइड और हैजा जैसी जलजनित बीमारियों से बचने के लिए हमेशा उबला हुआ या फिल्टर किया हुआ पानी पिएं।',
+              details: [
+                {
+                  title: 'स्वच्छ पानी क्यों महत्वपूर्ण है?',
+                  content: [
+                    'दूषित पानी में बैक्टीरिया, वायरस और परजीवी जैसे हानिकारक रोगाणु होते हैं।',
+                    'ये रोगाणु दस्त, हैजा, टाइफाइड और पेचिश जैसी बीमारियाँ पैदा कर सकते हैं, जो ग्रामीण क्षेत्रों में प्रमुख स्वास्थ्य जोखिम हैं।',
+                    'स्वच्छ पानी पाचन, जलयोजन और शरीर के समग्र कामकाज के लिए आवश्यक है।'
+                  ]
+                },
+                {
+                  title: 'घर पर पीने के पानी को शुद्ध करने के सरल तरीके:',
+                  content: [
+                    'उबालना: पानी को कम से कम 1 मिनट तक उबलने दें। यह अधिकांश कीटाणुओं को मारने का सबसे प्रभावी तरीका है।',
+                    'छानना: उबालने से पहले दिखाई देने वाली अशुद्धियों को छानने के लिए एक साफ कपड़े (जैसे धोती या साड़ी को कई बार मोड़कर) का उपयोग करें।',
+                    'धूप (SODIS विधि): साफ प्लास्टिक की बोतलों में पानी भरकर कम से कम 6 घंटे के लिए सीधी धूप में रखें। यूवी किरणें कीटाणुओं को मारने में मदद करती हैं।',
+                    'क्लोरीन टैबलेट: पैकेज पर दिए गए निर्देशों का पालन करें। ये अक्सर स्वास्थ्य कार्यकर्ताओं द्वारा वितरित किए जाते हैं।'
+                  ]
+                },
+                {
+                  title: 'सुरक्षित जल भंडारण के लिए सुझाव:',
+                  content: [
+                    'शुद्ध पानी को एक साफ, ढके हुए कंटेनर में रखें जिसका मुंह संकरा हो ताकि हाथों या बर्तनों से संदूषण को रोका जा सके।',
+                    'पानी निकालने के लिए एक लंबे हैंडल वाले करछुल का उपयोग करें; कंटेनर में अपने हाथ या बिना धोए गिलास न डुबोएं।',
+                  ]
+                }
+              ]
             },
             {
-            title: 'स्वच्छ भोजन करें',
-            description: 'हमेशा ताजा पका हुआ भोजन करें। सड़क विक्रेताओं से बासी या खुला भोजन करने से बचें।',
+              title: 'स्वच्छ भोजन करें',
+              description: 'हमेशा ताजा पका हुआ भोजन करें। सड़क विक्रेताओं से बासी या खुला भोजन करने से बचें।',
+              details: [
+                {
+                    title: 'मुख्य खाद्य सुरक्षा प्रथाएं:',
+                    content: [
+                        'हानिकारक बैक्टीरिया को मारने के लिए भोजन, विशेष रूप से मांस, मुर्गी और अंडे को अच्छी तरह से पकाएं।',
+                        'खाने या पकाने से पहले फलों और सब्जियों को हमेशा साफ पानी से धोएं।',
+                        'क्रॉस-संदूषण को रोकने के लिए कच्चे और पके हुए भोजन को अलग रखें।',
+                        'बचे हुए भोजन को खाने से पहले अच्छी तरह से गर्म करें जब तक कि वह भाप न बन जाए।'
+                    ]
+                },
+                {
+                    title: 'एक स्वच्छ रसोई के लिए सुझाव:',
+                    content: [
+                        'भोजन तैयार करने से पहले, दौरान और बाद में अपने हाथों को साबुन और पानी से धोएं।',
+                        'अपनी रसोई की सतहों, बर्तनों और कटिंग बोर्ड को साफ रखें।',
+                        'भोजन को ढककर अपनी रसोई और भोजन को कीड़ों, कीटों और अन्य जानवरों से बचाएं।',
+                    ]
+                },
+                {
+                    title: 'स्ट्रीट फूड से सावधानी:',
+                    content: [
+                        'यदि आप स्ट्रीट फूड खाते हैं, तो ऐसे विक्रेताओं को चुनें जो साफ-सुथरे दिखें और आपके सामने ताजा भोजन पकाएं।',
+                        'ऐसे भोजन से बचें जो खुले में, बिना ढके और मक्खियों के संपर्क में हो।',
+                    ]
+                }
+              ]
             },
             {
-            title: 'व्यक्तिगत स्वच्छता बनाए रखें',
-            description: 'नियमित रूप से साबुन से हाथ धोएं, खासकर खाने से पहले और शौचालय का उपयोग करने के बाद।',
+              title: 'व्यक्तिगत स्वच्छता बनाए रखें',
+              description: 'नियमित रूप से साबुन से हाथ धोएं, खासकर खाने से पहले और शौचालय का उपयोग करने के बाद।',
+              details: [
+                {
+                    title: 'हाथ धोने के छह चरण:',
+                    content: [
+                        'अपने हाथों को साफ, बहते पानी से गीला करें।',
+                        'साबुन लगाएं और अच्छी तरह से झाग बनाएं, अपने हाथों और कलाई की सभी सतहों को कवर करें।',
+                        'कम से कम 20 सेकंड के लिए रगड़ें। अपने हाथों के पिछले हिस्से, अपनी उंगलियों के बीच और अपने नाखूनों के नीचे साफ करना याद रखें।',
+                        'अपने हाथों को साफ, बहते पानी के नीचे अच्छी तरह से धो लें।',
+                        'अपने हाथों को एक साफ कपड़े से सुखाएं या हवा में सुखाएं।',
+                        'शौचालय का उपयोग करने के बाद, खांसने या छींकने के बाद, खाने से पहले, और किसी बीमार व्यक्ति की देखभाल करने से पहले और बाद में हाथ धोना महत्वपूर्ण है।'
+                    ]
+                },
+                {
+                    title: 'अन्य महत्वपूर्ण स्वच्छता की आदतें:',
+                    content: [
+                        'अपने शरीर को साफ और संक्रमण से मुक्त रखने के लिए रोजाना स्नान करें।',
+                        'गुहाओं और मसूड़ों की बीमारी को रोकने के लिए दिन में दो बार अपने दाँत ब्रश करें।',
+                        'कीटाणुओं के प्रसार को रोकने के लिए अपने नाखूनों को छोटा और साफ रखें।',
+                        'हमेशा साफ कपड़े पहनें।'
+                    ]
+                }
+              ]
             },
         ],
         healthyHabitsTitle: 'स्वस्थ जीवन शैली के लिए सुझाव',
         healthyHabitsSubtitle: 'दीर्घकालिक स्वास्थ्य के लिए इन आदतों को अपनी दिनचर्या में शामिल करें।',
         healthyHabits: [
             {
-            title: 'संतुलित आहार',
-            description: 'आवश्यक पोषक तत्वों के लिए अपने दैनिक भोजन में फल, सब्जियां, अनाज और प्रोटीन का मिश्रण शामिल करें।',
+              title: 'संतुलित आहार',
+              description: 'आवश्यक पोषक तत्वों के लिए अपने दैनिक भोजन में फल, सब्जियां, अनाज और प्रोटीन का मिश्रण शामिल करें।',
+              details: [
+                {
+                  title: 'संतुलित आहार क्या है?',
+                  content: [
+                    'इसका मतलब है कि सभी प्रमुख खाद्य समूहों से विभिन्न प्रकार के खाद्य पदार्थों को सही अनुपात में खाना।',
+                    'कार्बोहाइड्रेट (ऊर्जा): रोटी, चावल, बाजरा, ज्वार।',
+                    'प्रोटीन (शरीर निर्माण): दाल, बीन्स, छोले, अंडे, दूध और दही।',
+                    'विटामिन और खनिज (संरक्षण): सभी मौसमी फल और सब्जियां, विशेष रूप से पालक और मेथी जैसी पत्तेदार सब्जियां।',
+                    'वसा (ऊर्जा आरक्षित): तेल, घी और नट्स का संयम से उपयोग करें।'
+                  ]
+                },
+                {
+                  title: 'संतुलित आहार के लिए व्यावहारिक सुझाव:',
+                  content: [
+                    'प्रत्येक मुख्य भोजन में कम से कम तीन अलग-अलग खाद्य समूहों को शामिल करने का प्रयास करें।',
+                    'मौसमी फल और सब्जियां खाएं क्योंकि वे ताजे, सस्ते और पौष्टिक होते हैं।',
+                    'चीनी, नमक और प्रसंस्कृत/तले हुए खाद्य पदार्थों का सेवन कम करें।',
+                    'हाइड्रेटेड रहने के लिए दिन भर में खूब सारा साफ पानी पिएं।'
+                  ]
+                }
+              ]
             },
             {
-            title: 'नियमित व्यायाम',
-            description: 'हर दिन कम से कम 30 मिनट की शारीरिक गतिविधि जैसे चलना, योग या साइकिल चलाना शामिल करें।',
+              title: 'नियमित व्यायाम',
+              description: 'हर दिन कम से कम 30 मिनट की शारीरिक गतिविधि जैसे चलना, योग या साइकिल चलाना शामिल करें।',
+               details: [
+                {
+                  title: 'नियमित शारीरिक गतिविधि के लाभ:',
+                  content: [
+                    'मांसपेशियों और हड्डियों को मजबूत करता है, चोटों के जोखिम को कम करता है।',
+                    'हृदय स्वास्थ्य और रक्त परिसंचरण में सुधार करता है।',
+                    'स्वस्थ वजन बनाए रखने और रक्त शर्करा को नियंत्रित करने में मदद करता है।',
+                    'तनाव कम करता है और मानसिक स्वास्थ्य में सुधार करता है।'
+                  ]
+                },
+                {
+                  title: 'सरल गतिविधियाँ जो आप कर सकते हैं:',
+                  content: [
+                    'तेज चलना: अपने गांव के चारों ओर 30 मिनट की एक साधारण सैर एक बेहतरीन शुरुआत है।',
+                    'योग और स्ट्रेचिंग: सरल आसन लचीलेपन में सुधार कर सकते हैं और शरीर के दर्द को कम कर सकते हैं।',
+                    'खेती और घरेलू काम: दैनिक शारीरिक श्रम भी व्यायाम का एक अच्छा रूप है।',
+                    'साइकिल चलाना: यदि आपके पास साइकिल है, तो इसका उपयोग कम दूरी की यात्रा के लिए करें।'
+                  ]
+                }
+              ]
             },
             {
-            title: 'पर्याप्त नींद',
-            description: 'अपने शरीर और दिमाग को तरोताजा रखने के लिए हर रात 7-8 घंटे की अच्छी नींद सुनिश्चित करें।',
+              title: 'पर्याप्त नींद',
+              description: 'अपने शरीर और दिमाग को तरोताजा रखने के लिए हर रात 7-8 घंटे की अच्छी नींद सुनिश्चित करें।',
+               details: [
+                {
+                  title: 'नींद क्यों महत्वपूर्ण है?',
+                  content: [
+                    'नींद के दौरान, आपका शरीर खुद की मरम्मत करता है और अगले दिन के लिए ऊर्जा बनाता है।',
+                    'अच्छी नींद एकाग्रता, स्मृति और निर्णय लेने की क्षमताओं में सुधार करती है।',
+                    'नींद की कमी आपकी प्रतिरक्षा को कमजोर कर सकती है, जिससे आप बीमारी के प्रति अधिक संवेदनशील हो जाते हैं।',
+                  ]
+                },
+                {
+                  title: 'बेहतर नींद के लिए सुझाव:',
+                  content: [
+                    'एक दिनचर्या निर्धारित करने के लिए हर दिन एक ही समय पर सोने और जागने की कोशिश करें।',
+                    'सुनिश्चित करें कि आपका सोने का क्षेत्र अंधेरा, शांत और ठंडा हो।',
+                    'सोने से ठीक पहले भारी भोजन, कैफीन (चाय/कॉफी) और मोबाइल फोन का उपयोग करने से बचें।',
+                    'नरम संगीत सुनने या पढ़ने जैसी आराम की गतिविधियाँ आपको सो जाने में मदद कर सकती हैं।',
+                  ]
+                }
+              ]
             },
         ],
         govGuidelinesTitle: "प्रमुख सरकारी और डब्ल्यूएचओ स्वास्थ्य दिशानिर्देश",
@@ -405,14 +744,76 @@ export const translations = {
             {
                 title: 'संचारी रोगों का नियंत्रण',
                 description: 'टीबी या फ्लू जैसे संक्रामक रोगों वाले व्यक्तियों को अलग करें। प्रकोप के दौरान सार्वजनिक स्वास्थ्य सलाह का पालन करें।',
+                details: [
+                  {
+                    title: 'संचारी रोगों को समझना:',
+                    content: [
+                      'ये ऐसी बीमारियाँ हैं जो एक व्यक्ति से दूसरे व्यक्ति में फैलती हैं, जैसे कि सामान्य सर्दी, फ्लू, तपेदिक (टीबी), और COVID-19।',
+                      'वे हवा (खांसने, छींकने), सीधे संपर्क, या दूषित सतहों के माध्यम से फैल सकते हैं।',
+                    ]
+                  },
+                  {
+                    title: 'मुख्य निवारक उपाय:',
+                    content: [
+                      'अलगाव: यदि कोई बीमार है, तो उसे घर पर रहना चाहिए और बीमारी को फैलने से रोकने के लिए दूसरों के साथ निकट संपर्क से बचना चाहिए।',
+                      'अपनी खांसी/छींक को ढकें: अपने मुंह और नाक को ढकने के लिए रूमाल या अपनी कोहनी का उपयोग करें।',
+                      'वेंटिलेशन: ताजी हवा को प्रसारित करने के लिए खिड़कियां और दरवाजे खुले रखें, जिससे घर के अंदर कीटाणुओं की सांद्रता कम हो।',
+                      'सामुदायिक जिम्मेदारी: रोग के प्रकोप (जैसे, मानसून या फ्लू के मौसम के दौरान) के दौरान आशा कार्यकर्ताओं या स्थानीय स्वास्थ्य अधिकारियों द्वारा जारी किए गए सभी दिशानिर्देशों का पालन करें।'
+                    ]
+                  }
+              ]
             },
             {
                 title: 'नियमित टीकाकरण',
                 description: 'सुनिश्चित करें कि सभी बच्चों और वयस्कों को राष्ट्रीय टीकाकरण सारणी के अनुसार टीके लगें।',
+                 details: [
+                  {
+                    title: 'टीकाकरण एक जीवन रक्षक क्यों है:',
+                    content: [
+                      'टीके बच्चों को पोलियो, खसरा, टेटनस और डिप्थीरिया जैसी गंभीर और जानलेवा बीमारियों से बचाते हैं।',
+                      'यह सबसे प्रभावी और सबसे सुरक्षित सार्वजनिक स्वास्थ्य हस्तक्षेपों में से एक है।',
+                      'एक बच्चे के दीर्घकालिक स्वास्थ्य के लिए टीकाकरण अनुसूची का पालन करना महत्वपूर्ण है।',
+                    ]
+                  },
+                  {
+                    title: 'राष्ट्रीय टीकाकरण अनुसूची:',
+                    content: [
+                      'अपने बच्चे के लिए पूर्ण और अद्यतन टीकाकरण चार्ट प्राप्त करने के लिए अपने स्थानीय आंगनवाड़ी या आशा कार्यकर्ता से संपर्क करें।',
+                      'सरकारी स्वास्थ्य केंद्रों पर टीके मुफ्त प्रदान किए जाते हैं।',
+                      'सुनिश्चित करें कि आप टीकाकरण कार्ड को सुरक्षित रखें और इसे हर स्वास्थ्य यात्रा पर लाएं।'
+                    ]
+                  }
+              ]
             },
             {
                 title: 'मातृ एवं शिशु स्वास्थ्य',
                 description: 'गर्भवती महिलाओं को नियमित जांच, संस्थागत प्रसव और प्रसवोत्तर देखभाल करवानी चाहिए।',
+                 details: [
+                  {
+                    title: 'गर्भावस्था के दौरान देखभाल (प्रसवपूर्व देखभाल):',
+                    content: [
+                      'निकटतम स्वास्थ्य केंद्र में अपनी गर्भावस्था का शीघ्र पंजीकरण कराएं।',
+                      'अपने स्वास्थ्य और बच्चे के विकास की निगरानी के लिए कम से कम चार प्रसवपूर्व जांच पूरी करें।',
+                      'एनीमिया को रोकने के लिए स्वास्थ्य कार्यकर्ता की सलाह के अनुसार आयरन और फोलिक एसिड की गोलियां लें।',
+                      'पौष्टिक आहार लें और पर्याप्त आराम करें।'
+                    ]
+                  },
+                  {
+                    title: 'सुरक्षित प्रसव (संस्थागत प्रसव):',
+                    content: [
+                      'हमेशा अपने बच्चे को अस्पताल या प्राथमिक स्वास्थ्य केंद्र में जन्म देने की योजना बनाएं।',
+                      'यह सुनिश्चित करता है कि किसी भी जटिलता से निपटने के लिए एक कुशल स्वास्थ्य प्रदाता मौजूद है, जो मां और बच्चे दोनों की रक्षा करता है।',
+                      'जननी सुरक्षा योजना (JSY) जैसी सरकारी योजनाएं संस्थागत प्रसव के लिए नकद सहायता प्रदान करती हैं।'
+                    ]
+                  },
+                  {
+                    title: 'प्रसव के बाद देखभाल (प्रसवोत्तर देखभाल):',
+                    content: [
+                      'प्रसव के बाद मां और नवजात दोनों की नियमित स्वास्थ्य जांच होनी चाहिए।',
+                      'जन्म के पहले घंटे के भीतर स्तनपान शुरू करें। पहले 6 महीनों के लिए विशेष स्तनपान बच्चे के स्वास्थ्य के लिए महत्वपूर्ण है।',
+                    ]
+                  }
+              ]
             },
         ],
         whoLink: 'डब्ल्यूएचओ इंडिया वेबसाइट पर जाएं',
@@ -449,6 +850,14 @@ export const translations = {
         {
             question: 'क्या मेरी व्यक्तिगत जानकारी सुरक्षित है?',
             answer: 'हम आपकी गोपनीयता को प्राथमिकता देते हैं। चैटबॉट के साथ आपकी बातचीत गुमनाम है। टेली-परामर्श के लिए, हम आपको डॉक्टर से जोड़ने के लिए केवल आवश्यक जानकारी एकत्र करते हैं, और यह डेटा सुरक्षित रूप से संभाला जाता है।'
+        },
+        {
+          question: 'सेहत साथी किस प्रकार की स्वास्थ्य जानकारी प्रदान करता है?',
+          answer: 'हम सामान्य स्वास्थ्य स्थितियों, प्राथमिक चिकित्सा, निवारक देखभाल, स्वस्थ जीवन शैली युक्तियों और सरकारी स्वास्थ्य योजनाओं के बारे में विवरण पर सामान्य जानकारी प्रदान करते हैं। यह एक पेशेवर चिकित्सा निदान का विकल्प नहीं है।'
+        },
+        {
+          question: 'मैं नजदीकी अस्पताल कैसे ढूंढ सकता हूं?',
+          answer: 'आप हमारे ऐप में "अस्पताल लोकेटर" सुविधा का उपयोग कर सकते हैं या बस चैटबॉट से "आस-पास के अस्पताल ढूंढें" पूछ सकते हैं। यह आपके क्षेत्र में सुविधाओं की एक सूची प्रदान करेगा।'
         }
       ]
     },
@@ -676,14 +1085,88 @@ export const translations = {
         {
           title: 'स्वच्छ पाणी प्या',
           description: 'टायफॉइड आणि कॉलरासारखे जलजन्य आजार टाळण्यासाठी नेहमी उकळलेले किंवा फिल्टर केलेले पाणी प्या.',
+          details: [
+            {
+              title: 'स्वच्छ पाणी का महत्त्वाचे आहे?',
+              content: [
+                'दूषित पाण्यात जीवाणू, विषाणू आणि परजीवी यांसारखे हानिकारक जंतू असतात.',
+                'हे जंतू अतिसार, कॉलरा, टायफॉइड आणि आमांश यांसारखे आजार पसरवू शकतात, जे ग्रामीण भागात मोठे आरोग्य धोके आहेत.',
+                'स्वच्छ पाणी पचन, हायड्रेशन आणि शरीराच्या एकूण कार्यासाठी आवश्यक आहे.'
+              ]
+            },
+            {
+              title: 'घरी पिण्याचे पाणी शुद्ध करण्याचे सोपे मार्ग:',
+              content: [
+                'उकळणे: पाणी किमान १ मिनिटासाठी उकळवा. बहुतेक जंतू मारण्याचा हा सर्वात प्रभावी मार्ग आहे.',
+                'गाळणे: उकळण्यापूर्वी दृश्यमान अशुद्धी गाळण्यासाठी स्वच्छ कापड (उदा. धोतर किंवा साडी अनेक वेळा दुमडून) वापरा.',
+                'सूर्यप्रकाश (SODIS पद्धत): स्वच्छ प्लास्टिकच्या बाटल्यांमध्ये पाणी भरा आणि त्यांना किमान ६ तास थेट सूर्यप्रकाशात ठेवा. अतिनील किरणे जंतू मारण्यास मदत करतात.',
+                'क्लोरीन गोळ्या: पॅकेजवरील सूचनांचे पालन करा. या गोळ्या आरोग्य कर्मचाऱ्यांकडून वितरीत केल्या जातात.'
+              ]
+            },
+            {
+              title: 'सुरक्षित पाणी साठवण्यासाठी टिप्स:',
+              content: [
+                'शुद्ध केलेले पाणी स्वच्छ, झाकण असलेल्या आणि अरुंद तोंडाच्या भांड्यात साठवा जेणेकरून हाताने किंवा भांड्यांद्वारे होणारे प्रदूषण टाळता येईल.',
+                'पाणी काढण्यासाठी लांब दांड्याचा चमचा वापरा; आपले हात किंवा न धुतलेले ग्लास भांड्यात बुडवू नका.',
+              ]
+            }
+          ]
         },
         {
           title: 'स्वच्छ अन्न खा',
           description: 'ताजे शिजवलेले अन्न खा. रस्त्यावरील विक्रेत्यांकडून शिळे किंवा उघडे अन्न टाळा.',
+           details: [
+            {
+                title: 'मुख्य अन्न सुरक्षा पद्धती:',
+                content: [
+                    'हानिकारक जीवाणू मारण्यासाठी अन्न, विशेषतः मांस, कोंबडी आणि अंडी पूर्णपणे शिजवा.',
+                    'खाण्यापूर्वी किंवा शिजवण्यापूर्वी फळे आणि भाज्या नेहमी स्वच्छ पाण्याने धुवा.',
+                    'क्रॉस-दूषितता टाळण्यासाठी कच्चे आणि शिजवलेले अन्न वेगळे ठेवा.',
+                    'उरलेले अन्न खाण्यापूर्वी ते पूर्णपणे गरम होईपर्यंत पुन्हा गरम करा.'
+                ]
+            },
+            {
+                title: 'स्वच्छ स्वयंपाकघरासाठी टिप्स:',
+                content: [
+                    'अन्न तयार करण्यापूर्वी, करताना आणि नंतर आपले हात साबण आणि पाण्याने धुवा.',
+                    'तुमच्या स्वयंपाकघरातील पृष्ठभाग, भांडी आणि कटिंग बोर्ड स्वच्छ ठेवा.',
+                    'अन्न झाकून ठेवून तुमचे स्वयंपाकघर आणि अन्न कीटक, आणि इतर प्राण्यांपासून वाचवा.',
+                ]
+            },
+            {
+                title: 'पथारीच्या खाद्यपदार्थाबाबत खबरदारी:',
+                content: [
+                    'जर तुम्ही पथारीचे अन्न खात असाल, तर स्वच्छ दिसणार्‍या आणि तुमच्यासमोर ताजे अन्न शिजवणाऱ्या विक्रेत्यांची निवड करा.',
+                    'उघड्यावर ठेवलेले, न झाकलेले आणि माश्यांच्या संपर्कात आलेले अन्न टाळा.',
+                ]
+            }
+          ]
         },
         {
           title: 'वैयक्तिक स्वच्छता राखा',
           description: 'नियमितपणे साबणाने हात धुवा, विशेषतः जेवणापूर्वी आणि शौचालयाचा वापर केल्यानंतर.',
+          details: [
+            {
+                title: 'हात धुण्याचे सहा टप्पे:',
+                content: [
+                    'आपले हात स्वच्छ, वाहत्या पाण्याने ओले करा.',
+                    'साबण लावा आणि चांगले फेस करा, आपले हात आणि मनगटाच्या सर्व पृष्ठभागांवर लावा.',
+                    'किमान २० सेकंद घासून घ्या. हातांच्या मागील बाजू, बोटांच्यामध्ये आणि नखांच्या खाली स्वच्छ करण्याचे लक्षात ठेवा.',
+                    'आपले हात स्वच्छ, वाहत्या पाण्याखाली पूर्णपणे धुवा.',
+                    'आपले हात स्वच्छ कापडाने कोरडे करा किंवा हवेत कोरडे होऊ द्या.',
+                    'शौचालय वापरल्यानंतर, खोकल्यानंतर किंवा शिंकल्यानंतर, जेवणापूर्वी आणि आजारी व्यक्तीची काळजी घेण्यापूर्वी आणि नंतर हात धुणे महत्त्वाचे आहे.'
+                ]
+            },
+            {
+                title: 'इतर महत्त्वाच्या स्वच्छतेच्या सवयी:',
+                content: [
+                    'आपले शरीर स्वच्छ आणि संक्रमणांपासून मुक्त ठेवण्यासाठी दररोज आंघोळ करा.',
+                    'दात किडणे आणि हिरड्यांचे आजार टाळण्यासाठी दिवसातून दोनदा दात घासा.',
+                    'जंतूंचा प्रसार रोखण्यासाठी आपली नखे कापलेली आणि स्वच्छ ठेवा.',
+                    'नेहमी स्वच्छ कपडे घाला.'
+                ]
+            }
+          ]
         },
       ],
       healthyHabitsTitle: 'निरोगी जीवनशैलीसाठी सूचना',
@@ -692,14 +1175,74 @@ export const translations = {
         {
           title: 'संतुलित आहार',
           description: 'आवश्यक पोषक तत्वांचासाठी तुमच्या दैनंदिन जेवणात फळे, भाज्या, धान्य आणि प्रथिनांचे मिश्रण समाविष्ट करा.',
+           details: [
+            {
+              title: 'संतुलित आहार म्हणजे काय?',
+              content: [
+                'याचा अर्थ सर्व प्रमुख अन्न गटांमधून योग्य प्रमाणात विविध प्रकारचे पदार्थ खाणे.',
+                'कर्बोदके (ऊर्जा): पोळी, भात, बाजरी, ज्वारी.',
+                'प्रथिने (शरीरबांधणी): डाळी, कडधान्ये, चणे, अंडी, दूध आणि दही.',
+                'जीवनसत्त्वे आणि खनिजे (संरक्षण): सर्व हंगामी फळे आणि भाज्या, विशेषतः पालक आणि मेथीसारख्या पालेभाज्या.',
+                'चरबी (ऊर्जा साठा): तेल, तूप आणि सुकामेवा यांचा माफक प्रमाणात वापर करा.'
+              ]
+            },
+            {
+              title: 'संतुलित आहारासाठी व्यावहारिक टिप्स:',
+              content: [
+                'प्रत्येक मुख्य जेवणात किमान तीन वेगवेगळे अन्न गट समाविष्ट करण्याचा प्रयत्न करा.',
+                'हंगामी फळे आणि भाज्या खा कारण त्या ताज्या, स्वस्त आणि पौष्टिक असतात.',
+                'साखर, मीठ आणि प्रक्रिया केलेले/तळलेले पदार्थ यांचे सेवन कमी करा.',
+                'हायड्रेटेड राहण्यासाठी दिवसभर भरपूर स्वच्छ पाणी प्या.'
+              ]
+            }
+          ]
         },
         {
           title: 'नियमित व्यायाम',
           description: 'दररोज किमान ३० मिनिटे चालणे, योग किंवा सायकलिंग यासारख्या शारीरिक हालचाली करा.',
+          details: [
+            {
+              title: 'नियमित शारीरिक हालचालींचे फायदे:',
+              content: [
+                'स्नायू आणि हाडे मजबूत करते, दुखापतींचा धोका कमी करते.',
+                'हृदयाचे आरोग्य आणि रक्ताभिसरण सुधारते.',
+                'निरोगी वजन राखण्यास आणि रक्तातील साखर नियंत्रित करण्यास मदत करते.',
+                'तणाव कमी करते आणि मानसिक आरोग्य सुधारते.'
+              ]
+            },
+            {
+              title: 'तुम्ही करू शकता अशा सोप्या क्रिया:',
+              content: [
+                ' brisk चालणे: तुमच्या गावाभोवती ३० मिनिटांचे सोपे चालणे ही एक उत्तम सुरुवात आहे.',
+                'योग आणि स्ट्रेचिंग: सोपी आसने लवचिकता सुधारू शकतात आणि शरीरातील वेदना कमी करू शकतात.',
+                'शेती आणि घरगुती कामे: दररोजचे शारीरिक श्रम देखील व्यायामाचा एक चांगला प्रकार आहे.',
+                'सायकलिंग: तुमच्याकडे सायकल असल्यास, तिचा वापर कमी अंतराच्या प्रवासासाठी करा.'
+              ]
+            }
+          ]
         },
         {
           title: 'पुरेशी झोप',
           description: 'तुमचे शरीर आणि मन ताजेतवाने ठेवण्यासाठी दररोज रात्री ७-८ तास शांत झोप घ्या.',
+          details: [
+            {
+              title: 'झोप का महत्त्वाची आहे?',
+              content: [
+                'झोपेच्या वेळी, तुमचे शरीर स्वतःची दुरुस्ती करते आणि दुसऱ्या दिवसासाठी ऊर्जा तयार करते.',
+                'चांगली झोप एकाग्रता, स्मरणशक्ती आणि निर्णय घेण्याची क्षमता सुधारते.',
+                'झोपेच्या अभावामुळे तुमची रोगप्रतिकारशक्ती कमकुवत होऊ शकते, ज्यामुळे तुम्हाला आजार होण्याची अधिक शक्यता असते.',
+              ]
+            },
+            {
+              title: 'चांगल्या झोपेसाठी टिप्स:',
+              content: [
+                'एक दिनचर्या सेट करण्यासाठी दररोज एकाच वेळी झोपण्याचा आणि उठण्याचा प्रयत्न करा.',
+                'तुमची झोपण्याची जागा गडद, शांत आणि थंड असल्याची खात्री करा.',
+                'झोपण्यापूर्वी जड जेवण, कॅफिन (चहा/कॉफी) आणि मोबाइल फोन वापरणे टाळा.',
+                'हळू संगीत ऐकणे किंवा वाचणे यासारख्या आरामदायी क्रिया तुम्हाला झोपायला मदत करू शकतात.',
+              ]
+            }
+          ]
         },
       ],
       govGuidelinesTitle: "मुख्य सरकारी आणि डब्ल्यूएचओ आरोग्य मार्गदर्शक तत्त्वे",
@@ -708,14 +1251,76 @@ export const translations = {
         {
             title: 'संसर्गजन्य रोगांचे नियंत्रण',
             description: 'टीबी किंवा फ्लू सारख्या संसर्गजन्य रोग असलेल्या व्यक्तींना वेगळे करा. प्रादुर्भावाच्या काळात सार्वजनिक आरोग्य सल्ल्याचे पालन करा.',
+             details: [
+              {
+                title: 'संसर्गजन्य रोग समजून घेणे:',
+                content: [
+                  'हे आजार एका व्यक्तीकडून दुसऱ्या व्यक्तीकडे पसरतात, जसे की सामान्य सर्दी, फ्लू, क्षयरोग (टीबी) आणि COVID-19.',
+                  'ते हवेतून (खोकणे, शिंकणे), थेट संपर्कातून किंवा दूषित पृष्ठभागांवरून पसरू शकतात.',
+                ]
+              },
+              {
+                title: 'मुख्य प्रतिबंधात्मक उपाय:',
+                content: [
+                  'विलगीकरण: जर कोणी आजारी असेल, तर त्यांनी घरी राहावे आणि आजार पसरू नये म्हणून इतरांशी जवळचा संपर्क टाळावा.',
+                  'आपला खोकला/शिंक झाका: आपले तोंड आणि नाक झाकण्यासाठी रुमाल किंवा आपली कोपर वापरा.',
+                  'वायुवीजन: ताजी हवा फिरू देण्यासाठी खिडक्या आणि दारे उघडी ठेवा, ज्यामुळे घरातील जंतूंची एकाग्रता कमी होते.',
+                  'सामुदायिक जबाबदारी: रोगाच्या प्रादुर्भावाच्या वेळी (उदा. पावसाळ्यात किंवा फ्लूच्या हंगामात) आशा कार्यकर्त्यांनी किंवा स्थानिक आरोग्य अधिकाऱ्यांनी जारी केलेल्या सर्व मार्गदर्शक तत्त्वांचे पालन करा.'
+                ]
+              }
+          ]
         },
         {
             title: 'नियमित लसीकरण',
             description: 'राष्ट्रीय लसीकरण वेळापत्रकानुसार सर्व मुलांना आणि प्रौढांना लसीकरण मिळेल याची खात्री करा.',
+            details: [
+              {
+                title: 'लसीकरण जीवनरक्षक का आहे:',
+                content: [
+                  'लस मुलांना पोलिओ, गोवर, धनुर्वात आणि घटसर्प यांसारख्या गंभीर आणि जीवघेण्या आजारांपासून वाचवते.',
+                  'हे सर्वात प्रभावी आणि सुरक्षित सार्वजनिक आरोग्य हस्तक्षेपांपैकी एक आहे.',
+                  'मुलाच्या दीर्घकालीन आरोग्यासाठी लसीकरण वेळापत्रकाचे पालन करणे महत्त्वाचे आहे.',
+                ]
+              },
+              {
+                title: 'राष्ट्रीय लसीकरण वेळापत्रक:',
+                content: [
+                  'तुमच्या मुलासाठी संपूर्ण आणि अद्ययावत लसीकरण तक्ता मिळवण्यासाठी तुमच्या स्थानिक अंगणवाडी किंवा आशा कार्यकर्त्याशी संपर्क साधा.',
+                  'सरकारी आरोग्य केंद्रांवर लस विनामूल्य दिली जाते.',
+                  'तुम्ही लसीकरण कार्ड सुरक्षित ठेवा आणि प्रत्येक आरोग्य भेटीला ते सोबत आणा याची खात्री करा.'
+                ]
+              }
+          ]
         },
         {
             title: 'मातृ आणि बाल आरोग्य',
             description: 'गर्भवती महिलांनी नियमित तपासणी, संस्थात्मक प्रसूती आणि प्रसूतीनंतरची काळजी घ्यावी.',
+            details: [
+              {
+                title: 'गरोदरपणात काळजी (प्रसूतीपूर्व काळजी):',
+                content: [
+                  'जवळच्या आरोग्य केंद्रात तुमच्या गरोदरपणाची लवकर नोंदणी करा.',
+                  'तुमचे आरोग्य आणि बाळाच्या वाढीवर लक्ष ठेवण्यासाठी किमान चार प्रसूतीपूर्व तपासण्या पूर्ण करा.',
+                  'ॲनिमिया टाळण्यासाठी आरोग्य कार्यकर्त्याच्या सल्ल्यानुसार लोह आणि फॉलिक ॲसिडच्या गोळ्या घ्या.',
+                  'पौष्टिक आहार घ्या आणि पुरेशी विश्रांती घ्या.'
+                ]
+              },
+              {
+                title: 'सुरक्षित प्रसूती (संस्थात्मक प्रसूती):',
+                content: [
+                  'तुमच्या बाळाला नेहमी रुग्णालय किंवा प्राथमिक आरोग्य केंद्रात जन्म देण्याची योजना करा.',
+                  'हे सुनिश्चित करते की कोणताही गुंतागुंत हाताळण्यासाठी एक कुशल आरोग्य प्रदाता उपस्थित आहे, ज्यामुळे आई आणि बाळ दोघांचेही संरक्षण होते.',
+                  'जननी सुरक्षा योजना (JSY) सारख्या सरकारी योजना संस्थात्मक प्रसूतीसाठी आर्थिक सहाय्य प्रदान करतात.'
+                ]
+              },
+              {
+                title: 'प्रसूतीनंतरची काळजी (प्रसूतीनंतरची काळजी):',
+                content: [
+                  'आई आणि नवजात दोघांचीही प्रसूतीनंतर नियमित आरोग्य तपासणी झाली पाहिजे.',
+                  'जन्माच्या पहिल्या तासात स्तनपान सुरू करा. पहिल्या ६ महिन्यांसाठी केवळ स्तनपान बाळाच्या आरोग्यासाठी महत्त्वाचे आहे.',
+                ]
+              }
+          ]
         },
       ],
       whoLink: 'डब्ल्यूएचओ इंडिया वेबसाइटला भेट द्या',
@@ -752,6 +1357,14 @@ export const translations = {
         {
             question: 'माझी वैयक्तिक माहिती सुरक्षित आहे का?',
             answer: 'आम्ही तुमच्या गोपनीयतेला प्राधान्य देतो. चॅटबॉटसोबतचे तुमचे संभाषण निनावी आहे. टेली-सल्लामसलतसाठी, आम्ही तुम्हाला डॉक्टरशी जोडण्यासाठी फक्त आवश्यक माहिती गोळा करतो आणि हा डेटा सुरक्षितपणे हाताळला जातो.'
+        },
+        {
+          question: 'सेहत साथी कोणत्या प्रकारची आरोग्य माहिती पुरवते?',
+          answer: 'आम्ही सामान्य आरोग्य स्थिती, प्रथमोपचार, प्रतिबंधात्मक काळजी, निरोगी जीवनशैली टिप्स आणि सरकारी आरोग्य योजनांबद्दल तपशीलवार माहिती प्रदान करतो. हे व्यावसायिक वैद्यकीय निदानाचा पर्याय नाही.'
+        },
+        {
+          question: 'मी जवळचे रुग्णालय कसे शोधू शकेन?',
+          answer: 'तुम्ही आमच्या अॅपमधील "हॉस्पिटल लोकेटर" वैशिष्ट्य वापरू शकता किंवा चॅटबॉटला "जवळची रुग्णालये शोधा" असे विचारू शकता. ते तुमच्या क्षेत्रातील सुविधांची यादी देईल.'
         }
       ]
     },
