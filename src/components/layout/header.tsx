@@ -7,12 +7,13 @@ import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { Menu, X, BotMessageSquare, Globe, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useChatLanguage, setChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 export function Header() {
   const pathname = usePathname();
@@ -130,6 +131,11 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="pr-0">
+              <SheetHeader>
+                  <SheetTitle>
+                      <VisuallyHidden>Navigation Menu</VisuallyHidden>
+                  </SheetTitle>
+              </SheetHeader>
               <Link
                 href="/"
                 className="flex items-center mb-8"
