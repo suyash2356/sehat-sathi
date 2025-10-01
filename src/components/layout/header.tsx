@@ -1,20 +1,42 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import { Menu, X, BotMessageSquare, Globe } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { Menu, X, BotMessageSquare, Globe, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useChatLanguage, setChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
+import { useToast } from '@/hooks/use-toast';
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const { language, setLanguage } = useChatLanguage();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    toast({
+      title: 'Signed Out',
+      description: 'You have been successfully signed out.',
+    });
+    router.push('/');
+  };
 
   const handleLanguageChange = (lang: 'en' | 'hi' | 'mr') => {
     setChatLanguage(lang);
@@ -33,7 +55,7 @@ export function Header() {
   
   const handleMapClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (pathname !== '/services') {
-      // Allow default navigation if not on services page
+      router.push('/services#hospital-locator');
     } else {
       e.preventDefault();
       const mapElement = document.getElementById('hospital-locator');
@@ -98,10 +120,21 @@ export function Header() {
           ))}
            <NavLink href="/services#hospital-locator" label={t.nav.map} onClick={handleMapClick} />
         </nav>
-        <div className="flex-1 hidden md:flex justify-end">
+        <div className="flex-1 flex justify-end items-center gap-2">
             <LanguageSelector />
+             {user ? (
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
+                <LogOut className="h-5 w-5" />
+              </Button>
+            ) : (
+              pathname !== '/login' && (
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login">Login</Link>
+                </Button>
+              )
+            )}
         </div>
-        <div className="flex flex-1 items-center justify-end md:hidden">
+        <div className="flex items-center md:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button

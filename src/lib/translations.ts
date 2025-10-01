@@ -36,8 +36,9 @@ export const translations = {
     },
     home: {
       heroTitle: 'Your Health Assistant, Anytime, Anywhere',
-      heroSubtitle: 'Providing rural India with instant, reliable healthcare guidance.',
-      startChatting: 'Start Chatting',
+      heroSubtitle: 'Providing rural India with instant, reliable healthcare guidance and access to government initiatives.',
+      startChatting: 'Use as Guest',
+      signIn: 'Sign In with Phone',
       features: [
         {
           title: 'Basic First Aid Guidance',
@@ -198,8 +199,9 @@ export const translations = {
     },
     home: {
       heroTitle: 'आपका स्वास्थ्य सहायक, कभी भी, कहीं भी',
-      heroSubtitle: 'ग्रामीण भारत को तत्काल, विश्वसनीय स्वास्थ्य मार्गदर्शन प्रदान करना।',
-      startChatting: 'चैटिंग शुरू करें',
+      heroSubtitle: 'ग्रामीण भारत को तत्काल, विश्वसनीय स्वास्थ्य मार्गदर्शन और सरकारी पहलों तक पहुंच प्रदान करना।',
+      startChatting: 'अतिथि के रूप में उपयोग करें',
+      signIn: 'फोन से साइन इन करें',
       features: [
         {
           title: 'बुनियादी प्राथमिक चिकित्सा मार्गदर्शन',
@@ -265,7 +267,7 @@ export const translations = {
       ],
       aiButton: 'हमारे चैटबॉट से पूछें',
       bookingTitle: 'टेली-परामर्श बुक करें',
-      bookingDescription: 'अपने घर के आराम से एक प्रमाणित डॉक्टर से जुड़ें। अपॉइंटमेंट का अनुरोध करने के लिए नीचे दिया गया फॉर्म भरें।',
+      bookingDescription: 'अपने घर के आराम से एक प्रमाणित डॉक्टर से जुड़ें। अपॉइंटMENT का अनुरोध करने के लिए नीचे दिया गया फॉर्म भरें।',
       formNameLabel: 'पूरा नाम',
       formNamePlaceholder: 'उदा. रमेश कुमार',
       formPhoneLabel: 'फोन नंबर',
@@ -360,8 +362,9 @@ export const translations = {
     },
     home: {
       heroTitle: 'तुमचा आरोग्य सहाय्यक, कधीही, कुठेही',
-      heroSubtitle: 'ग्रामीण भारताला त्वरित, विश्वसनीय आरोग्य मार्गदर्शन प्रदान करणे।',
-      startChatting: 'चॅटिंग सुरू करा',
+      heroSubtitle: 'ग्रामीण भारताला त्वरित, विश्वसनीय आरोग्य मार्गदर्शन आणि सरकारी उपक्रमांमध्ये प्रवेश प्रदान करणे।',
+      startChatting: 'अतिथी म्हणून वापरा',
+      signIn: 'फोनने साइन इन करा',
       features: [
         {
           title: 'मूलभूत प्रथमोपचार मार्गदर्शन',
@@ -405,7 +408,7 @@ export const translations = {
       formEmailPlaceholder: 'your.email@example.com',
       formMessageLabel: 'तुमचा संदेश',
       formMessagePlaceholder: 'आम्ही तुमची कशी मदत करू शकतो?',
-      sendButton: 'संदेश পাঠवा',
+      sendButton: 'संदेश पाठवा',
       contactInfoTitle: 'संपर्क माहिती',
       contactInfoDescription: 'थेट समर्थनासाठी, तुम्ही आम्हाला ईमेलद्वारे संपर्क साधू शकता। कृपया लक्षात घ्या, वैद्यकीय आणीबाणीसाठी, थेट रुग्णालयाशी संपर्क साधा।',
       supportEmail: 'समर्थन ईमेल',
