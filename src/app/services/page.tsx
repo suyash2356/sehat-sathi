@@ -29,6 +29,7 @@ const filterSchema = z.object({
   age: z.coerce.number().min(0, { message: 'Age must be a positive number.' }).max(120),
   gender: z.enum(['male', 'female', 'other']),
   state: z.string().min(1, { message: 'Please select your state.' }),
+  district: z.string().min(1, { message: 'Please select your district.' }),
 });
 
 type FilterValues = z.infer<typeof filterSchema>;
@@ -53,6 +54,7 @@ export default function ServicesPage() {
       age: 18,
       gender: 'female',
       state: 'Maharashtra',
+      district: 'Pune',
     },
   });
 
@@ -170,6 +172,28 @@ export default function ServicesPage() {
                               <SelectItem value="Maharashtra">Maharashtra</SelectItem>
                               <SelectItem value="Delhi">Delhi</SelectItem>
                               <SelectItem value="Karnataka">Karnataka</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="district"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t.myServicesFormDistrict}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select your district" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="Pune">Pune</SelectItem>
+                              <SelectItem value="Mumbai">Mumbai</SelectItem>
+                              <SelectItem value="Nagpur">Nagpur</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
