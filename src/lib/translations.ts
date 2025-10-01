@@ -29,7 +29,8 @@ export const translations = {
       about: 'About',
       contact: 'Contact',
       map: 'Map',
-      profile: 'My Profile'
+      profile: 'My Profile',
+      insurance: 'Insurance'
     },
     footer: {
       disclaimer: 'Disclaimer: This chatbot provides general health guidance. For emergencies, please visit a certified doctor or hospital.',
@@ -262,6 +263,13 @@ export const translations = {
       healthDetailsDescription: 'Your personal health records and information.',
       documentsDescription: 'Upload and manage important medical documents.',
       familyDescription: 'Add and manage health details for your family members.',
+    },
+    insurance: {
+      title: 'Insurance & Jivan Bima',
+      subtitle: 'Manage and track your life insurance policies here.',
+      description: 'This section will allow you to view your existing insurance policies, track premium due dates, and explore new government-backed insurance schemes (Bima). Functionality to add, update, and manage your policies is coming soon.',
+      addPolicy: 'Add New Policy',
+      viewPolicies: 'View My Policies'
     }
   },
   hi: {
@@ -294,7 +302,8 @@ export const translations = {
       about: 'हमारे बारे में',
       contact: 'संपर्क',
       map: 'नक्शा',
-      profile: 'मेरी प्रोफाइल'
+      profile: 'मेरी प्रोफाइल',
+      insurance: 'बीमा'
     },
     footer: {
       disclaimer: 'अस्वीकरण: यह चैटबॉट सामान्य स्वास्थ्य मार्गदर्शन प्रदान करता है। आपात स्थिति के लिए, कृपया किसी प्रमाणित डॉक्टर या अस्पताल में जाएँ।',
@@ -527,6 +536,13 @@ export const translations = {
       healthDetailsDescription: 'आपके व्यक्तिगत स्वास्थ्य रिकॉर्ड और जानकारी।',
       documentsDescription: 'महत्वपूर्ण चिकित्सा दस्तावेज़ अपलोड और प्रबंधित करें।',
       familyDescription: 'अपने परिवार के सदस्यों के लिए स्वास्थ्य विवरण जोड़ें और प्रबंधित करें।',
+    },
+    insurance: {
+      title: 'बीमा और जीवन बीमा',
+      subtitle: 'अपनी जीवन बीमा पॉलिसियों को यहां प्रबंधित और ट्रैक करें।',
+      description: 'यह अनुभाग आपको अपनी मौजूदा बीमा पॉलिसियों को देखने, प्रीमियम देय तिथियों को ट्रैक करने और नई सरकारी समर्थित बीमा योजनाओं (बीमा) का पता लगाने की अनुमति देगा। आपकी पॉलिसियों को जोड़ने, अपडेट करने और प्रबंधित करने की कार्यक्षमता जल्द ही आ रही है।',
+      addPolicy: 'नई पॉलिसी जोड़ें',
+      viewPolicies: 'मेरी पॉलिसियां ​​देखें'
     }
   },
   mr: {
@@ -559,7 +575,8 @@ export const translations = {
       about: 'बद्दल',
       contact: 'संपर्क',
       map: 'नकाशा',
-      profile: 'माझी प्रोफाइल'
+      profile: 'माझी प्रोफाइल',
+      insurance: 'विमा'
     },
     footer: {
       disclaimer: 'अस्वीकरण: हा चॅटबॉट सामान्य आरोग्य मार्गदर्शन प्रदान करतो। आपत्कालीन परिस्थितीसाठी, कृपया प्रमाणित डॉक्टर किंवा रुग्णालयाला भेट द्या।',
@@ -792,6 +809,13 @@ export const translations = {
       healthDetailsDescription: 'तुमचे वैयक्तिक आरोग्य रेकॉर्ड आणि माहिती.',
       documentsDescription: 'महत्त्वाची वैद्यकीय कागदपत्रे अपलोड आणि व्यवस्थापित करा.',
       familyDescription: 'तुमच्या कुटुंबातील सदस्यांसाठी आरोग्य तपशील जोडा आणि व्यवस्थापित करा.',
+    },
+    insurance: {
+        title: 'विमा आणि जीवन विमा',
+        subtitle: 'तुमच्या जीवन विमा पॉलिसी येथे व्यवस्थापित करा आणि ट्रॅक करा.',
+        description: 'हा विभाग तुम्हाला तुमच्या विद्यमान विमा पॉलिसी पाहण्याची, प्रीमियम देय तारखांचा मागोवा घेण्याची आणि नवीन सरकारी-समर्थित विमा योजना (विमा) एक्सप्लोर करण्याची परवानगी देईल. तुमच्या पॉलिसी जोडण्यासाठी, अद्यतनित करण्यासाठी आणि व्यवस्थापित करण्यासाठी कार्यक्षमता लवकरच येत आहे.',
+        addPolicy: 'नवीन पॉलिसी जोडा',
+        viewPolicies: 'माझ्या पॉलिसी पहा'
     }
   },
 };

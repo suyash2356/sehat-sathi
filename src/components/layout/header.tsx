@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon } from 'lucide-react';
+import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon, ShieldPlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -57,6 +57,7 @@ export function Header() {
   ];
 
   const profileNavItem = { href: '/profile', label: t.nav.profile, icon: <UserIcon className="h-5 w-5" /> };
+  const insuranceNavItem = { href: '/insurance', label: t.nav.insurance, icon: <ShieldPlus className="h-5 w-5" /> };
   
   const NavLink = ({ href, label, className, onClick, icon }: { href: string; label: string, className?: string, onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void, icon?: React.ReactNode }) => (
     <Link
@@ -85,28 +86,6 @@ export function Header() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-          {translations.en.menu.english}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleLanguageChange('hi')}>
-          {translations.hi.menu.hindi}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleLanguageChange('mr')}>
-          {translations.mr.menu.marathi}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-  
-  const SheetLanguageSelector = () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="w-full text-left text-lg font-medium text-foreground/80 flex items-center gap-2">
-          <Globe className="h-5 w-5" /> 
-          <span>{t.menu[language]}</span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
         <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
           {translations.en.menu.english}
         </DropdownMenuItem>
@@ -152,17 +131,20 @@ export function Header() {
                 {navItems.map((item) => (
                   <NavLink key={item.href} {...item} className="text-lg" />
                 ))}
-                <div className="text-lg font-medium text-foreground/80 pl-0">
-                  <SheetLanguageSelector />
-                </div>
               </div>
 
-              {user && (
-                <div className="mt-auto border-t pt-4">
+              {(user) && (
+                <div className="mt-auto border-t pt-4 space-y-6">
                    <NavLink 
                     href={profileNavItem.href} 
                     label={profileNavItem.label} 
                     icon={profileNavItem.icon}
+                    className="text-lg"
+                  />
+                   <NavLink 
+                    href={insuranceNavItem.href} 
+                    label={insuranceNavItem.label} 
+                    icon={insuranceNavItem.icon}
                     className="text-lg"
                   />
                 </div>
