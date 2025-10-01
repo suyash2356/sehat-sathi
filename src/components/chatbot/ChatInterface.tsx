@@ -14,6 +14,7 @@ import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { translations } from '@/lib/translations';
 import { useChatLanguage, setChatLanguage as setGlobalLanguage } from '@/hooks/use-chat-language';
+import { useToast } from '@/hooks/use-toast';
 
 type Message = {
   id: number;
@@ -81,6 +82,7 @@ export function ChatInterface() {
   const [isRecording, setIsRecording] = useState(false);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
+  const { toast } = useToast();
 
   const t = translations[language];
 
@@ -167,7 +169,11 @@ export function ChatInterface() {
     } else {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        alert("Your browser does not support Speech Recognition. Please try Chrome or Firefox.");
+        toast({
+            title: "Speech Recognition Not Supported",
+            description: "Your browser does not support Speech Recognition. Please try Chrome or Firefox.",
+            variant: "destructive",
+        });
         return;
       }
       
@@ -189,6 +195,21 @@ export function ChatInterface() {
       
       recognition.onerror = (event) => {
         console.error('Speech recognition error', event.error);
+        let title = "Speech Recognition Error";
+        let description = "An unknown error occurred.";
+
+        if (event.error === 'not-allowed') {
+            title = "Microphone Access Denied";
+            description = "To use voice input, please allow microphone access in your browser settings and refresh the page.";
+        } else if (event.error === 'no-speech') {
+            title = "No Speech Detected";
+            description = "Please try speaking again.";
+        } else if (event.error === 'network') {
+            title = "Network Error";
+            description = "A network error occurred with the speech recognition service. Please check your connection.";
+        }
+        
+        toast({ title, description, variant: 'destructive' });
       };
 
       recognition.onend = () => {
