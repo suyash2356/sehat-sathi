@@ -28,6 +28,7 @@ export const translations = {
       services: 'Services',
       about: 'About',
       contact: 'Contact',
+      map: 'Map'
     },
     footer: {
       disclaimer: 'Disclaimer: This chatbot provides general health guidance. For emergencies, please visit a certified doctor or hospital.',
@@ -109,6 +110,8 @@ export const translations = {
       formPhonePlaceholder: '10-digit mobile number',
       formIssueLabel: 'Health Issue',
       formIssuePlaceholder: 'Briefly describe your health concern...',
+      formHospitalLabel: 'Selected Hospital (Optional)',
+      formHospitalPlaceholder: 'Hospital name will appear here',
       bookingButton: 'Request Booking',
       bookingToastTitle: 'Booking Confirmed!',
       bookingToastDescription: "We've received your request. You'll get an SMS shortly.",
@@ -120,27 +123,42 @@ export const translations = {
           address: 'Near Pune Railway Station, Pune, Maharashtra',
           lat: 18.5204,
           lng: 73.8567,
+          contact: '020-26123456',
+          specialties: 'General Medicine, Surgery, Pediatrics',
+          timing: '24/7 Emergency, OPD: 9am - 5pm'
         },
         {
           name: 'Rural Hospital, Manchar',
           address: 'Manchar, Ambegaon Taluka, Pune District, Maharashtra',
           lat: 19.0066,
           lng: 73.9338,
+          contact: '02133-223344',
+          specialties: 'General Medicine, Maternity',
+          timing: '24/7 Emergency, OPD: 9am - 1pm'
         },
         {
           name: 'Primary Health Centre, Khed',
           address: 'Khed, Pune District, Maharashtra',
           lat: 18.8473,
           lng: 73.8760,
+          contact: '02135-222233',
+          specialties: 'Primary Care, Vaccinations',
+          timing: 'OPD: 9am - 5pm'
         },
         {
             name: 'Sub District Hospital, Baramati',
             address: 'Baramati, Pune District, Maharashtra',
             lat: 18.1581,
             lng: 74.5746,
+            contact: '02112-224567',
+            specialties: 'Orthopedics, General Medicine',
+            timing: '24/7 Emergency, OPD: 10am - 4pm'
         }
       ],
-      mapButton: 'View on Map',
+      mapButton: 'Book Appointment',
+      mapSpecialties: 'Specialties',
+      mapTimings: 'Timings',
+      mapContact: 'Contact',
     }
   },
   hi: {
@@ -172,6 +190,7 @@ export const translations = {
       services: 'सेवाएं',
       about: 'हमारे बारे में',
       contact: 'संपर्क',
+      map: 'नक्शा'
     },
     footer: {
       disclaimer: 'अस्वीकरण: यह चैटबॉट सामान्य स्वास्थ्य मार्गदर्शन प्रदान करता है। आपात स्थिति के लिए, कृपया किसी प्रमाणित डॉक्टर या अस्पताल में जाएँ।',
@@ -253,6 +272,8 @@ export const translations = {
       formPhonePlaceholder: '10-अंकीय मोबाइल नंबर',
       formIssueLabel: 'स्वास्थ्य समस्या',
       formIssuePlaceholder: 'संक्षेप में अपनी स्वास्थ्य चिंता का वर्णन करें...',
+      formHospitalLabel: 'चयनित अस्पताल (वैकल्पिक)',
+      formHospitalPlaceholder: 'अस्पताल का नाम यहाँ दिखाई देगा',
       bookingButton: 'बुकिंग का अनुरोध करें',
       bookingToastTitle: 'बुकिंग की पुष्टि हुई!',
       bookingToastDescription: 'हमें आपका अनुरोध मिल गया है। आपको शीघ्र ही एक एसएमएस मिलेगा।',
@@ -264,27 +285,42 @@ export const translations = {
           address: 'पुणे रेलवे स्टेशन के पास, पुणे, महाराष्ट्र',
           lat: 18.5204,
           lng: 73.8567,
+          contact: '020-26123456',
+          specialties: 'सामान्य चिकित्सा, सर्जरी, बाल रोग',
+          timing: '24/7 आपातकाल, ओपीडी: सुबह 9 बजे - शाम 5 बजे'
         },
         {
           name: 'ग्रामीण अस्पताल, मंचर',
           address: 'मंचर, आंबेगांव तालुका, पुणे जिला, महाराष्ट्र',
           lat: 19.0066,
           lng: 73.9338,
+          contact: '02133-223344',
+          specialties: 'सामान्य चिकित्सा, प्रसूति',
+          timing: '24/7 आपातकाल, ओपीडी: सुबह 9 बजे - दोपहर 1 बजे'
         },
         {
           name: 'प्राथमिक स्वास्थ्य केंद्र, खेड़',
           address: 'खेड़, पुणे जिला, महाराष्ट्र',
           lat: 18.8473,
           lng: 73.8760,
+          contact: '02135-222233',
+          specialties: 'प्राथमिक देखभाल, टीकाकरण',
+          timing: 'ओपीडी: सुबह 9 बजे - शाम 5 बजे'
         },
         {
             name: 'उप जिला अस्पताल, बारामती',
             address: 'बारामती, पुणे जिला, महाराष्ट्र',
             lat: 18.1581,
             lng: 74.5746,
+            contact: '02112-224567',
+            specialties: 'हड्डी रोग, सामान्य चिकित्सा',
+            timing: '24/7 आपातकाल, ओपीडी: सुबह 10 बजे - शाम 4 बजे'
         }
       ],
-      mapButton: 'नक्शे पर देखें',
+      mapButton: 'अपॉइंटमेंट बुक करें',
+      mapSpecialties: 'विशेषज्ञता',
+      mapTimings: 'समय',
+      mapContact: 'संपर्क',
     }
   },
   mr: {
@@ -316,6 +352,7 @@ export const translations = {
       services: 'सेवा',
       about: 'बद्दल',
       contact: 'संपर्क',
+      map: 'नकाशा'
     },
     footer: {
       disclaimer: 'अस्वीकरण: हा चॅटबॉट सामान्य आरोग्य मार्गदर्शन प्रदान करतो। आपत्कालीन परिस्थितीसाठी, कृपया प्रमाणित डॉक्टर किंवा रुग्णालयाला भेट द्या।',
@@ -368,7 +405,7 @@ export const translations = {
       formEmailPlaceholder: 'your.email@example.com',
       formMessageLabel: 'तुमचा संदेश',
       formMessagePlaceholder: 'आम्ही तुमची कशी मदत करू शकतो?',
-      sendButton: 'संदेश पाठवा',
+      sendButton: 'संदेश পাঠवा',
       contactInfoTitle: 'संपर्क माहिती',
       contactInfoDescription: 'थेट समर्थनासाठी, तुम्ही आम्हाला ईमेलद्वारे संपर्क साधू शकता। कृपया लक्षात घ्या, वैद्यकीय आणीबाणीसाठी, थेट रुग्णालयाशी संपर्क साधा।',
       supportEmail: 'समर्थन ईमेल',
@@ -381,7 +418,7 @@ export const translations = {
       title: 'आमच्या सेवा',
       subtitle: 'तुमच्यासाठी डिझाइन केलेली प्रवेशयोग्य आरोग्यसेवा समाधाने।',
       aiTitle: 'एआय-चालित आरोग्य मार्गदर्शन',
-      aiDescription: 'आरोग्यविषयक प्रश्न आहे का? आमच्या एआय सहाय्यकाकडून त्वरित, विश्वसनीय सल्ला मिळवा। हे तुमच्या खिशात आरोग्य तज्ञ असल्यासारखे आहे, २४/७ उपलब्ध।',
+aiDescription: 'आरोग्यविषयक प्रश्न आहे का? आमच्या एआय सहाय्यकाकडून त्वरित, विश्वसनीय सल्ला मिळवा। हे तुमच्या खिशात आरोग्य तज्ञ असल्यासारखे आहे, २४/७ उपलब्ध।',
       aiHelpTitle: 'आमचा चॅटबॉट मदत करू शकतो:',
       aiHelpItems: [
         'लक्षणे समजून घेणे',
@@ -397,6 +434,8 @@ export const translations = {
       formPhonePlaceholder: '१०-अंकी मोबाइल नंबर',
       formIssueLabel: 'आरोग्य समस्या',
       formIssuePlaceholder: 'तुमच्या आरोग्य चिंतेचे थोडक्यात वर्णन करा...',
+      formHospitalLabel: 'निवडलेले रुग्णालय (ऐच्छिक)',
+      formHospitalPlaceholder: 'रुग्णालयाचे नाव येथे दिसेल',
       bookingButton: 'बुकिंगची विनंती करा',
       bookingToastTitle: 'बुकिंगची पुष्टी झाली!',
       bookingToastDescription: 'आम्हाला तुमची विनंती मिळाली आहे। तुम्हाला लवकरच एक एसएमएस मिळेल।',
@@ -408,27 +447,42 @@ export const translations = {
           address: 'पुणे रेल्वे स्टेशन जवळ, पुणे, महाराष्ट्र',
           lat: 18.5204,
           lng: 73.8567,
+          contact: '020-26123456',
+          specialties: 'सामान्य औषध, शस्त्रक्रिया, बालरोग',
+          timing: '24/7 आपत्कालीन, ओपीडी: सकाळी 9 ते संध्याकाळी 5'
         },
         {
           name: 'ग्रामीण रुग्णालय, मंचर',
           address: 'मंचर, आंबेगाव तालुका, पुणे जिल्हा, महाराष्ट्र',
           lat: 19.0066,
           lng: 73.9338,
+          contact: '02133-223344',
+          specialties: 'सामान्य औषध, प्रसूती',
+          timing: '24/7 आपत्कालीन, ओपीडी: सकाळी 9 ते दुपारी 1'
         },
         {
           name: 'प्राथमिक आरोग्य केंद्र, खेड',
           address: 'खेड, पुणे जिल्हा, महाराष्ट्र',
           lat: 18.8473,
           lng: 73.8760,
+          contact: '02135-222233',
+          specialties: 'प्राथमिक काळजी, लसीकरण',
+          timing: 'ओपीडी: सकाळी 9 ते संध्याकाळी 5'
         },
         {
             name: 'उप जिल्हा रुग्णालय, बारामती',
             address: 'बारामती, पुणे जिल्हा, महाराष्ट्र',
             lat: 18.1581,
             lng: 74.5746,
+            contact: '02112-224567',
+            specialties: 'ऑर्थोपेडिक्स, सामान्य औषध',
+            timing: '24/7 आपत्कालीन, ओपीडी: सकाळी 10 ते दुपारी 4'
         }
       ],
-      mapButton: 'नकाशावर पहा',
+      mapButton: 'अपॉइंटमेंट बुक करा',
+      mapSpecialties: 'विशेषता',
+      mapTimings: 'वेळा',
+      mapContact: 'संपर्क',
     }
   },
 };

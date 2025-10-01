@@ -30,16 +30,32 @@ export function Header() {
     { href: '/about', label: t.nav.about },
     { href: '/contact', label: t.nav.contact },
   ];
+  
+  const handleMapClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    if (pathname !== '/services') {
+      // Allow default navigation if not on services page
+    } else {
+      e.preventDefault();
+      const mapElement = document.getElementById('hospital-locator');
+      if (mapElement) {
+        mapElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    setIsOpen(false);
+  };
 
-  const NavLink = ({ href, label, className }: { href: string; label: string, className?: string }) => (
+  const NavLink = ({ href, label, className, onClick }: { href: string; label: string, className?: string, onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void }) => (
     <Link
       href={href}
       className={cn(
         'font-medium transition-colors hover:text-primary',
-        pathname === href ? 'text-primary' : 'text-foreground/80',
+        pathname === href && !onClick ? 'text-primary' : 'text-foreground/80',
         className
       )}
-      onClick={() => setIsOpen(false)}
+      onClick={(e) => {
+        if(onClick) onClick(e);
+        setIsOpen(false)
+      }}
     >
       {label}
     </Link>
@@ -80,6 +96,7 @@ export function Header() {
           {navItems.map((item) => (
             <NavLink key={item.href} {...item} />
           ))}
+           <NavLink href="/services#hospital-locator" label={t.nav.map} onClick={handleMapClick} />
         </nav>
         <div className="flex-1 hidden md:flex justify-end">
             <LanguageSelector />
@@ -108,6 +125,7 @@ export function Header() {
                 {navItems.map((item) => (
                   <NavLink key={item.href} {...item} className="text-lg" />
                 ))}
+                 <NavLink href="/services#hospital-locator" label={t.nav.map} className="text-lg" onClick={handleMapClick} />
                 <div className="text-lg font-medium text-foreground/80 pl-0">
                   <LanguageSelector inSheet={true} />
                 </div>

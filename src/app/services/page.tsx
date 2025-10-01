@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,30 +13,36 @@ import { Stethoscope, Video, Hospital } from 'lucide-react';
 import Link from 'next/link';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
-import { GoogleMapEmbed } from '@/components/services/GoogleMapEmbed';
+import { GoogleMapEmbed, type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
+import React from 'react';
 
 
 const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
   issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
+  hospital: z.string().optional(),
 });
+
+type BookingFormValues = z.infer<typeof bookingSchema>;
 
 export default function ServicesPage() {
   const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].services;
+  const bookingFormRef = React.useRef<HTMLFormElement>(null);
 
-  const form = useForm<z.infer<typeof bookingSchema>>({
+  const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       name: '',
       phone: '',
       issue: '',
+      hospital: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof bookingSchema>) {
+  function onSubmit(values: BookingFormValues) {
     console.log(values);
     form.reset();
     toast({
@@ -44,6 +50,11 @@ export default function ServicesPage() {
       description: t.bookingToastDescription,
       variant: 'default',
     });
+  }
+  
+  const handleBookAppointment = (hospital: HospitalType) => {
+    form.setValue('hospital', hospital.name);
+    bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -78,7 +89,7 @@ export default function ServicesPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg overflow-hidden">
+        <Card className="shadow-lg overflow-hidden" ref={bookingFormRef}>
           <CardHeader>
             <div className="flex items-center gap-4">
               <Video className="h-8 w-8 text-primary" />
@@ -117,6 +128,19 @@ export default function ServicesPage() {
                     </FormItem>
                   )}
                 />
+                 <FormField
+                  control={form.control}
+                  name="hospital"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t.formHospitalLabel}</FormLabel>
+                      <FormControl>
+                        <Input placeholder={t.formHospitalPlaceholder} {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="issue"
@@ -136,7 +160,7 @@ export default function ServicesPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-lg overflow-hidden">
+        <Card className="shadow-lg overflow-hidden" id="hospital-locator">
           <CardHeader>
             <div className="flex items-center gap-4">
               <Hospital className="h-8 w-8 text-primary" />
@@ -147,7 +171,18 @@ export default function ServicesPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <GoogleMapEmbed hospitals={t.hospitals} />
+            <GoogleMapEmbed 
+                hospitals={t.hospitals} 
+                onBookAppointment={handleBookAppointment}
+                translations={
+                    {
+                        specialties: t.mapSpecialties,
+                        timings: t.mapTimings,
+                        contact: t.mapContact,
+                        bookAppointment: t.mapButton
+                    }
+                }
+            />
           </CardContent>
         </Card>
 

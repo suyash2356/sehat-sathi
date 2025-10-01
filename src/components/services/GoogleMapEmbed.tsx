@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { Button } from '@/components/ui/button';
+import { Phone, Clock, Stethoscope } from 'lucide-react';
 
 const containerStyle = {
   width: '100%',
@@ -14,18 +16,28 @@ const center = {
   lng: 73.8567
 };
 
-type Hospital = {
+export type Hospital = {
   name: string;
   address: string;
   lat: number;
   lng: number;
+  contact: string;
+  specialties: string;
+  timing: string;
 };
 
 interface GoogleMapEmbedProps {
   hospitals: Hospital[];
+  onBookAppointment: (hospital: Hospital) => void;
+  translations: {
+    specialties: string;
+    timings: string;
+    contact: string;
+    bookAppointment: string;
+  }
 }
 
-export function GoogleMapEmbed({ hospitals }: GoogleMapEmbedProps) {
+export function GoogleMapEmbed({ hospitals, onBookAppointment, translations }: GoogleMapEmbedProps) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || ''
@@ -55,9 +67,15 @@ export function GoogleMapEmbed({ hospitals }: GoogleMapEmbedProps) {
           position={{ lat: selectedHospital.lat, lng: selectedHospital.lng }}
           onCloseClick={() => setSelectedHospital(null)}
         >
-          <div className="p-1">
+          <div className="p-1 max-w-xs space-y-2">
             <h4 className="font-bold text-base">{selectedHospital.name}</h4>
             <p className="text-sm text-muted-foreground">{selectedHospital.address}</p>
+            <div className="text-sm space-y-1">
+                <p className="flex items-center gap-2"><Stethoscope className="h-4 w-4 text-primary" /> <strong>{translations.specialties}:</strong> {selectedHospital.specialties}</p>
+                <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> <strong>{translations.timings}:</strong> {selectedHospital.timing}</p>
+                <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /> <strong>{translations.contact}:</strong> {selectedHospital.contact}</p>
+            </div>
+            <Button size="sm" className="w-full mt-2" onClick={() => onBookAppointment(selectedHospital)}>{translations.bookAppointment}</Button>
           </div>
         </InfoWindow>
       )}
