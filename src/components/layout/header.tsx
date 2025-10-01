@@ -71,17 +71,37 @@ export function Header() {
     </Link>
   );
   
-  const LanguageSelector = ({ inSheet = false }) => (
+  const LanguageSelector = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={cn("gap-2", inSheet ? 'justify-start w-full px-0' : '')}>
+        <Button variant="ghost" size="icon" className="gap-2">
           <Globe className="h-5 w-5" /> 
-          {!inSheet && (
-            <span>{t.menu[language]}</span>
-          )}
+          <span className="sr-only">Select Language</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={inSheet ? "start" : "end"}>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
+          {translations.en.menu.english}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleLanguageChange('hi')}>
+          {translations.hi.menu.hindi}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleLanguageChange('mr')}>
+          {translations.mr.menu.marathi}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+  
+  const SheetLanguageSelector = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="w-full text-left text-lg font-medium text-foreground/80 flex items-center gap-2">
+          <Globe className="h-5 w-5" /> 
+          <span>{t.menu[language]}</span>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
         <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
           {translations.en.menu.english}
         </DropdownMenuItem>
@@ -97,31 +117,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <BotMessageSquare className="h-6 w-6 text-primary" />
-          <span className="font-bold font-headline">{t.appName}</span>
-        </Link>
-        <nav className="hidden md:flex items-center space-x-6 text-sm">
-          {navItems.map((item) => (
-            <NavLink key={item.href} {...item} />
-          ))}
-        </nav>
-        <div className="flex-1 flex justify-end items-center gap-2">
-            <LanguageSelector />
-             {user ? (
-              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
-                <LogOut className="h-5 w-5" />
-              </Button>
-            ) : (
-              pathname !== '/login' && (
-                <Button asChild variant="outline" size="sm">
-                  <Link href="/login">Login</Link>
-                </Button>
-              )
-            )}
-        </div>
-        <div className="flex items-center md:hidden">
+      <div className="container flex h-14 items-center justify-between">
+        <div className="flex items-center">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -146,11 +143,33 @@ export function Header() {
                   <NavLink key={item.href} {...item} className="text-lg" />
                 ))}
                 <div className="text-lg font-medium text-foreground/80 pl-0">
-                  <LanguageSelector inSheet={true} />
+                  <SheetLanguageSelector />
                 </div>
               </div>
             </SheetContent>
           </Sheet>
+        </div>
+        
+        <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center space-x-2">
+                <BotMessageSquare className="h-6 w-6 text-primary" />
+                <span className="font-bold font-headline">{t.appName}</span>
+            </Link>
+
+            <div className="flex items-center gap-2">
+                <LanguageSelector />
+                {user ? (
+                <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
+                    <LogOut className="h-5 w-5" />
+                </Button>
+                ) : (
+                pathname !== '/login' && (
+                    <Button asChild variant="outline" size="sm">
+                    <Link href="/login">Login</Link>
+                    </Button>
+                )
+                )}
+            </div>
         </div>
       </div>
     </header>
