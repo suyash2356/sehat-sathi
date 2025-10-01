@@ -175,16 +175,28 @@ export const translations = {
       initiativesSubtitle: 'Learn about key programs aimed at improving public health across the nation.',
       initiatives: [
         {
-          title: "Ayushman Bharat",
-          description: "A flagship scheme of Government of India to achieve the vision of Universal Health Coverage (UHC).",
+          title: "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)",
+          description: "Provides a health cover of Rs. 5 lakhs per family per year for secondary and tertiary care hospitalization to over 10.74 crore poor and vulnerable families.",
         },
         {
-          title: "National Health Mission",
-          description: "Aims to provide universal access to equitable, affordable, and quality health care services.",
+          title: "National Health Mission (NHM)",
+          description: "Envisages achievement of universal access to equitable, affordable & quality health care services that are accountable and responsive to people's needs.",
         },
         {
-          title: "Pradhan Mantri Matru Vandana Yojana",
-          description: "A maternity benefit program run by the government of India.",
+          title: "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+          description: "A maternity benefit programme providing partial wage compensation to women for wage-loss during childbirth and childcare.",
+        },
+         {
+          title: 'Janani Shishu Suraksha Karyakram (JSSK)',
+          description: 'Entitles all pregnant women delivering in public health institutions to absolutely free and no expense delivery, including caesarean section.',
+        },
+        {
+          title: 'Rashtriya Bal Swasthya Karyakram (RBSK)',
+          description: 'An initiative for early identification and early intervention for children from birth to 18 years to cover 4 ‘D’s viz. Defects at birth, Deficiencies, Diseases, Development delays including disability.',
+        },
+        {
+          title: 'National Tobacco Control Programme (NTCP)',
+          description: 'Aims to control tobacco consumption and minimize deaths caused by it. It focuses on creating awareness about the harmful effects of tobacco.',
         },
       ],
       aiTitle: 'AI-Powered Health Guidance',
@@ -247,6 +259,24 @@ export const translations = {
             contact: '02112-224567',
             specialties: 'Orthopedics, General Medicine',
             timing: '24/7 Emergency, OPD: 10am - 4pm'
+        },
+        {
+          name: 'Aundh District Hospital',
+          address: 'Aundh, Pune, Maharashtra',
+          lat: 18.5619,
+          lng: 73.8081,
+          contact: '020-25698745',
+          specialties: 'Dermatology, ENT',
+          timing: 'OPD: 9am - 4pm'
+        },
+        {
+          name: 'Sassoon General Hospital',
+          address: 'Station Road, Pune, Maharashtra',
+          lat: 18.5232,
+          lng: 73.8695,
+          contact: '020-26128000',
+          specialties: 'Cardiology, Neurology, Oncology',
+          timing: '24/7 Emergency and Services'
         }
       ],
       mapButton: 'Book Appointment',
@@ -294,7 +324,7 @@ export const translations = {
       title: 'यहाँ आस-पास के कुछ अस्पताल हैं:',
       mapLink: 'नक्शे पर देखें',
     },
-    bookingConfirmation: 'आपका टेली-परामर्श अनुरोध प्राप्त हो गया है। आपको शीघ्र ही डॉक्टर के विवरण और अपॉइंटमेंट के समय के साथ एक एसएमएस मिलेगा।',
+    bookingConfirmation: 'आपका टेली-परामर्श अनुरोध प्राप्त हो गया है। आपको शीघ्र ही डॉक्टर के विवरण और अपॉइंटMENT के समय के साथ एक एसएमएस मिलेगा।',
     nav: {
       home: 'स्वास्थ्य गाइड',
       chatbot: 'चैटबॉट',
@@ -448,16 +478,28 @@ export const translations = {
       initiativesSubtitle: 'देश भर में सार्वजनिक स्वास्थ्य में सुधार के उद्देश्य से प्रमुख कार्यक्रमों के बारे में जानें।',
       initiatives: [
         {
-            title: "आयुष्मान भारत",
-            description: "सार्वभौमिक स्वास्थ्य कवरेज (UHC) की दृष्टि प्राप्त करने के लिए भारत सरकार की एक प्रमुख योजना।",
+            title: "आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना (AB-PMJAY)",
+            description: "10.74 करोड़ से अधिक गरीब और कमजोर परिवारों को द्वितीयक और तृतीयक देखभाल अस्पताल में भर्ती के लिए प्रति वर्ष प्रति परिवार 5 लाख रुपये का स्वास्थ्य कवर प्रदान करता है।",
         },
         {
-            title: "राष्ट्रीय स्वास्थ्य मिशन",
-            description: "न्यायसंगत, सस्ती और गुणवत्तापूर्ण स्वास्थ्य देखभाल सेवाओं तक सार्वभौमिक पहुंच प्रदान करना है।",
+            title: "राष्ट्रीय स्वास्थ्य मिशन (NHM)",
+            description: "लोगों की जरूरतों के प्रति जवाबदेह और उत्तरदायी, समान, सस्ती और गुणवत्तापूर्ण स्वास्थ्य देखभाल सेवाओं तक सार्वभौमिक पहुंच की उपलब्धि की परिकल्पना करता है।",
         },
         {
-            title: "प्रधानमंत्री मातृ वंदना योजना",
-            description: "भारत सरकार द्वारा चलाया जाने वाला एक मातृत्व लाभ कार्यक्रम।",
+            title: "प्रधानमंत्री मातृ वंदना योजना (PMMVY)",
+            description: "प्रसव और बच्चे की देखभाल के दौरान मजदूरी-हानि के लिए महिलाओं को आंशिक मजदूरी मुआवजा प्रदान करने वाला एक मातृत्व लाभ कार्यक्रम।",
+        },
+        {
+            title: 'जननी शिशु सुरक्षा कार्यक्रम (JSSK)',
+            description: 'सार्वजनिक स्वास्थ्य संस्थानों में प्रसव कराने वाली सभी गर्भवती महिलाओं को सिजेरियन सेक्शन सहित बिल्कुल मुफ्त और बिना किसी खर्च के प्रसव का अधिकार देता है।',
+        },
+        {
+            title: 'राष्ट्रीय बाल स्वास्थ्य कार्यक्रम (RBSK)',
+            description: 'जन्म से 18 वर्ष तक के बच्चों के लिए 4 ‘डी’ यानी जन्म के समय दोष, कमियों, बीमारियों, विकलांगता सहित विकास में देरी को कवर करने के लिए शीघ्र पहचान और शीघ्र हस्तक्षेप की एक पहल।',
+        },
+        {
+            title: 'राष्ट्रीय तंबाकू नियंत्रण कार्यक्रम (NTCP)',
+            description: 'इसका उद्देश्य तंबाकू की खपत को नियंत्रित करना और इससे होने वाली मौतों को कम करना है। यह तंबाकू के हानिकारक प्रभावों के बारे में जागरूकता पैदा करने पर केंद्रित है।',
         },
       ],
       aiTitle: 'एआई-संचालित स्वास्थ्य मार्गदर्शन',
@@ -520,6 +562,24 @@ export const translations = {
             contact: '02112-224567',
             specialties: 'हड्डी रोग, सामान्य चिकित्सा',
             timing: '24/7 आपातकाल, ओपीडी: सुबह 10 बजे - शाम 4 बजे'
+        },
+        {
+          name: 'औंध जिला अस्पताल',
+          address: 'औंध, पुणे, महाराष्ट्र',
+          lat: 18.5619,
+          lng: 73.8081,
+          contact: '020-25698745',
+          specialties: 'त्वचा विज्ञान, ईएनटी',
+          timing: 'ओपीडी: सुबह 9 बजे - शाम 4 बजे'
+        },
+        {
+          name: 'ससून जनरल अस्पताल',
+          address: 'स्टेशन रोड, पुणे, महाराष्ट्र',
+          lat: 18.5232,
+          lng: 73.8695,
+          contact: '020-26128000',
+          specialties: 'हृदय रोग, तंत्रिका विज्ञान, ऑन्कोलॉजी',
+          timing: '24/7 आपातकालीन और सेवाएं'
         }
       ],
       mapButton: 'अपॉइंटमेंट बुक करें',
@@ -721,16 +781,28 @@ export const translations = {
       initiativesSubtitle: 'देशभरात सार्वजनिक आरोग्य सुधारण्याच्या उद्देशाने असलेल्या प्रमुख कार्यक्रमांबद्दल जाणून घ्या।',
       initiatives: [
         {
-            title: "आयुष्मान भारत",
-            description: "सार्वत्रिक आरोग्य कव्हरेज (UHC) चे उद्दिष्ट साध्य करण्यासाठी भारत सरकारची एक प्रमुख योजना.",
+            title: "आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना (AB-PMJAY)",
+            description: "10.74 कोटी पेक्षा जास्त गरीब आणि असुरक्षित कुटुंबांना दुय्यम आणि तृतीयक काळजी रुग्णालयात दाखल करण्यासाठी प्रति कुटुंब प्रति वर्ष 5 लाख रुपयांचे आरोग्य संरक्षण प्रदान करते.",
         },
         {
-            title: "राष्ट्रीय आरोग्य अभियान",
-            description: "सर्वांना समान, परवडणाऱ्या आणि दर्जेदार आरोग्य सेवांमध्ये सार्वत्रिक प्रवेश प्रदान करण्याचे उद्दिष्ट आहे.",
+            title: "राष्ट्रीय आरोग्य अभियान (NHM)",
+            description: "लोकांच्या गरजांसाठी जबाबदार आणि प्रतिसाद देणाऱ्या समान, परवडणाऱ्या आणि दर्जेदार आरोग्य सेवांमध्ये सार्वत्रिक प्रवेशाची कल्पना करते.",
         },
         {
-            title: "प्रधानमंत्री मातृ वंदना योजना",
-            description: "भारत सरकारद्वारे चालवला जाणारा एक प्रसूती लाभ कार्यक्रम.",
+            title: "प्रधानमंत्री मातृ वंदना योजना (PMMVY)",
+            description: "प्रसूती आणि बाळाच्या संगोपनाच्या काळात मजुरीच्या नुकसानीसाठी महिलांना आंशिक वेतन भरपाई प्रदान करणारा एक प्रसूती लाभ कार्यक्रम.",
+        },
+        {
+          title: 'जननी शिशु सुरक्षा कार्यक्रम (JSSK)',
+          description: 'सार्वजनिक आरोग्य संस्थांमध्ये प्रसूती करणाऱ्या सर्व गर्भवती महिलांना सिझेरियन सेक्शनसह पूर्णपणे विनामूल्य आणि कोणत्याही खर्चाशिवाय प्रसूतीचा हक्क देतो.',
+        },
+        {
+          title: 'राष्ट्रीय बाल स्वास्थ्य कार्यक्रम (RBSK)',
+          description: 'जन्मापासून 18 वर्षांपर्यंतच्या मुलांसाठी 4 ‘डी’ म्हणजेच जन्मातील दोष, कमतरता, रोग, विकासातील विलंब यासह अपंगत्वासाठी लवकर ओळख आणि लवकर हस्तक्षेपासाठी एक उपक्रम.',
+        },
+        {
+          title: 'राष्ट्रीय तंबाखू नियंत्रण कार्यक्रम (NTCP)',
+          description: 'याचा उद्देश तंबाखूच्या सेवनावर नियंत्रण ठेवणे आणि त्यामुळे होणारे मृत्यू कमी करणे आहे. हे तंबाखूच्या हानिकारक परिणामांबद्दल जागरूकता निर्माण करण्यावर लक्ष केंद्रित करते.',
         },
       ],
       aiTitle: 'एआय-चालित आरोग्य मार्गदर्शन',
@@ -793,6 +865,24 @@ export const translations = {
             contact: '02112-224567',
             specialties: 'ऑर्थोपेडिक्स, सामान्य औषध',
             timing: '24/7 आपत्कालीन, ओपीडी: सकाळी 10 ते दुपारी 4'
+        },
+        {
+          name: 'औंध जिल्हा रुग्णालय',
+          address: 'औंध, पुणे, महाराष्ट्र',
+          lat: 18.5619,
+          lng: 73.8081,
+          contact: '020-25698745',
+          specialties: 'त्वचारोग, कान-नाक-घसा',
+          timing: 'ओपीडी: सकाळी ९ ते दुपारी ४'
+        },
+        {
+          name: 'ससून सर्वोपचार रुग्णालय',
+          address: 'स्टेशन रोड, पुणे, महाराष्ट्र',
+          lat: 18.5232,
+          lng: 73.8695,
+          contact: '020-26128000',
+          specialties: 'हृदयरोग, न्युरोलॉजी, ऑन्कोलॉजी',
+          timing: '२४/७ आपत्कालीन आणि सेवा'
         }
       ],
       mapButton: 'अपॉइंटमेंट बुक करा',

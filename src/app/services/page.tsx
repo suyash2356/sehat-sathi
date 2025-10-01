@@ -1,7 +1,8 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { HeartPulse, ShieldCheck, Baby } from 'lucide-react';
+import { HeartPulse, ShieldCheck, Baby, ShieldPlus, Syringe, Activity } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 
@@ -9,29 +10,19 @@ const initiativeIcons = [
   <HeartPulse key="ayushman" className="h-12 w-12 text-primary" />,
   <ShieldCheck key="mission" className="h-12 w-12 text-primary" />,
   <Baby key="matru" className="h-12 w-12 text-primary" />,
+  <ShieldPlus key="jssk" className="h-12 w-12 text-primary" />,
+  <Syringe key="rbsk" className="h-12 w-12 text-primary" />,
+  <Activity key="ntcp" className="h-12 w-12 text-primary" />,
 ];
 
 export default function ServicesPage() {
   const { language } = useChatLanguage();
   const t = translations[language].services;
 
-  const initiatives = [
-    {
-      title: t.initiatives[0].title,
-      description: t.initiatives[0].description,
-      icon: initiativeIcons[0]
-    },
-    {
-      title: t.initiatives[1].title,
-      description: t.initiatives[1].description,
-      icon: initiativeIcons[1]
-    },
-    {
-      title: t.initiatives[2].title,
-      description: t.initiatives[2].description,
-      icon: initiativeIcons[2]
-    },
-  ]
+  const initiatives = t.initiatives.map((initiative, index) => ({
+    ...initiative,
+    icon: initiativeIcons[index],
+  }));
 
   return (
     <div className="container py-12 md:py-16">

@@ -1,22 +1,25 @@
-import type { Metadata } from 'next';
+
+'use client';
+
 import './globals.css';
+import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
-
-export const metadata: Metadata = {
-  title: 'Sehat Sathi – Rural Healthcare AI Bot',
-  description: 'Providing rural India with instant, reliable healthcare guidance.',
-};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const showFooter = pathname === '/' || pathname === '/login';
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <title>Sehat Sathi – Rural Healthcare AI Bot</title>
+        <meta name="description" content="Providing rural India with instant, reliable healthcare guidance." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
@@ -24,7 +27,7 @@ export default function RootLayout({
       <body className="font-body antialiased flex flex-col min-h-screen">
         <Header />
         <main className="flex-grow">{children}</main>
-        <Footer />
+        {showFooter && <Footer />}
         <Toaster />
       </body>
     </html>
