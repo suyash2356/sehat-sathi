@@ -17,6 +17,24 @@ export const translations = {
     emergency: {
       title: 'This could be an emergency!',
       message: 'Please seek immediate medical attention. Go to the nearest hospital or call emergency services.',
+      buttonText: 'Emergency',
+      formTitle: 'Emergency Ambulance Request',
+      formDescription: 'Only use this for genuine medical emergencies. Misuse may lead to penalties.',
+      locationLabel: 'Location / Area',
+      locationPlaceholder: 'Full address, landmarks, etc.',
+      reasonLabel: 'Reason for Emergency',
+      reasonPlaceholder: 'e.g., Accident, Chest Pain',
+      contactLabel: 'Contact Number',
+      contactPlaceholder: 'A 10-digit number to call back',
+      submitButton: 'Request Ambulance',
+      confirmTitle: 'Confirm Emergency Request?',
+      confirmMessage: 'You are about to request an ambulance. Please confirm this is a real emergency. India\'s national emergency number is:',
+      emergencyNumberText: 'National Emergency Number',
+      confirmSubtext: 'Press "Confirm" to proceed.',
+      cancelButton: 'Cancel',
+      confirmButton: 'Confirm',
+      toastTitle: 'Emergency Request Sent',
+      toastDescription: 'Ambulance has been notified of your location. Stay on the line.',
     },
     hospitals: {
       title: 'Here are some nearby hospitals:',
@@ -545,6 +563,24 @@ export const translations = {
     emergency: {
       title: 'यह एक आपात स्थिति हो सकती है!',
       message: 'कृपया तत्काल चिकित्सा सहायता लें। नजदीकी अस्पताल जाएं या आपातकालीन सेवाओं को कॉल करें।',
+      buttonText: 'आपातकालीन',
+      formTitle: 'आपातकालीन एम्बुलेंस अनुरोध',
+      formDescription: 'इसका उपयोग केवल वास्तविक चिकित्सा आपात स्थिति के लिए करें। दुरुपयोग करने पर दंड हो सकता है।',
+      locationLabel: 'स्थान / क्षेत्र',
+      locationPlaceholder: 'पूरा पता, स्थलचिह्न, आदि।',
+      reasonLabel: 'आपातकाल का कारण',
+      reasonPlaceholder: 'उदा., दुर्घटना, सीने में दर्द',
+      contactLabel: 'संपर्क नंबर',
+      contactPlaceholder: 'वापस कॉल करने के लिए 10 अंकों का नंबर',
+      submitButton: 'एम्बुलेंस का अनुरोध करें',
+      confirmTitle: 'आपातकालीन अनुरोध की पुष्टि करें?',
+      confirmMessage: 'आप एम्बुलेंस का अनुरोध करने वाले हैं। कृपया पुष्टि करें कि यह एक वास्तविक आपात स्थिति है। भारत का राष्ट्रीय आपातकालीन नंबर है:',
+      emergencyNumberText: 'राष्ट्रीय आपातकालीन नंबर',
+      confirmSubtext: 'आगे बढ़ने के लिए "पुष्टि करें" दबाएं।',
+      cancelButton: 'रद्द करें',
+      confirmButton: 'पुष्टि करें',
+      toastTitle: 'आपातकालीन अनुरोध भेजा गया',
+      toastDescription: 'एम्बुलेंस को आपके स्थान की सूचना दे दी गई है। लाइन पर बने रहें।',
     },
     hospitals: {
       title: 'यहाँ आस-पास के कुछ अस्पताल हैं:',
@@ -822,7 +858,7 @@ export const translations = {
                   {
                     title: 'सुरक्षित प्रसव (संस्थागत प्रसव):',
                     content: [
-                      'हमेशा اپنے बच्चे को अस्पताल या प्राथमिक स्वास्थ्य केंद्र में जन्म देने की योजना बनाएं।',
+                      'हमेशा अपने बच्चे को अस्पताल या प्राथमिक स्वास्थ्य केंद्र में जन्म देने की योजना बनाएं।',
                       'यह सुनिश्चित करता है कि किसी भी जटिलता से निपटने के लिए एक कुशल स्वास्थ्य प्रदाता मौजूद है, जो मां और बच्चे दोनों की रक्षा करता है।',
                       'जननी सुरक्षा योजना (JSY) जैसी सरकारी योजनाएं संस्थागत प्रसव के लिए नकद सहायता प्रदान करती हैं।'
                     ]
@@ -862,7 +898,7 @@ export const translations = {
         },
         {
             question: 'क्या मैं इस सेवा का उपयोग आपात स्थिति के लिए कर सकता हूँ?',
-            answer: 'नहीं। सेहत साथी केवल सामान्य स्वास्थ्य मार्गदर्शन के लिए है। किसी भी चिकित्सा आपात स्थिति में, कृपया اپنے नजदीकी अस्पताल या किसी प्रमाणित चिकित्सक से तुरंत संपर्क करें।'
+            answer: 'नहीं। सेहत साथी केवल सामान्य स्वास्थ्य मार्गदर्शन के लिए है। किसी भी चिकित्सा आपात स्थिति में, कृपया अपने नजदीकी अस्पताल या किसी प्रमाणित चिकित्सक से तुरंत संपर्क करें।'
         },
         {
             question: 'चैटबॉट किन भाषाओं में उपलब्ध है?',
@@ -961,7 +997,7 @@ export const translations = {
       bookingToastTitle: 'बुकिंग की पुष्टि हुई!',
       bookingToastDescription: 'हमें आपका अनुरोध मिल गया है। आपको शीघ्र ही एक एसएमएस मिलेगा।',
       locatorTitle: 'अस्पताल और क्लिनिक लोकेटर',
-      locatorDescription: 'महाराष्ट्र में اپنے आस-पास सरकारी और निजी स्वास्थ्य सुविधाएं खोजें।',
+      locatorDescription: 'महाराष्ट्र में अपने आस-पास सरकारी और निजी स्वास्थ्य सुविधाएं खोजें।',
       hospitals: [
         {
           name: 'जिला सामान्य अस्पताल, पुणे',
@@ -1023,7 +1059,7 @@ export const translations = {
       mapTimings: 'समय',
       mapContact: 'संपर्क',
       myServicesTitle: 'आपके लिए सेवाएं खोजें',
-      myServicesDescription: 'यह जानने के لیے कुछ सवालों के जवाब दें कि आप किन सरकारी स्वास्थ्य योजनाओं के लिए पात्र हो सकते हैं।',
+      myServicesDescription: 'यह जानने के लिए कुछ सवालों के जवाब दें कि आप किन सरकारी स्वास्थ्य योजनाओं के लिए पात्र हो सकते हैं।',
       myServicesButton: 'मेरी सेवाएं खोजें',
       myServicesFormTitle: 'हमें अपने बारे में बताएं',
       myServicesFormAge: 'आपकी उम्र',
@@ -1073,6 +1109,24 @@ export const translations = {
     emergency: {
       title: 'ही एक आणीबाणी असू शकते!',
       message: 'कृपया त्वरित वैद्यकीय मदत घ्या। जवळच्या रुग्णालयात जा किंवा आपत्कालीन सेवांना कॉल करा।',
+      buttonText: 'आपत्कालीन',
+      formTitle: 'आपत्कालीन रुग्णवाहिका विनंती',
+      formDescription: 'याचा वापर फक्त खऱ्या वैद्यकीय आणीबाणीसाठी करा। गैरवापरामुळे दंड होऊ शकतो।',
+      locationLabel: 'स्थान / क्षेत्र',
+      locationPlaceholder: 'पूर्ण पत्ता, महत्त्वाचे ठिकाण, इ.',
+      reasonLabel: 'आणीबाणीचे कारण',
+      reasonPlaceholder: 'उदा. अपघात, छातीत दुखणे',
+      contactLabel: 'संपर्क क्रमांक',
+      contactPlaceholder: 'परत कॉल करण्यासाठी १०-अंकी क्रमांक',
+      submitButton: 'रुग्णवाहिकेची विनंती करा',
+      confirmTitle: 'आपत्कालीन विनंतीची पुष्टी करायची?',
+      confirmMessage: 'तुम्ही रुग्णवाहिकेची विनंती करणार आहात। कृपया पुष्टी करा की ही खरी आणीबाणी आहे। भारताचा राष्ट्रीय आपत्कालीन क्रमांक आहे:',
+      emergencyNumberText: 'राष्ट्रीय आपत्कालीन क्रमांक',
+      confirmSubtext: 'पुढे जाण्यासाठी "पुष्टी करा" दाबा।',
+      cancelButton: 'रद्द करा',
+      confirmButton: 'पुष्टी करा',
+      toastTitle: 'आपत्कालीन विनंती पाठवली',
+      toastDescription: 'रुग्णवाहिकेला तुमच्या स्थानाची सूचना देण्यात आली आहे। लाइनवर रहा।',
     },
     hospitals: {
       title: 'येथे जवळपासची काही रुग्णालये आहेत:',
