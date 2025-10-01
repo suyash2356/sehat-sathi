@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
-import { Menu, X, BotMessageSquare, Globe, LogOut } from 'lucide-react';
+import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -14,6 +14,7 @@ import { useChatLanguage, setChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { Separator } from '../ui/separator';
 
 export function Header() {
   const pathname = usePathname();
@@ -54,12 +55,14 @@ export function Header() {
     { href: '/about', label: t.nav.about },
     { href: '/contact', label: t.nav.contact },
   ];
+
+  const profileNavItem = { href: '/profile', label: t.nav.profile, icon: <UserIcon className="h-5 w-5" /> };
   
-  const NavLink = ({ href, label, className, onClick }: { href: string; label: string, className?: string, onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void }) => (
+  const NavLink = ({ href, label, className, onClick, icon }: { href: string; label: string, className?: string, onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void, icon?: React.ReactNode }) => (
     <Link
       href={href}
       className={cn(
-        'font-medium transition-colors hover:text-primary',
+        'font-medium transition-colors hover:text-primary flex items-center gap-3',
         pathname === href ? 'text-primary' : 'text-foreground/80',
         className
       )}
@@ -68,7 +71,8 @@ export function Header() {
         setIsOpen(false)
       }}
     >
-      {label}
+      {icon}
+      <span>{label}</span>
     </Link>
   );
   
@@ -130,7 +134,7 @@ export function Header() {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="pr-0">
+            <SheetContent side="left" className="pr-0 flex flex-col">
               <SheetHeader>
                   <SheetTitle>
                       <VisuallyHidden>Navigation Menu</VisuallyHidden>
@@ -144,7 +148,7 @@ export function Header() {
                 <BotMessageSquare className="h-6 w-6 mr-2 text-primary" />
                 <span className="font-bold font-headline">{t.appName}</span>
               </Link>
-              <div className="flex flex-col space-y-6">
+              <div className="flex flex-col space-y-6 flex-grow">
                 {navItems.map((item) => (
                   <NavLink key={item.href} {...item} className="text-lg" />
                 ))}
@@ -152,6 +156,17 @@ export function Header() {
                   <SheetLanguageSelector />
                 </div>
               </div>
+
+              {user && (
+                <div className="mt-auto border-t pt-4">
+                   <NavLink 
+                    href={profileNavItem.href} 
+                    label={profileNavItem.label} 
+                    icon={profileNavItem.icon}
+                    className="text-lg"
+                  />
+                </div>
+              )}
             </SheetContent>
           </Sheet>
         </div>

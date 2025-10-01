@@ -28,7 +28,8 @@ export const translations = {
       services: 'Services',
       about: 'About',
       contact: 'Contact',
-      map: 'Map'
+      map: 'Map',
+      profile: 'My Profile'
     },
     footer: {
       disclaimer: 'Disclaimer: This chatbot provides general health guidance. For emergencies, please visit a certified doctor or hospital.',
@@ -251,6 +252,16 @@ export const translations = {
       mapSpecialties: 'Specialties',
       mapTimings: 'Timings',
       mapContact: 'Contact',
+    },
+    profile: {
+      title: 'My Profile',
+      subtitle: 'Manage your health information, documents, and family details here.',
+      healthDetailsTitle: 'My Health Details',
+      documentsTitle: 'My Important Documents',
+      familyTitle: 'My Family Members',
+      healthDetailsDescription: 'Your personal health records and information.',
+      documentsDescription: 'Upload and manage important medical documents.',
+      familyDescription: 'Add and manage health details for your family members.',
     }
   },
   hi: {
@@ -282,7 +293,8 @@ export const translations = {
       services: 'सेवाएं',
       about: 'हमारे बारे में',
       contact: 'संपर्क',
-      map: 'नक्शा'
+      map: 'नक्शा',
+      profile: 'मेरी प्रोफाइल'
     },
     footer: {
       disclaimer: 'अस्वीकरण: यह चैटबॉट सामान्य स्वास्थ्य मार्गदर्शन प्रदान करता है। आपात स्थिति के लिए, कृपया किसी प्रमाणित डॉक्टर या अस्पताल में जाएँ।',
@@ -505,6 +517,16 @@ export const translations = {
       mapSpecialties: 'विशेषज्ञता',
       mapTimings: 'समय',
       mapContact: 'संपर्क',
+    },
+    profile: {
+      title: 'मेरी प्रोफाइल',
+      subtitle: 'अपनी स्वास्थ्य जानकारी, दस्तावेज़ और परिवार के विवरण यहाँ प्रबंधित करें।',
+      healthDetailsTitle: 'मेरे स्वास्थ्य का विवरण',
+      documentsTitle: 'मेरे महत्वपूर्ण दस्तावेज़',
+      familyTitle: 'मेरे परिवार के सदस्य',
+      healthDetailsDescription: 'आपके व्यक्तिगत स्वास्थ्य रिकॉर्ड और जानकारी।',
+      documentsDescription: 'महत्वपूर्ण चिकित्सा दस्तावेज़ अपलोड और प्रबंधित करें।',
+      familyDescription: 'अपने परिवार के सदस्यों के लिए स्वास्थ्य विवरण जोड़ें और प्रबंधित करें।',
     }
   },
   mr: {
@@ -536,7 +558,8 @@ export const translations = {
       services: 'सेवा',
       about: 'बद्दल',
       contact: 'संपर्क',
-      map: 'नकाशा'
+      map: 'नकाशा',
+      profile: 'माझी प्रोफाइल'
     },
     footer: {
       disclaimer: 'अस्वीकरण: हा चॅटबॉट सामान्य आरोग्य मार्गदर्शन प्रदान करतो। आपत्कालीन परिस्थितीसाठी, कृपया प्रमाणित डॉक्टर किंवा रुग्णालयाला भेट द्या।',
@@ -759,6 +782,16 @@ export const translations = {
       mapSpecialties: 'विशेषता',
       mapTimings: 'वेळा',
       mapContact: 'संपर्क',
+    },
+    profile: {
+      title: 'माझी प्रोफाइल',
+      subtitle: 'तुमची आरोग्य माहिती, कागदपत्रे आणि कौटुंबिक तपशील येथे व्यवस्थापित करा.',
+      healthDetailsTitle: 'माझे आरोग्य तपशील',
+      documentsTitle: 'माझी महत्त्वाची कागदपत्रे',
+      familyTitle: 'माझे कुटुंबातील सदस्य',
+      healthDetailsDescription: 'तुमचे वैयक्तिक आरोग्य रेकॉर्ड आणि माहिती.',
+      documentsDescription: 'महत्त्वाची वैद्यकीय कागदपत्रे अपलोड आणि व्यवस्थापित करा.',
+      familyDescription: 'तुमच्या कुटुंबातील सदस्यांसाठी आरोग्य तपशील जोडा आणि व्यवस्थापित करा.',
     }
   },
 };
