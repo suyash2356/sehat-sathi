@@ -1,25 +1,27 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth, db, storage } from '@/lib/firebase';
-import { collection, onSnapshot, addDoc, deleteDoc, query, orderBy, Timestamp, doc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ShieldPlus, PlusCircle, FileText, Upload, Download, Trash2 } from 'lucide-react';
+import { ShieldPlus, FileText, Upload, Download, Trash2 } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Progress } from '@/components/ui/progress';
+import { useUser } from '@/hooks/use-user';
+import { useCollection } from '@/hooks/use-firestore';
+import { collection, addDoc, deleteDoc, query, orderBy, Timestamp, doc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from '@/lib/firebase';
 
 const documentSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters.'}),
@@ -40,37 +42,19 @@ export default function InsurancePage() {
   const { language } = useChatLanguage();
   const t = translations[language].insurance;
   const { toast } = useToast();
-  const [documents, setDocuments] = useState<InsuranceDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const user = auth.currentUser;
+  const { user, loading: userLoading } = useUser();
+
+  const docsColRef = useMemo(() => (user ? query(collection(db, 'users', user.uid, 'insuranceDocuments'), orderBy('uploadedAt', 'desc')) : null), [user]);
+  const { data: documents, loading: docsLoading } = useCollection<InsuranceDocument>(docsColRef);
+
+  const isLoading = userLoading || docsLoading;
 
   const docForm = useForm<DocumentFormValues>({
     resolver: zodResolver(documentSchema),
     defaultValues: { title: '' },
   });
-
-  useEffect(() => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-
-    const docsColRef = query(collection(db, 'users', user.uid, 'insuranceDocuments'), orderBy('uploadedAt', 'desc'));
-
-    const unsubscribe = onSnapshot(docsColRef, (snapshot) => {
-      const docsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as InsuranceDocument));
-      setDocuments(docsData);
-      setIsLoading(false);
-    }, (error) => {
-      console.error("Error fetching insurance documents:", error);
-      toast({ title: t.fetchError, description: t.fetchErrorDescription, variant: 'destructive'});
-      setIsLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, [user, toast, t]);
 
   async function onDocSubmit(values: DocumentFormValues) {
     if (!user || !values.file) return;
@@ -198,7 +182,7 @@ export default function InsurancePage() {
                 <Skeleton className="h-12 w-full" />
                 <Skeleton className="h-12 w-full" />
             </div>
-          ) : documents.length > 0 ? (
+          ) : documents && documents.length > 0 ? (
             <div className="space-y-4">
               {documents.map((doc) => (
                 <div key={doc.id} className="flex items-center justify-between p-3 rounded-md border">

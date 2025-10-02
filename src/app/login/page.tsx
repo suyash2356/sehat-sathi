@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth, googleProvider } from '@/lib/firebase';
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword,
@@ -21,6 +20,7 @@ import { Mail, KeyRound } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
+import { useAuth, googleProvider } from '@/hooks/use-firebase';
 
 const authSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -39,6 +39,7 @@ export default function LoginPage() {
   const [authType, setAuthType] = useState<'login' | 'signup'>('login');
   const { language } = useChatLanguage();
   const t = translations[language].login;
+  const auth = useAuth();
 
   const form = useForm<z.infer<typeof authSchema>>({
     resolver: zodResolver(authType === 'login' ? signInSchema : authSchema),
@@ -46,6 +47,7 @@ export default function LoginPage() {
   });
 
   const handleGoogleSignIn = async () => {
+    if(!auth) return;
     setIsSubmitting(true);
     try {
       await signInWithPopup(auth, googleProvider);
@@ -74,6 +76,7 @@ export default function LoginPage() {
   };
 
   async function onSubmit(values: z.infer<typeof authSchema>) {
+    if(!auth) return;
     setIsSubmitting(true);
     if (authType === 'signup') {
       try {

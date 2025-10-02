@@ -40,13 +40,13 @@ interface GoogleMapEmbedProps {
 export function GoogleMapEmbed({ hospitals, onBookAppointment, translations }: GoogleMapEmbedProps) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
   });
 
   const [selectedHospital, setSelectedHospital] = React.useState<Hospital | null>(null);
 
-  if (!process.env.GOOGLE_MAPS_API_KEY) {
-    return <div className="text-destructive font-semibold p-4 bg-destructive/10 rounded-md">The Google Maps API key is missing. Please add the `GOOGLE_MAPS_API_KEY` to your .env file and restart the server.</div>;
+  if (!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY) {
+    return <div className="text-destructive font-semibold p-4 bg-destructive/10 rounded-md">The Google Maps API key is missing. Please add `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` to your .env file and restart the server.</div>;
   }
   
   if (!isLoaded) return <div>Loading map...</div>;

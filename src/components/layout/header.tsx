@@ -3,12 +3,11 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth } from '@/lib/firebase';
-import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
+import { signOut, type User } from 'firebase/auth';
 import { Menu, X, BotMessageSquare, Globe, LogOut, User as UserIcon, ShieldPlus, Bell, Siren, Phone, MapPin, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -23,6 +22,8 @@ import { useChatLanguage, setChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { useToast } from '@/hooks/use-toast';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { useUser } from '@/hooks/use-user';
+import { useAuth } from '@/hooks/use-firebase';
 
 
 const emergencySchema = z.object({
@@ -37,7 +38,8 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useUser();
+  const auth = useAuth();
   const { language, setLanguage } = useChatLanguage();
   const { toast } = useToast();
   const [isEmergencyFormOpen, setIsEmergencyFormOpen] = useState(false);
@@ -46,13 +48,6 @@ export function Header() {
 
   const isLandingPage = pathname === '/';
   const t = translations[language];
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const form = useForm<EmergencyFormValues>({
     resolver: zodResolver(emergencySchema),
@@ -64,6 +59,7 @@ export function Header() {
   });
 
   const handleLogout = async () => {
+    if (!auth) return;
     await signOut(auth);
     toast({
       title: t.logout.title,

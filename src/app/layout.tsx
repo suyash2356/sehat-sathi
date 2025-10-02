@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
 import { useChatLanguage } from '@/hooks/use-chat-language';
+import { FirebaseProvider } from '@/hooks/use-firebase';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -38,7 +39,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <LayoutContent>{children}</LayoutContent>
+        <FirebaseProvider>
+          <LayoutContent>{children}</LayoutContent>
+        </FirebaseProvider>
       </body>
     </html>
   );

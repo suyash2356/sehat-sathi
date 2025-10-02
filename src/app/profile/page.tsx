@@ -5,9 +5,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth, db, storage } from '@/lib/firebase';
-import { collection, onSnapshot, doc, setDoc, addDoc, deleteDoc, query, orderBy, Timestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +19,11 @@ import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useUser } from '@/hooks/use-user';
+import { useCollection, useDoc } from '@/hooks/use-firestore';
+import { collection, doc, setDoc, addDoc, deleteDoc, Timestamp, orderBy, query } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { db, storage } from '@/lib/firebase';
 
 const memberSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -40,9 +42,12 @@ const documentSchema = z.object({
 type MemberFormValues = z.infer<typeof memberSchema>;
 type DocumentFormValues = z.infer<typeof documentSchema>;
 
-type UserProfile = MemberFormValues & {
-  id: string;
+export type UserProfileData = MemberFormValues & {
   email?: string;
+};
+
+export type UserProfile = UserProfileData & {
+  id: string;
   isPrimary: boolean;
 };
 
@@ -59,17 +64,44 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].profile;
-  const [profiles, setProfiles] = useState<UserProfile[]>([]);
-  const [documents, setDocuments] = useState<HealthDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading: userLoading } = useUser();
+
+  const userDocRef = useMemo(() => (user ? doc(db, 'users', user.uid) : null), [user]);
+  const { data: userProfileData, loading: profileLoading } = useDoc<UserProfileData>(userDocRef);
+
+  const familyColRef = useMemo(() => (user ? collection(db, 'users', user.uid, 'familyMembers') : null), [user]);
+  const { data: familyMembersData, loading: familyLoading } = useCollection<UserProfileData>(familyColRef);
+  
+  const docsColRef = useMemo(() => (user ? query(collection(db, 'users', user.uid, 'documents'), orderBy('uploadedAt', 'desc')) : null), [user]);
+  const { data: documents, loading: docsLoading } = useCollection<HealthDocument>(docsColRef);
+
   const [isMemberFormOpen, setIsMemberFormOpen] = useState(false);
   const [editingProfile, setEditingProfile] = useState<UserProfile | null>(null);
   const [isDocFormOpen, setIsDocFormOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const user = auth.currentUser;
   
-  const primaryProfile = useMemo(() => profiles.find(p => p.isPrimary), [profiles]);
-  const familyMembers = useMemo(() => profiles.filter(p => !p.isPrimary), [profiles]);
+  const isLoading = userLoading || profileLoading || familyLoading || docsLoading;
+
+  const primaryProfile = useMemo<UserProfile | null>(() => {
+    if (!user || !userProfileData) return null;
+    return {
+      id: user.uid,
+      isPrimary: true,
+      name: userProfileData.name || user.displayName || 'New User',
+      email: userProfileData.email || user.email || '',
+      relationship: userProfileData.relationship || 'Self',
+      ...userProfileData,
+    };
+  }, [user, userProfileData]);
+  
+  const familyMembers = useMemo<UserProfile[]>(() => {
+    if (!familyMembersData) return [];
+    return familyMembersData.map(member => ({
+      ...member,
+      isPrimary: false,
+    }));
+  }, [familyMembersData]);
+
 
   const memberForm = useForm<MemberFormValues>({
     resolver: zodResolver(memberSchema),
@@ -80,55 +112,6 @@ export default function ProfilePage() {
     resolver: zodResolver(documentSchema),
     defaultValues: { title: '' },
   });
-
-  useEffect(() => {
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-
-    const userDocRef = doc(db, 'users', user.uid);
-    const familyColRef = collection(db, 'users', user.uid, 'familyMembers');
-    const docsColRef = query(collection(db, 'users', user.uid, 'documents'), orderBy('uploadedAt', 'desc'));
-
-    const unsubUser = onSnapshot(userDocRef, (docSnap) => {
-      let userProfile: UserProfile;
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        userProfile = { id: user.uid, isPrimary: true, email: user.email!, ...data } as UserProfile;
-      } else {
-        userProfile = { id: user.uid, isPrimary: true, name: user.displayName || 'New User', email: user.email!, relationship: 'Self' };
-      }
-      setProfiles(prev => [userProfile, ...prev.filter(p => !p.isPrimary)]);
-      setIsLoading(false);
-    }, (error) => {
-      console.error("Error fetching user profile:", error);
-      toast({ title: t.fetchProfileError, description: t.fetchProfileErrorDescription, variant: 'destructive'});
-      setIsLoading(false);
-    });
-
-    const unsubFamily = onSnapshot(familyColRef, (snapshot) => {
-      const familyData = snapshot.docs.map(doc => ({ id: doc.id, isPrimary: false, ...doc.data() } as UserProfile));
-      setProfiles(prev => [prev.find(p => p.isPrimary)!, ...familyData]);
-    }, (error) => {
-        console.error("Error fetching family members:", error);
-        toast({ title: t.fetchFamilyError, description: t.fetchFamilyErrorDescription, variant: 'destructive'});
-    });
-    
-    const unsubDocs = onSnapshot(docsColRef, (snapshot) => {
-        const docsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as HealthDocument));
-        setDocuments(docsData);
-    }, (error) => {
-        console.error("Error fetching documents:", error);
-        toast({ title: t.fetchDocumentsError, description: t.fetchDocumentsErrorDescription, variant: 'destructive'});
-    });
-
-    return () => {
-      unsubUser();
-      unsubFamily();
-      unsubDocs();
-    };
-  }, [user, toast, t]);
   
   const handleOpenMemberForm = (profile: UserProfile | null = null) => {
     setEditingProfile(profile);
@@ -150,8 +133,9 @@ export default function ProfilePage() {
   async function onMemberSubmit(values: MemberFormValues) {
     if (!user) return;
     try {
+      let docRef;
       if (editingProfile) {
-        const docRef = editingProfile.isPrimary 
+        docRef = editingProfile.isPrimary 
           ? doc(db, 'users', editingProfile.id)
           : doc(db, 'users', user.uid, 'familyMembers', editingProfile.id);
         await setDoc(docRef, values, { merge: true });
@@ -388,12 +372,13 @@ export default function ProfilePage() {
           {isLoading ? (
              <div className="space-y-6">
                 <Skeleton className="h-64 w-full" />
+                <Skeleton className="h-48 w-full" />
              </div>
           ) : (
             <>
               {primaryProfile && <ProfileCard profile={primaryProfile} />}
               {familyMembers.map(member => <ProfileCard key={member.id} profile={member} />)}
-              {profiles.length === 0 && (
+              {!primaryProfile && familyMembers.length === 0 && (
                  <Card>
                     <CardContent className="text-center py-12">
                       <p className="text-muted-foreground mb-4">{t.noProfiles}</p>
@@ -424,7 +409,7 @@ export default function ProfilePage() {
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                     </div>
-                ) : documents.length > 0 ? (
+                ) : documents && documents.length > 0 ? (
                     <div className="space-y-4">
                         {documents.map(doc => (
                             <div key={doc.id} className="flex items-center justify-between p-2 rounded-md border">
