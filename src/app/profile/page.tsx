@@ -5,8 +5,9 @@ import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { auth, db } from '@/lib/firebase';
-import { collection, onSnapshot, doc, setDoc, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db, storage } from '@/lib/firebase';
+import { collection, onSnapshot, doc, setDoc, addDoc, deleteDoc, query, orderBy, Timestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,10 +16,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { User, FileText, Users, Edit, Trash2, PlusCircle, Heart } from 'lucide-react';
+import { User, FileText, Users, Edit, Trash2, PlusCircle, Heart, Upload, BadgeCheck, Clock, Download } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 const memberSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -29,7 +32,13 @@ const memberSchema = z.object({
   chronicDiseases: z.string().optional(),
 });
 
+const documentSchema = z.object({
+  title: z.string().min(3, { message: 'Title must be at least 3 characters.'}),
+  file: z.instanceof(FileList).refine(files => files?.length === 1, 'File is required.'),
+});
+
 type MemberFormValues = z.infer<typeof memberSchema>;
+type DocumentFormValues = z.infer<typeof documentSchema>;
 
 type UserProfile = MemberFormValues & {
   id: string;
@@ -37,22 +46,39 @@ type UserProfile = MemberFormValues & {
   isPrimary: boolean;
 };
 
+type HealthDocument = {
+  id: string;
+  title: string;
+  url: string;
+  path: string;
+  uploadedAt: Timestamp;
+  status: 'Pending' | 'Verified';
+};
+
 export default function ProfilePage() {
   const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].profile;
   const [profiles, setProfiles] = useState<UserProfile[]>([]);
+  const [documents, setDocuments] = useState<HealthDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isMemberFormOpen, setIsMemberFormOpen] = useState(false);
   const [editingProfile, setEditingProfile] = useState<UserProfile | null>(null);
+  const [isDocFormOpen, setIsDocFormOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const user = auth.currentUser;
   
   const primaryProfile = useMemo(() => profiles.find(p => p.isPrimary), [profiles]);
   const familyMembers = useMemo(() => profiles.filter(p => !p.isPrimary), [profiles]);
 
-  const form = useForm<MemberFormValues>({
+  const memberForm = useForm<MemberFormValues>({
     resolver: zodResolver(memberSchema),
     defaultValues: { name: '', relationship: '', bio: '', bloodGroup: '', allergies: '', chronicDiseases: '' },
+  });
+
+  const docForm = useForm<DocumentFormValues>({
+    resolver: zodResolver(documentSchema),
+    defaultValues: { title: '' },
   });
 
   useEffect(() => {
@@ -63,6 +89,7 @@ export default function ProfilePage() {
 
     const userDocRef = doc(db, 'users', user.uid);
     const familyColRef = collection(db, 'users', user.uid, 'familyMembers');
+    const docsColRef = query(collection(db, 'users', user.uid, 'documents'), orderBy('uploadedAt', 'desc'));
 
     const unsubUser = onSnapshot(userDocRef, (docSnap) => {
       let userProfile: UserProfile;
@@ -83,23 +110,30 @@ export default function ProfilePage() {
     const unsubFamily = onSnapshot(familyColRef, (snapshot) => {
       const familyData = snapshot.docs.map(doc => ({ id: doc.id, isPrimary: false, ...doc.data() } as UserProfile));
       setProfiles(prev => [prev.find(p => p.isPrimary)!, ...familyData]);
-      setIsLoading(false);
     }, (error) => {
         console.error("Error fetching family members:", error);
         toast({ title: 'Error', description: 'Could not fetch family member data.', variant: 'destructive'});
-        setIsLoading(false);
+    });
+    
+    const unsubDocs = onSnapshot(docsColRef, (snapshot) => {
+        const docsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as HealthDocument));
+        setDocuments(docsData);
+    }, (error) => {
+        console.error("Error fetching documents:", error);
+        toast({ title: 'Error', description: 'Could not fetch documents.', variant: 'destructive'});
     });
 
     return () => {
       unsubUser();
       unsubFamily();
+      unsubDocs();
     };
   }, [user, toast]);
   
-  const handleOpenForm = (profile: UserProfile | null = null) => {
+  const handleOpenMemberForm = (profile: UserProfile | null = null) => {
     setEditingProfile(profile);
     if (profile) {
-      form.reset({
+      memberForm.reset({
           name: profile.name || '',
           relationship: profile.relationship || '',
           bio: profile.bio || '',
@@ -108,39 +142,75 @@ export default function ProfilePage() {
           chronicDiseases: profile.chronicDiseases || '',
       });
     } else {
-      form.reset({ name: '', relationship: '', bio: '', bloodGroup: '', allergies: '', chronicDiseases: '' });
+      memberForm.reset({ name: '', relationship: '', bio: '', bloodGroup: '', allergies: '', chronicDiseases: '' });
     }
-    setIsFormOpen(true);
+    setIsMemberFormOpen(true);
   };
 
-  async function onSubmit(values: MemberFormValues) {
-    if (!user) {
-      toast({ title: 'Error', description: 'You must be logged in.', variant: 'destructive' });
-      return;
-    }
-    
+  async function onMemberSubmit(values: MemberFormValues) {
+    if (!user) return;
     try {
-      if (editingProfile) { // Editing existing profile
+      if (editingProfile) {
         const docRef = editingProfile.isPrimary 
           ? doc(db, 'users', editingProfile.id)
           : doc(db, 'users', user.uid, 'familyMembers', editingProfile.id);
-        
         await setDoc(docRef, values, { merge: true });
         toast({ title: 'Profile Updated', description: `${values.name}'s details have been saved.` });
-      } else { // Adding new family member
+      } else {
         const colRef = collection(db, 'users', user.uid, 'familyMembers');
         await addDoc(colRef, values);
         toast({ title: 'Member Added', description: `${values.name} has been added to your family.` });
       }
-      setIsFormOpen(false);
+      setIsMemberFormOpen(false);
       setEditingProfile(null);
     } catch (error) {
       console.error("Error saving profile: ", error);
-      toast({ title: 'Save Failed', description: 'Could not save the profile. Please try again.', variant: 'destructive' });
+      toast({ title: 'Save Failed', description: 'Could not save the profile.', variant: 'destructive' });
     }
   }
 
-  async function handleDelete(profile: UserProfile) {
+  async function onDocSubmit(values: DocumentFormValues) {
+    if (!user || !values.file) return;
+    const file = values.file[0];
+    const docId = `${Date.now()}_${file.name}`;
+    const storagePath = `documents/${user.uid}/${docId}`;
+    const storageRef = ref(storage, storagePath);
+
+    try {
+      setUploadProgress(0);
+      // Simulate progress for small files
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => (prev === null ? 0 : Math.min(prev + 10, 90)));
+      }, 200);
+
+      await uploadBytes(storageRef, file);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      const downloadURL = await getDownloadURL(storageRef);
+      
+      const docsColRef = collection(db, 'users', user.uid, 'documents');
+      await addDoc(docsColRef, {
+        title: values.title,
+        url: downloadURL,
+        path: storagePath,
+        uploadedAt: Timestamp.now(),
+        status: 'Pending',
+      });
+
+      toast({ title: 'Upload Successful', description: `${values.title} has been uploaded.` });
+      setIsDocFormOpen(false);
+      docForm.reset();
+    } catch (error) {
+      console.error("Error uploading document: ", error);
+      toast({ title: 'Upload Failed', description: 'Could not upload the document.', variant: 'destructive' });
+    } finally {
+      setTimeout(() => setUploadProgress(null), 1000);
+    }
+  }
+
+  async function handleDeleteMember(profile: UserProfile) {
     if (!user || profile.isPrimary) return;
     try {
       const docRef = doc(db, 'users', user.uid, 'familyMembers', profile.id);
@@ -148,7 +218,21 @@ export default function ProfilePage() {
       toast({ title: 'Member Deleted', description: `${profile.name} has been removed.` });
     } catch (error) {
        console.error("Error deleting member: ", error);
-       toast({ title: 'Delete Failed', description: 'Could not delete member. Please try again.', variant: 'destructive' });
+       toast({ title: 'Delete Failed', description: 'Could not delete member.', variant: 'destructive' });
+    }
+  }
+
+  async function handleDeleteDoc(document: HealthDocument) {
+    if (!user) return;
+    const storageRef = ref(storage, document.path);
+    const docRef = doc(db, 'users', user.uid, 'documents', document.id);
+    try {
+      await deleteObject(storageRef);
+      await deleteDoc(docRef);
+      toast({ title: 'Document Deleted', description: `${document.title} has been removed.` });
+    } catch (error) {
+       console.error("Error deleting document: ", error);
+       toast({ title: 'Delete Failed', description: 'Could not delete document.', variant: 'destructive' });
     }
   }
 
@@ -167,7 +251,7 @@ export default function ProfilePage() {
           <CardTitle className="font-headline">{profile.name}</CardTitle>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleOpenForm(profile)}>
+            <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => handleOpenMemberForm(profile)}>
                 <Edit className="h-4 w-4" />
                 <span className="sr-only">Edit {profile.name}</span>
             </Button>
@@ -188,7 +272,7 @@ export default function ProfilePage() {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(profile)}>Delete</AlertDialogAction>
+                            <AlertDialogAction onClick={() => handleDeleteMember(profile)}>Delete</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -211,7 +295,7 @@ export default function ProfilePage() {
       </CardContent>
     </Card>
   );
-
+  
   if (!user && !isLoading) {
     return (
       <div className="container py-12 md:py-16 text-center">
@@ -226,34 +310,56 @@ export default function ProfilePage() {
 
   return (
     <div className="container py-12 md:py-16">
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+      <Dialog open={isMemberFormOpen} onOpenChange={setIsMemberFormOpen}>
           <DialogContent>
               <DialogHeader>
                   <DialogTitle>{editingProfile ? `Edit ${editingProfile.isPrimary ? 'Your' : `${editingProfile.name}'s`} Profile` : 'Add a Family Member'}</DialogTitle>
               </DialogHeader>
-              <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                      <FormField control={form.control} name="name" render={({ field }) => (
+              <Form {...memberForm}>
+                  <form onSubmit={memberForm.handleSubmit(onMemberSubmit)} className="space-y-4">
+                      <FormField control={memberForm.control} name="name" render={({ field }) => (
                           <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
-                      <FormField control={form.control} name="relationship" render={({ field }) => (
+                      <FormField control={memberForm.control} name="relationship" render={({ field }) => (
                           <FormItem><FormLabel>Relationship</FormLabel><FormControl><Input placeholder="e.g., Spouse, Son, Mother" {...field} disabled={editingProfile?.isPrimary} /></FormControl><FormMessage /></FormItem>
                       )}/>
-                      <FormField control={form.control} name="bio" render={({ field }) => (
+                      <FormField control={memberForm.control} name="bio" render={({ field }) => (
                           <FormItem><FormLabel>Short Bio</FormLabel><FormControl><Textarea placeholder="A little about them" {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
-                      <FormField control={form.control} name="bloodGroup" render={({ field }) => (
+                      <FormField control={memberForm.control} name="bloodGroup" render={({ field }) => (
                           <FormItem><FormLabel>Blood Group</FormLabel><FormControl><Input placeholder="e.g., A+, O-" {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
-                        <FormField control={form.control} name="allergies" render={({ field }) => (
+                        <FormField control={memberForm.control} name="allergies" render={({ field }) => (
                           <FormItem><FormLabel>Allergies</FormLabel><FormControl><Textarea placeholder="e.g., Peanuts, Pollen" {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
-                        <FormField control={form.control} name="chronicDiseases" render={({ field }) => (
+                        <FormField control={memberForm.control} name="chronicDiseases" render={({ field }) => (
                           <FormItem><FormLabel>Chronic Diseases</FormLabel><FormControl><Textarea placeholder="e.g., Diabetes, Hypertension" {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <DialogFooter>
                           <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
                           <Button type="submit">Save Changes</Button>
+                      </DialogFooter>
+                  </form>
+              </Form>
+          </DialogContent>
+      </Dialog>
+      <Dialog open={isDocFormOpen} onOpenChange={setIsDocFormOpen}>
+          <DialogContent>
+              <DialogHeader>
+                  <DialogTitle>Upload a New Document</DialogTitle>
+              </DialogHeader>
+              <Form {...docForm}>
+                  <form onSubmit={docForm.handleSubmit(onDocSubmit)} className="space-y-4">
+                      <FormField control={docForm.control} name="title" render={({ field }) => (
+                          <FormItem><FormLabel>Document Title</FormLabel><FormControl><Input placeholder="e.g., Blood Test Report" {...field} /></FormControl><FormMessage /></FormItem>
+                      )}/>
+                      <FormField control={docForm.control} name="file" render={({ field }) => (
+                          <FormItem><FormLabel>File</FormLabel><FormControl><Input type="file" {...docForm.register('file')} /></FormControl><FormMessage /></FormItem>
+                      )}/>
+                      {uploadProgress !== null && <Progress value={uploadProgress} className="w-full" />}
+                      <DialogFooter>
+                          <DialogClose asChild><Button variant="ghost" disabled={uploadProgress !== null}>Cancel</Button></DialogClose>
+                          <Button type="submit" disabled={uploadProgress !== null}>{uploadProgress !== null ? 'Uploading...' : 'Upload'}</Button>
                       </DialogFooter>
                   </form>
               </Form>
@@ -274,7 +380,7 @@ export default function ProfilePage() {
               <Users className="h-7 w-7 text-primary" />
               Family & Health Details
             </h2>
-             <Button onClick={() => handleOpenForm()}>
+             <Button onClick={() => handleOpenMemberForm()}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Add Member
             </Button>
@@ -282,7 +388,6 @@ export default function ProfilePage() {
           
           {isLoading ? (
              <div className="space-y-6">
-                <Skeleton className="h-64 w-full" />
                 <Skeleton className="h-64 w-full" />
              </div>
           ) : (
@@ -301,16 +406,66 @@ export default function ProfilePage() {
         </div>
 
         <div className="space-y-8">
-          <Card className="text-center shadow-lg bg-secondary/50 cursor-not-allowed">
-            <CardHeader className="items-center p-6 opacity-50">
-              <div className="p-4 bg-primary/10 rounded-full mb-4">
-                <FileText className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="font-headline">{t.documentsTitle}</CardTitle>
+          <Card className="shadow-lg">
+            <CardHeader>
+                <div className="flex justify-between items-center">
+                    <CardTitle className="font-headline flex items-center gap-3">
+                        <FileText className="h-6 w-6 text-primary" />
+                        My Documents
+                    </CardTitle>
+                    <Button size="icon" variant="outline" onClick={() => setIsDocFormOpen(true)}>
+                        <Upload className="h-4 w-4" />
+                        <span className="sr-only">Upload Document</span>
+                    </Button>
+                </div>
             </CardHeader>
-            <CardContent className="opacity-50">
-              <p className="text-muted-foreground">{t.documentsDescription}</p>
-               <p className="text-xs font-semibold text-primary mt-2">(Coming Soon)</p>
+            <CardContent>
+                {isLoading ? (
+                    <div className="space-y-4">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                    </div>
+                ) : documents.length > 0 ? (
+                    <div className="space-y-4">
+                        {documents.map(doc => (
+                            <div key={doc.id} className="flex items-center justify-between p-2 rounded-md border">
+                                <div className="flex-1 overflow-hidden">
+                                    <p className="font-semibold truncate">{doc.title}</p>
+                                    <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                        {doc.status === 'Verified' ? <BadgeCheck className="h-3 w-3 text-green-500" /> : <Clock className="h-3 w-3" />}
+                                        <Badge variant={doc.status === 'Verified' ? 'default' : 'secondary'} className="bg-opacity-20 text-xs">{doc.status}</Badge>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1 ml-2">
+                                    <Button asChild variant="ghost" size="icon">
+                                        <a href={doc.url} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4" /></a>
+                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This will permanently delete the document "{doc.title}".
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-center text-sm text-muted-foreground py-4">No documents uploaded yet.</p>
+                )}
             </CardContent>
           </Card>
         </div>
