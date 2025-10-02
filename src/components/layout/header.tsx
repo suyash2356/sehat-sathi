@@ -150,54 +150,56 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 items-center">
         <div className="flex flex-1 items-center justify-start">
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-              >
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="pr-0 flex flex-col">
-              <SheetHeader>
-                  <SheetTitle>
-                      <VisuallyHidden>Navigation Menu</VisuallyHidden>
-                  </SheetTitle>
-              </SheetHeader>
-              <Link
-                href="/"
-                className="flex items-center mb-8"
-                onClick={() => setIsOpen(false)}
-              >
-                <BotMessageSquare className="h-6 w-6 mr-2 text-primary" />
-                <span className="font-bold font-headline">{t.appName}</span>
-              </Link>
-              <div className="flex flex-col space-y-6 flex-grow">
-                {navItems.map((item) => (
-                  <NavLink key={item.href} {...item} className="text-lg" />
-                ))}
-              </div>
-
-              {(user) && (
-                <div className="mt-auto border-t pt-4 space-y-6">
-                   <NavLink 
-                    href={profileNavItem.href} 
-                    label={profileNavItem.label} 
-                    icon={profileNavItem.icon}
-                    className="text-lg"
-                  />
-                   <NavLink 
-                    href={insuranceNavItem.href} 
-                    label={insuranceNavItem.label} 
-                    icon={insuranceNavItem.icon}
-                    className="text-lg"
-                  />
+          {!isLandingPage && (
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                >
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="pr-0 flex flex-col">
+                <SheetHeader>
+                    <SheetTitle>
+                        <VisuallyHidden>Navigation Menu</VisuallyHidden>
+                    </SheetTitle>
+                </SheetHeader>
+                <Link
+                  href="/"
+                  className="flex items-center mb-8"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <BotMessageSquare className="h-6 w-6 mr-2 text-primary" />
+                  <span className="font-bold font-headline">{t.appName}</span>
+                </Link>
+                <div className="flex flex-col space-y-6 flex-grow">
+                  {navItems.map((item) => (
+                    <NavLink key={item.href} {...item} className="text-lg" />
+                  ))}
                 </div>
-              )}
-            </SheetContent>
-          </Sheet>
+
+                {(user) && (
+                  <div className="mt-auto border-t pt-4 space-y-6">
+                     <NavLink 
+                      href={profileNavItem.href} 
+                      label={profileNavItem.label} 
+                      icon={profileNavItem.icon}
+                      className="text-lg"
+                    />
+                     <NavLink 
+                      href={insuranceNavItem.href} 
+                      label={insuranceNavItem.label} 
+                      icon={insuranceNavItem.icon}
+                      className="text-lg"
+                    />
+                  </div>
+                )}
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
         
         <div className="flex flex-1 items-center justify-center">
@@ -305,21 +307,19 @@ export function Header() {
                 <LanguageSelector />
               </>
             )}
-            {user ? (
-            <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
-                <LogOut className="h-5 w-5" />
-            </Button>
+            {user && !isLandingPage ? (
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
+                  <LogOut className="h-5 w-5" />
+              </Button>
             ) : (
-            pathname !== '/login' && (
-                <Button asChild variant="outline" size="sm">
-                <Link href="/login">Login</Link>
-                </Button>
-            )
+              pathname !== '/login' && (
+                  <Button asChild variant="outline" size="sm">
+                  <Link href="/login">Login</Link>
+                  </Button>
+              )
             )}
         </div>
       </div>
     </header>
   );
 }
-
-    
