@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { Video, Hospital } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
@@ -20,6 +21,9 @@ const bookingSchema = z.object({
   phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
   issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
   hospital: z.string().optional(),
+  appointmentType: z.enum(['hospital-visit', 'video-call'], {
+    required_error: 'Please select an appointment type.',
+  }),
 });
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
@@ -37,6 +41,7 @@ export default function MapPage() {
       phone: '',
       issue: '',
       hospital: '',
+      appointmentType: 'hospital-visit',
     },
   });
 
@@ -105,6 +110,40 @@ export default function MapPage() {
             <CardContent>
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="appointmentType"
+                      render={({ field }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel>{t.formAppointmentTypeLabel}</FormLabel>
+                          <FormControl>
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="flex flex-col space-y-1"
+                            >
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="hospital-visit" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {t.formAppointmentTypeHospital}
+                                </FormLabel>
+                              </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="video-call" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {t.formAppointmentTypeVideo}
+                                </FormLabel>
+                              </FormItem>
+                            </RadioGroup>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                     control={form.control}
                     name="name"
