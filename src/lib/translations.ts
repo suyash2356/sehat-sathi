@@ -445,8 +445,8 @@ export const translations = {
       formPhonePlaceholder: '10-digit mobile number',
       formIssueLabel: 'Health Issue',
       formIssuePlaceholder: 'Briefly describe your health concern...',
-      formHospitalLabel: 'Selected Hospital (Optional)',
-      formHospitalPlaceholder: 'Hospital name will appear here',
+      formHospitalLabel: 'Selected Hospital',
+      formHospitalPlaceholder: 'Select a hospital from the map',
       bookingButton: 'Request Appointment',
       bookingToastTitle: 'Appointment Request Confirmed!',
       bookingToastDescription: "We've received your request. You'll get an SMS shortly.",
@@ -530,6 +530,12 @@ export const translations = {
       formAppointmentTypeLabel: 'Appointment Type',
       formAppointmentTypeHospital: 'Visit Hospital',
       formAppointmentTypeVideo: 'Online Video Call',
+      formCallNowLabel: 'Call Now (Urgent)',
+      formCallNowDescription: 'Connect immediately. Extra charges apply.',
+      formDateLabel: 'Preferred Date',
+      formDatePlaceholder: 'Pick a date',
+      formTimeLabel: 'Preferred Time',
+      formTimePlaceholder: 'Select a time slot',
     },
     profile: {
       title: 'My Profile',
@@ -769,7 +775,7 @@ export const translations = {
                     'तेज चलना: अपने गांव के चारों ओर 30 मिनट की एक साधारण सैर एक बेहतरीन शुरुआत है।',
                     'योग और स्ट्रेचिंग: सरल आसन लचीलेपन में सुधार कर सकते हैं और शरीर के दर्द को कम कर सकते हैं।',
                     'खेती और घरेलू काम: दैनिक शारीरिक श्रम भी व्यायाम का एक अच्छा रूप है।',
-                    'साइकिल चलाना: यदि आपके पास साइकिल है, तो इसका उपयोग कम दूरी की यात्रा के लिए करें।'
+                    'साइकिल चलाना: यदि आपके पास साइकिल है, तो इसका उपयोग कम दूरी की यात्रा के لیے करें।'
                   ]
                 }
               ]
@@ -909,7 +915,7 @@ export const translations = {
         },
         {
             question: 'क्या मेरी व्यक्तिगत जानकारी सुरक्षित है?',
-            answer: 'हम आपकी गोपनीयता को प्राथमिकता देते हैं। चैटबॉट के साथ आपकी बातचीत गुमनाम है। टेली-परामर्श के लिए, हम आपको डॉक्टर से जोड़ने के लिए केवल आवश्यक जानकारी एकत्र करते हैं, और यह डेटा सुरक्षित रूप से संभाला जाता है।'
+            answer: 'हम आपकी गोपनीयता को प्राथमिकता देते हैं। चैटबॉट के साथ आपकी बातचीत गुमनाम है। टेली-परामर्श के लिए, हम आपको डॉक्टर से जोड़ने के लिए केवल आवश्यक जानकारी एकत्र करते हैं, और यह डेटा सुरक्षित रूप سے संभाला जाता है।'
         },
         {
           question: 'सेहत साथी किस प्रकार की स्वास्थ्य जानकारी प्रदान करता है?',
@@ -985,7 +991,7 @@ export const translations = {
         'मामूली चोटों के लिए प्राथमिक उपचार',
         'आम बीमारियों के बारे में जानकारी'
       ],
-      aiButton: 'हमारे चैटबॉट से पूछें',
+aiButton: 'हमारे चैटबॉट से पूछें',
       bookingTitle: 'अपॉइंटमेंट बुक करें',
       bookingDescription: 'अपने घर के आराम से एक प्रमाणित डॉक्टर से जुड़ें या अस्पताल जाने की योजना बनाएं। अपॉइंटमेंट का अनुरोध करने के लिए नीचे दिया गया फॉर्म भरें।',
       formNameLabel: 'पूरा नाम',
@@ -994,8 +1000,8 @@ export const translations = {
       formPhonePlaceholder: '10-अंकीय मोबाइल नंबर',
       formIssueLabel: 'स्वास्थ्य समस्या',
       formIssuePlaceholder: 'संक्षेप में अपनी स्वास्थ्य चिंता का वर्णन करें...',
-      formHospitalLabel: 'चयनित अस्पताल (वैकल्पिक)',
-      formHospitalPlaceholder: 'अस्पताल का नाम यहाँ दिखाई देगा',
+      formHospitalLabel: 'चयनित अस्पताल',
+      formHospitalPlaceholder: 'नक्शे से एक अस्पताल चुनें',
       bookingButton: 'अपॉइंटमेंट का अनुरोध करें',
       bookingToastTitle: 'अपॉइंटमेंट अनुरोध की पुष्टि हुई!',
       bookingToastDescription: 'हमें आपका अनुरोध मिल गया है। आपको शीघ्र ही एक एसएमएस मिलेगा।',
@@ -1079,6 +1085,12 @@ export const translations = {
       formAppointmentTypeLabel: 'अपॉइंटमेंट का प्रकार',
       formAppointmentTypeHospital: 'अस्पताल जाएं',
       formAppointmentTypeVideo: 'ऑनलाइन वीडियो कॉल',
+      formCallNowLabel: 'अभी कॉल करें (अत्यावश्यक)',
+      formCallNowDescription: 'तुरंत जुड़ें। अतिरिक्त शुल्क लागू।',
+      formDateLabel: 'पसंदीदा तारीख',
+      formDatePlaceholder: 'एक तारीख चुनें',
+      formTimeLabel: 'पसंदीदा समय',
+      formTimePlaceholder: 'एक समय स्लॉट चुनें',
     },
     profile: {
       title: 'मेरी प्रोफाइल',
@@ -1543,8 +1555,8 @@ export const translations = {
       formPhonePlaceholder: '१०-अंकी मोबाइल नंबर',
       formIssueLabel: 'आरोग्य समस्या',
       formIssuePlaceholder: 'तुमच्या आरोग्य चिंतेचे थोडक्यात वर्णन करा...',
-      formHospitalLabel: 'निवडलेले रुग्णालय (ऐच्छिक)',
-      formHospitalPlaceholder: 'रुग्णालयाचे नाव येथे दिसेल',
+      formHospitalLabel: 'निवडलेले रुग्णालय',
+      formHospitalPlaceholder: 'नकाशावरून रुग्णालय निवडा',
       bookingButton: 'भेटीची विनंती करा',
       bookingToastTitle: 'भेटीची विनंती निश्चित झाली!',
       bookingToastDescription: 'आम्हाला तुमची विनंती मिळाली आहे। तुम्हाला लवकरच एक एसएमएस मिळेल।',
@@ -1628,6 +1640,12 @@ export const translations = {
       formAppointmentTypeLabel: 'भेटीचा प्रकार',
       formAppointmentTypeHospital: 'रुग्णालयात भेट द्या',
       formAppointmentTypeVideo: 'ऑनलाइन व्हिडिओ कॉल',
+      formCallNowLabel: 'आता कॉल करा (तातडीचे)',
+      formCallNowDescription: 'त्वरित कनेक्ट व्हा. अतिरिक्त शुल्क लागू.',
+      formDateLabel: 'पसंतीची तारीख',
+      formDatePlaceholder: 'एक तारीख निवडा',
+      formTimeLabel: 'पसंतीची वेळ',
+      formTimePlaceholder: 'वेळेची निवड करा',
     },
     profile: {
       title: 'माझी प्रोफाइल',

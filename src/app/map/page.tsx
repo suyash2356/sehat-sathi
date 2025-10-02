@@ -10,11 +10,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
-import { Video, Hospital } from 'lucide-react';
+import { Video, Hospital, CalendarIcon, Clock, Zap } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { GoogleMapEmbed, type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
 import React from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -24,15 +30,25 @@ const bookingSchema = z.object({
     required_error: 'Please select an appointment type.',
   }),
   hospital: z.string().optional(),
+  preferredDate: z.date().optional(),
+  preferredTime: z.string().optional(),
+  callNow: z.boolean().optional(),
 }).refine(data => {
-    // If appointment type is hospital-visit, hospital field must be filled.
     if (data.appointmentType === 'hospital-visit' && !data.hospital) {
         return false;
     }
     return true;
 }, {
     message: 'Please select a hospital from the map for a hospital visit.',
-    path: ['hospital'], //
+    path: ['hospital'],
+}).refine(data => {
+    if (data.appointmentType === 'video-call' && !data.callNow && (!data.preferredDate || !data.preferredTime)) {
+        return false;
+    }
+    return true;
+}, {
+    message: 'Please select a preferred date and time for your video call.',
+    path: ['preferredDate'],
 });
 
 
@@ -52,25 +68,43 @@ export default function MapPage() {
       issue: '',
       hospital: '',
       appointmentType: 'video-call',
+      callNow: false,
     },
   });
   
   const appointmentType = form.watch('appointmentType');
+  const callNow = form.watch('callNow');
+
+  React.useEffect(() => {
+    if (callNow) {
+      form.clearErrors(['preferredDate', 'preferredTime']);
+      form.setValue('preferredDate', undefined);
+      form.setValue('preferredTime', undefined);
+    }
+  }, [callNow, form]);
 
   function onSubmit(values: BookingFormValues) {
     console.log(values);
-    form.reset();
-    if(values.appointmentType === 'hospital-visit') {
+    
+    if (values.appointmentType === 'hospital-visit') {
         toast({
           title: t.bookingToastTitle,
           description: "Your request has been sent to the hospital. You will be notified upon confirmation.",
         });
-    } else {
-        toast({
-          title: "Video Consultation Confirmed!",
-          description: "A meeting link will be sent to you via SMS shortly.",
-        });
+    } else { // Video call
+        if (values.callNow) {
+            toast({
+              title: "Immediate Consultation Requested!",
+              description: "Connecting you to the next available doctor. This is a premium service.",
+            });
+        } else {
+            toast({
+              title: "Video Consultation Scheduled!",
+              description: `Your appointment is requested for ${format(values.preferredDate!, 'PPP')} at ${values.preferredTime}. A confirmation link will be sent via SMS.`,
+            });
+        }
     }
+    form.reset();
   }
   
   const handleBookAppointment = (hospital: HospitalType) => {
@@ -78,6 +112,13 @@ export default function MapPage() {
     form.setValue('appointmentType', 'hospital-visit');
     bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  const timeSlots = [
+    "09:00 AM - 09:30 AM", "09:30 AM - 10:00 AM", "10:00 AM - 10:30 AM",
+    "10:30 AM - 11:00 AM", "11:00 AM - 11:30 AM", "11:30 AM - 12:00 PM",
+    "02:00 PM - 02:30 PM", "02:30 PM - 03:00 PM", "03:00 PM - 03:30 PM",
+    "03:30 PM - 04:00 PM",
+  ];
 
   return (
     <div className="container py-12 md:py-16">
@@ -191,19 +232,112 @@ export default function MapPage() {
                     )}
                     />
                     
-                     <FormField
-                        control={form.control}
-                        name="hospital"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>{t.formHospitalLabel}</FormLabel>
-                            <FormControl>
-                                <Input placeholder={t.formHospitalPlaceholder} {...field} disabled={appointmentType !== 'hospital-visit'} />
-                            </FormControl>
-                             <FormMessage />
-                            </FormItem>
-                        )}
+                    {appointmentType === 'hospital-visit' && (
+                        <FormField
+                            control={form.control}
+                            name="hospital"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>{t.formHospitalLabel}</FormLabel>
+                                <FormControl>
+                                    <Input placeholder={t.formHospitalPlaceholder} {...field} disabled={appointmentType !== 'hospital-visit'} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
                         />
+                    )}
+
+                    {appointmentType === 'video-call' && (
+                      <div className="space-y-6 rounded-lg border p-4">
+                        <FormField
+                          control={form.control}
+                          name="callNow"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-primary/10">
+                              <div className="space-y-0.5">
+                                <FormLabel className="text-base flex items-center gap-2"><Zap className="text-amber-500" /> {t.formCallNowLabel}</FormLabel>
+                                <FormDescription>{t.formCallNowDescription}</FormDescription>
+                              </div>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className={cn("space-y-6", callNow ? "opacity-50" : "")}>
+                          <FormField
+                            control={form.control}
+                            name="preferredDate"
+                            render={({ field }) => (
+                              <FormItem className="flex flex-col">
+                                <FormLabel>{t.formDateLabel}</FormLabel>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <FormControl>
+                                      <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                          "w-full pl-3 text-left font-normal",
+                                          !field.value && "text-muted-foreground"
+                                        )}
+                                        disabled={callNow}
+                                      >
+                                        {field.value ? (
+                                          format(field.value, "PPP")
+                                        ) : (
+                                          <span>{t.formDatePlaceholder}</span>
+                                        )}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                      </Button>
+                                    </FormControl>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                      mode="single"
+                                      selected={field.value}
+                                      onSelect={field.onChange}
+                                      disabled={(date) =>
+                                        date < new Date(new Date().setDate(new Date().getDate() - 1)) 
+                                      }
+                                      initialFocus
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="preferredTime"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t.formTimeLabel}</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value} disabled={callNow}>
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder={t.formTimePlaceholder} />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {timeSlots.map(slot => (
+                                      <SelectItem key={slot} value={slot}>{slot}</SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    )}
                     
                     <FormField
                     control={form.control}
