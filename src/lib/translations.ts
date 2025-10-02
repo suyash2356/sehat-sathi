@@ -438,32 +438,38 @@ export const translations = {
         {
           title: "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (AB-PMJAY)",
           description: "Provides a health cover of Rs. 5 lakhs per family per year for secondary and tertiary care hospitalization to over 10.74 crore poor and vulnerable families.",
-          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+          url: "https://pmjay.gov.in/"
         },
         {
           title: "National Health Mission (NHM)",
           description: "Envisages achievement of universal access to equitable, affordable & quality health care services that are accountable and responsive to people's needs.",
-          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+          url: "https://nhm.gov.in/"
         },
         {
           title: "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
           description: "A maternity benefit programme providing partial wage compensation to women for wage-loss during childbirth and childcare.",
-          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+          url: "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana"
         },
          {
           title: 'Janani Shishu Suraksha Karyakram (JSSK)',
           description: 'Entitles all pregnant women delivering in public health institutions to absolutely free and no expense delivery, including caesarean section.',
-          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+          url: "https://nhm.gov.in/index1.php?lang=1&level=2&sublinkid=825&lid=221"
         },
         {
           title: 'Rashtriya Bal Swasthya Karyakram (RBSK)',
           description: 'An initiative for early identification and early intervention for children from birth to 18 years to cover 4 ‘D’s viz. Defects at birth, Deficiencies, Diseases, Development delays including disability.',
-          criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' },
+          url: "https://rbsk.nhm.gov.in/"
         },
         {
           title: 'National Tobacco Control Programme (NTCP)',
           description: 'Aims to control tobacco consumption and minimize deaths caused by it. It focuses on creating awareness about the harmful effects of tobacco.',
-          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+          url: "https://ntcp.mohfw.gov.in/"
         },
       ],
       aiTitle: 'AI-Powered Health Guidance',
@@ -1126,32 +1132,38 @@ export const translations = {
         {
             title: "आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना (AB-PMJAY)",
             description: "10.74 करोड़ से अधिक गरीब और कमजोर परिवारों को द्वितीयक और तृतीयक देखभाल अस्पताल में भर्ती के लिए प्रति वर्ष प्रति परिवार 5 लाख रुपये का स्वास्थ्य कवर प्रदान करता है।",
-            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+            url: "https://pmjay.gov.in/"
         },
         {
             title: "राष्ट्रीय स्वास्थ्य मिशन (NHM)",
             description: "लोगों की जरूरतों के प्रति जवाबदेह और उत्तरदायी, समान, परवडणाऱ्या आणि दर्जेदार आरोग्य सेवांमध्ये सार्वत्रिक प्रवेशाची कल्पना करते.",
-            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+            url: "https://nhm.gov.in/"
         },
         {
             title: "प्रधानमंत्री मातृ वंदना योजना (PMMVY)",
             description: "प्रसूति और बच्चे की देखभाल के दौरान मजदूरी-हानि के लिए महिलाओं को आंशिक मजदूरी मुआवजा प्रदान करने वाला एक मातृत्व लाभ कार्यक्रम।",
-            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+            url: "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana"
         },
         {
             title: 'जननी शिशु सुरक्षा कार्यक्रम (JSSK)',
             description: 'सार्वजनिक स्वास्थ्य संस्थानों में प्रसव कराने वाली सभी गर्भवती महिलाओं को सिजेरियन सेक्शन सहित बिल्कुल मुफ्त और बिना किसी खर्च के प्रसव का अधिकार देता है।',
-            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+            url: "https://nhm.gov.in/index1.php?lang=1&level=2&sublinkid=825&lid=221"
         },
         {
             title: 'राष्ट्रीय बाल स्वास्थ्य कार्यक्रम (RBSK)',
             description: 'जन्म से 18 वर्ष तक के बच्चों के लिए 4 ‘डी’ यानी जन्म के समय दोष, कमियों, बीमारियों, विकलांगता सहित विकास में देरी को कवर करने के लिए शीघ्र पहचान और शीघ्र हस्तक्षेप की एक पहल।',
-            criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' },
+            url: "https://rbsk.nhm.gov.in/"
         },
         {
             title: 'राष्ट्रीय तंबाकू नियंत्रण कार्यक्रम (NTCP)',
             description: 'इसका उद्देश्य तंबाकू की खपत को नियंत्रित करना और इससे होने वाली मौतों को कम करना है। यह तंबाकू के हानिकारक प्रभावों के बारे में जागरूकता पैदा करने पर केंद्रित है।',
-            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+            url: "https://ntcp.mohfw.gov.in/"
         },
       ],
       aiTitle: 'एआय-चालित आरोग्य मार्गदर्शन',
@@ -1814,32 +1826,38 @@ export const translations = {
         {
             title: "आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना (AB-PMJAY)",
             description: "10.74 कोटी पेक्षा जास्त गरीब आणि असुरक्षित कुटुंबांना दुय्यम आणि तृतीयक काळजी रुग्णालयात दाखल करण्यासाठी प्रति कुटुंब प्रति वर्ष 5 लाख रुपयांचे आरोग्य संरक्षण प्रदान करते.",
-            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+            url: "https://pmjay.gov.in/"
         },
         {
             title: "राष्ट्रीय आरोग्य अभियान (NHM)",
             description: "लोकांच्या गरजांसाठी जबाबदार आणि प्रतिसाद देणाऱ्या समान, परवडणाऱ्या आणि दर्जेदार आरोग्य सेवांमध्ये सार्वत्रिक प्रवेशाची कल्पना करते.",
-            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+            criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+            url: "https://nhm.gov.in/"
         },
         {
             title: "प्रधानमंत्री मातृ वंदना योजना (PMMVY)",
             description: "प्रसूती आणि बाळाच्या संगोपनाच्या काळात मजुरीच्या नुकसानीसाठी महिलांना आंशिक वेतन भरपाई प्रदान करणारा एक प्रसूती लाभ कार्यक्रम.",
-            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+            criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+            url: "https://wcd.nic.in/schemes/pradhan-mantri-matru-vandana-yojana"
         },
         {
           title: 'जननी शिशु सुरक्षा कार्यक्रम (JSSK)',
           description: 'सार्वजनिक आरोग्य संस्थांमध्ये प्रसूती करणाऱ्या सर्व गर्भवती महिलांना सिझेरियन सेक्शनसह पूर्णपणे विनामूल्य आणि कोणत्याही खर्चाशिवाय प्रसूतीचा हक्क देतो.',
-          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' }
+          criteria: { minAge: 18, maxAge: 45, applicableGender: 'female' },
+          url: "https://nhm.gov.in/index1.php?lang=1&level=2&sublinkid=825&lid=221"
         },
         {
           title: 'राष्ट्रीय बाल स्वास्थ्य कार्यक्रम (RBSK)',
           description: 'जन्मापासून 18 वर्षांपर्यंतच्या मुलांसाठी 4 ‘डी’ म्हणजेच जन्मातील दोष, कमतरता, रोग, विकासातील विलंब यासह अपंगत्वासाठी लवकर ओळख आणि लवकर हस्तक्षेपासाठी एक उपक्रम.',
-          criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 18, applicableGender: 'all' },
+          url: "https://rbsk.nhm.gov.in/"
         },
         {
           title: 'राष्ट्रीय तंबाखू नियंत्रण कार्यक्रम (NTCP)',
           description: 'याचा उद्देश तंबाखूच्या सेवनावर नियंत्रण ठेवणे आणि त्यामुळे होणारे मृत्यू कमी करणे आहे. हे तंबाखूच्या हानिकारक परिणामांबद्दल जागरूकता निर्माण करण्यावर लक्ष केंद्रित करते.',
-          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' }
+          criteria: { minAge: 0, maxAge: 120, applicableGender: 'all' },
+          url: "https://ntcp.mohfw.gov.in/"
         },
       ],
       aiTitle: 'एआय-चालित आरोग्य मार्गदर्शन',
@@ -2065,3 +2083,5 @@ export const translations = {
     }
   },
 };
+
+    

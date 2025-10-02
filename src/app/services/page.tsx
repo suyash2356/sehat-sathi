@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -247,17 +248,19 @@ export default function ServicesPage() {
 
       <div className="space-y-6">
           {displayedInitiatives.map((initiative, index) => (
-            <Card key={index} className="flex flex-col md:flex-row items-start shadow-sm hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="p-4 md:p-6 flex-shrink-0">
-                    <div className="p-3 bg-primary/10 rounded-lg">
-                        {initiative.icon}
-                    </div>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6 pt-0 md:pt-6">
-                    <h3 className="font-headline text-lg font-semibold">{initiative.title}</h3>
-                    <p className="text-muted-foreground mt-1">{initiative.description}</p>
-                </CardContent>
-            </Card>
+            <a href={initiative.url} key={index} target="_blank" rel="noopener noreferrer" className="block">
+              <Card className="flex flex-col md:flex-row items-start shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 h-full">
+                  <CardHeader className="p-4 md:p-6 flex-shrink-0">
+                      <div className="p-3 bg-primary/10 rounded-lg">
+                          {initiative.icon}
+                      </div>
+                  </CardHeader>
+                  <CardContent className="p-4 md:p-6 pt-0 md:pt-6">
+                      <h3 className="font-headline text-lg font-semibold">{initiative.title}</h3>
+                      <p className="text-muted-foreground mt-1">{initiative.description}</p>
+                  </CardContent>
+              </Card>
+            </a>
           ))}
           {isFilterActive && displayedInitiatives.length === 0 && (
             <p className="text-center text-muted-foreground py-8">{t.myServicesNoResults}</p>
@@ -266,3 +269,5 @@ export default function ServicesPage() {
     </div>
   );
 }
+
+    
