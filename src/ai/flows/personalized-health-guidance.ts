@@ -16,6 +16,7 @@ const PersonalizedHealthGuidanceInputSchema = z.object({
     .string()
     .describe('A description of the patient symptoms.'),
   medicalHistory: z.string().describe('The medical history of the patient.'),
+  language: z.enum(['en', 'hi', 'mr']).describe('The language for the response.'),
   photoDataUri: z
     .string()
     .optional()
@@ -43,6 +44,8 @@ const prompt = ai.definePrompt({
   IMPORTANT: You are not a doctor. You must not provide a diagnosis. Your advice should be for general informational purposes only. Always recommend that the user consult a certified doctor or visit a hospital for a proper diagnosis and treatment, especially in case of emergencies.`,
   prompt: `You are a healthcare assistant bot designed to provide personalized health guidance based on the user's symptoms and medical history, following WHO guidelines.
 
+  The user is asking for advice in this language: {{{language}}}. All of your responses must be in this language.
+
   Symptoms: {{{symptoms}}}
   Medical History: {{{medicalHistory}}}
   {{#if photoDataUri}}
@@ -50,7 +53,7 @@ const prompt = ai.definePrompt({
   {{media url=photoDataUri}}
   {{/if}}
 
-  Based on the provided information, what tailored health advice can you provide? Remember to always recommend consulting a professional.`,
+  Based on the provided information, what tailored health advice can you provide in {{{language}}}? Remember to always recommend consulting a professional.`,
 });
 
 const personalizedHealthGuidanceFlow = ai.defineFlow(

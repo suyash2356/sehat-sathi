@@ -146,6 +146,7 @@ export function ChatInterface() {
         const result = await personalizedHealthGuidance({
           symptoms: userMessage,
           medicalHistory: 'none provided',
+          language: language,
           photoDataUri: photoDataUri,
         });
         botResponseText = result.advice;
