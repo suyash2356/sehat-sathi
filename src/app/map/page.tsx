@@ -20,11 +20,21 @@ const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
   issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
-  hospital: z.string().optional(),
   appointmentType: z.enum(['hospital-visit', 'video-call'], {
     required_error: 'Please select an appointment type.',
   }),
+  hospital: z.string().optional(),
+}).refine(data => {
+    // If appointment type is hospital-visit, hospital field must be filled.
+    if (data.appointmentType === 'hospital-visit' && !data.hospital) {
+        return false;
+    }
+    return true;
+}, {
+    message: 'Please select a hospital from the map for a hospital visit.',
+    path: ['hospital'], //
 });
+
 
 type BookingFormValues = z.infer<typeof bookingSchema>;
 
@@ -41,22 +51,31 @@ export default function MapPage() {
       phone: '',
       issue: '',
       hospital: '',
-      appointmentType: 'hospital-visit',
+      appointmentType: 'video-call',
     },
   });
+  
+  const appointmentType = form.watch('appointmentType');
 
   function onSubmit(values: BookingFormValues) {
     console.log(values);
     form.reset();
-    toast({
-      title: t.bookingToastTitle,
-      description: t.bookingToastDescription,
-      variant: 'default',
-    });
+    if(values.appointmentType === 'hospital-visit') {
+        toast({
+          title: t.bookingToastTitle,
+          description: "Your request has been sent to the hospital. You will be notified upon confirmation.",
+        });
+    } else {
+        toast({
+          title: "Video Consultation Confirmed!",
+          description: "A meeting link will be sent to you via SMS shortly.",
+        });
+    }
   }
   
   const handleBookAppointment = (hospital: HospitalType) => {
     form.setValue('hospital', hospital.name);
+    form.setValue('appointmentType', 'hospital-visit');
     bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -119,17 +138,9 @@ export default function MapPage() {
                           <FormControl>
                             <RadioGroup
                               onValueChange={field.onChange}
-                              defaultValue={field.value}
+                              value={field.value}
                               className="flex flex-col space-y-1"
                             >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="hospital-visit" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  {t.formAppointmentTypeHospital}
-                                </FormLabel>
-                              </FormItem>
                               <FormItem className="flex items-center space-x-3 space-y-0">
                                 <FormControl>
                                   <RadioGroupItem value="video-call" />
@@ -138,12 +149,21 @@ export default function MapPage() {
                                   {t.formAppointmentTypeVideo}
                                 </FormLabel>
                               </FormItem>
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="hospital-visit" />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {t.formAppointmentTypeHospital}
+                                </FormLabel>
+                              </FormItem>
                             </RadioGroup>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    
                     <FormField
                     control={form.control}
                     name="name"
@@ -170,19 +190,21 @@ export default function MapPage() {
                         </FormItem>
                     )}
                     />
-                    <FormField
-                    control={form.control}
-                    name="hospital"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>{t.formHospitalLabel}</FormLabel>
-                        <FormControl>
-                            <Input placeholder={t.formHospitalPlaceholder} {...field} disabled />
-                        </FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
+                    
+                     <FormField
+                        control={form.control}
+                        name="hospital"
+                        render={({ field }) => (
+                            <FormItem>
+                            <FormLabel>{t.formHospitalLabel}</FormLabel>
+                            <FormControl>
+                                <Input placeholder={t.formHospitalPlaceholder} {...field} disabled={appointmentType !== 'hospital-visit'} />
+                            </FormControl>
+                             <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    
                     <FormField
                     control={form.control}
                     name="issue"
