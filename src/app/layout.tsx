@@ -6,17 +6,30 @@ import { usePathname } from 'next/navigation';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster";
+import { useChatLanguage } from '@/hooks/use-chat-language';
+
+function LayoutContent({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const showFooter = pathname === '/' || pathname === '/login';
+
+  return (
+    <>
+      <Header />
+      <main className="flex-grow">{children}</main>
+      {showFooter && <Footer />}
+      <Toaster />
+    </>
+  );
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const showFooter = pathname === '/' || pathname === '/login';
-
+  const { language } = useChatLanguage();
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang={language} className="scroll-smooth">
       <head>
         <title>Sehat Sathi – Rural Healthcare AI Bot</title>
         <meta name="description" content="Providing rural India with instant, reliable healthcare guidance." />
@@ -25,10 +38,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-grow">{children}</main>
-        {showFooter && <Footer />}
-        <Toaster />
+        <LayoutContent>{children}</LayoutContent>
       </body>
     </html>
   );
