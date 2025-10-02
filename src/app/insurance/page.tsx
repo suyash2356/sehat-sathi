@@ -65,12 +65,12 @@ export default function InsurancePage() {
       setIsLoading(false);
     }, (error) => {
       console.error("Error fetching insurance documents:", error);
-      toast({ title: 'Error', description: 'Could not fetch insurance documents.', variant: 'destructive'});
+      toast({ title: t.fetchError, description: t.fetchErrorDescription, variant: 'destructive'});
       setIsLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user, toast]);
+  }, [user, toast, t]);
 
   async function onDocSubmit(values: DocumentFormValues) {
     if (!user || !values.file) return;
@@ -100,12 +100,12 @@ export default function InsurancePage() {
         uploadedAt: Timestamp.now(),
       });
 
-      toast({ title: t.uploadSuccessToastTitle, description: `${values.title} has been uploaded.` });
+      toast({ title: t.uploadSuccessToastTitle, description: t.uploadSuccessToastDescription.replace('{title}', values.title) });
       setIsFormOpen(false);
       docForm.reset();
     } catch (error) {
       console.error("Error uploading document: ", error);
-      toast({ title: 'Upload Failed', description: 'Could not upload the document.', variant: 'destructive' });
+      toast({ title: t.uploadFailedTitle, description: t.uploadFailedDescription, variant: 'destructive' });
     } finally {
       setTimeout(() => setUploadProgress(null), 1000);
     }
@@ -118,21 +118,21 @@ export default function InsurancePage() {
     try {
       await deleteObject(storageRef);
       await deleteDoc(docRef);
-      toast({ title: 'Document Deleted', description: `${document.title} has been removed.` });
+      toast({ title: t.deleteSuccessTitle, description: t.deleteSuccessDescription.replace('{title}', document.title) });
     } catch (error) {
        console.error("Error deleting document: ", error);
-       toast({ title: 'Delete Failed', description: 'Could not delete document.', variant: 'destructive' });
+       toast({ title: t.deleteFailedTitle, description: t.deleteFailedDescription, variant: 'destructive' });
     }
   }
   
   if (!user && !isLoading) {
     return (
       <div className="container py-12 md:py-16 text-center">
-         <h1 className="text-3xl md:text-4xl font-bold font-headline">Access Denied</h1>
+         <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.accessDeniedTitle}</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          You must be logged in to manage your insurance documents.
+          {t.accessDeniedDescription}
         </p>
-         <Button onClick={() => window.location.href='/login'} className="mt-6">Login</Button>
+         <Button onClick={() => window.location.href='/login'} className="mt-6">{t.loginButton}</Button>
       </div>
     );
   }
@@ -218,14 +218,14 @@ export default function InsurancePage() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogTitle>{t.deleteConfirmationTitle}</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This will permanently delete the document "{doc.title}".
+                                        {t.deleteConfirmationDescription.replace('{title}', doc.title)}
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                    <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">{t.deleteButton}</AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>

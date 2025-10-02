@@ -103,7 +103,7 @@ export default function ProfilePage() {
       setIsLoading(false);
     }, (error) => {
       console.error("Error fetching user profile:", error);
-      toast({ title: 'Error', description: 'Could not fetch your profile data.', variant: 'destructive'});
+      toast({ title: t.fetchProfileError, description: t.fetchProfileErrorDescription, variant: 'destructive'});
       setIsLoading(false);
     });
 
@@ -112,7 +112,7 @@ export default function ProfilePage() {
       setProfiles(prev => [prev.find(p => p.isPrimary)!, ...familyData]);
     }, (error) => {
         console.error("Error fetching family members:", error);
-        toast({ title: 'Error', description: 'Could not fetch family member data.', variant: 'destructive'});
+        toast({ title: t.fetchFamilyError, description: t.fetchFamilyErrorDescription, variant: 'destructive'});
     });
     
     const unsubDocs = onSnapshot(docsColRef, (snapshot) => {
@@ -120,7 +120,7 @@ export default function ProfilePage() {
         setDocuments(docsData);
     }, (error) => {
         console.error("Error fetching documents:", error);
-        toast({ title: 'Error', description: 'Could not fetch documents.', variant: 'destructive'});
+        toast({ title: t.fetchDocumentsError, description: t.fetchDocumentsErrorDescription, variant: 'destructive'});
     });
 
     return () => {
@@ -128,7 +128,7 @@ export default function ProfilePage() {
       unsubFamily();
       unsubDocs();
     };
-  }, [user, toast]);
+  }, [user, toast, t]);
   
   const handleOpenMemberForm = (profile: UserProfile | null = null) => {
     setEditingProfile(profile);
@@ -155,17 +155,17 @@ export default function ProfilePage() {
           ? doc(db, 'users', editingProfile.id)
           : doc(db, 'users', user.uid, 'familyMembers', editingProfile.id);
         await setDoc(docRef, values, { merge: true });
-        toast({ title: 'Profile Updated', description: `${values.name}'s details have been saved.` });
+        toast({ title: t.updateProfileSuccess, description: t.updateProfileSuccessDescription.replace('{name}', values.name) });
       } else {
         const colRef = collection(db, 'users', user.uid, 'familyMembers');
         await addDoc(colRef, values);
-        toast({ title: 'Member Added', description: `${values.name} has been added to your family.` });
+        toast({ title: t.addMemberSuccess, description: t.addMemberSuccessDescription.replace('{name}', values.name) });
       }
       setIsMemberFormOpen(false);
       setEditingProfile(null);
     } catch (error) {
       console.error("Error saving profile: ", error);
-      toast({ title: 'Save Failed', description: 'Could not save the profile.', variant: 'destructive' });
+      toast({ title: t.saveProfileError, description: t.saveProfileErrorDescription, variant: 'destructive' });
     }
   }
 
@@ -178,7 +178,6 @@ export default function ProfilePage() {
 
     try {
       setUploadProgress(0);
-      // Simulate progress for small files
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => (prev === null ? 0 : Math.min(prev + 10, 90)));
       }, 200);
@@ -199,12 +198,12 @@ export default function ProfilePage() {
         status: 'Pending',
       });
 
-      toast({ title: 'Upload Successful', description: `${values.title} has been uploaded.` });
+      toast({ title: t.uploadSuccess, description: t.uploadSuccessDescription.replace('{title}', values.title) });
       setIsDocFormOpen(false);
       docForm.reset();
     } catch (error) {
       console.error("Error uploading document: ", error);
-      toast({ title: 'Upload Failed', description: 'Could not upload the document.', variant: 'destructive' });
+      toast({ title: t.uploadError, description: t.uploadErrorDescription, variant: 'destructive' });
     } finally {
       setTimeout(() => setUploadProgress(null), 1000);
     }
@@ -215,10 +214,10 @@ export default function ProfilePage() {
     try {
       const docRef = doc(db, 'users', user.uid, 'familyMembers', profile.id);
       await deleteDoc(docRef);
-      toast({ title: 'Member Deleted', description: `${profile.name} has been removed.` });
+      toast({ title: t.deleteMemberSuccess, description: t.deleteMemberSuccessDescription.replace('{name}', profile.name) });
     } catch (error) {
        console.error("Error deleting member: ", error);
-       toast({ title: 'Delete Failed', description: 'Could not delete member.', variant: 'destructive' });
+       toast({ title: t.deleteMemberError, description: t.deleteMemberErrorDescription, variant: 'destructive' });
     }
   }
 
@@ -229,17 +228,17 @@ export default function ProfilePage() {
     try {
       await deleteObject(storageRef);
       await deleteDoc(docRef);
-      toast({ title: 'Document Deleted', description: `${document.title} has been removed.` });
+      toast({ title: t.deleteDocumentSuccess, description: t.deleteDocumentSuccessDescription.replace('{title}', document.title) });
     } catch (error) {
        console.error("Error deleting document: ", error);
-       toast({ title: 'Delete Failed', description: 'Could not delete document.', variant: 'destructive' });
+       toast({ title: t.deleteDocumentError, description: t.deleteDocumentErrorDescription, variant: 'destructive' });
     }
   }
 
   const HealthDetailItem = ({ label, value }: { label: string, value?: string }) => (
     <div>
         <h4 className="text-sm font-semibold text-muted-foreground">{label}</h4>
-        <p className="text-base">{value || 'Not provided'}</p>
+        <p className="text-base">{value || t.notProvided}</p>
     </div>
   );
 
@@ -265,14 +264,14 @@ export default function ProfilePage() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogTitle>{t.deleteMemberConfirmationTitle}</AlertDialogTitle>
                             <AlertDialogDescription>
-                                This will permanently delete {profile.name}'s profile. This action cannot be undone.
+                                {t.deleteMemberConfirmationDescription.replace('{name}', profile.name)}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDeleteMember(profile)}>Delete</AlertDialogAction>
+                            <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteMember(profile)}>{t.deleteButton}</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
@@ -286,10 +285,10 @@ export default function ProfilePage() {
             {profile.bio && <p className="mt-2 text-foreground/80">{profile.bio}</p>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
-            <HealthDetailItem label="Blood Group" value={profile.bloodGroup} />
-            <HealthDetailItem label="Allergies" value={profile.allergies} />
+            <HealthDetailItem label={t.bloodGroup} value={profile.bloodGroup} />
+            <HealthDetailItem label={t.allergies} value={profile.allergies} />
             <div className="md:col-span-2">
-              <HealthDetailItem label="Chronic Diseases" value={profile.chronicDiseases} />
+              <HealthDetailItem label={t.chronicDiseases} value={profile.chronicDiseases} />
             </div>
         </div>
       </CardContent>
@@ -299,11 +298,11 @@ export default function ProfilePage() {
   if (!user && !isLoading) {
     return (
       <div className="container py-12 md:py-16 text-center">
-         <h1 className="text-3xl md:text-4xl font-bold font-headline">Access Denied</h1>
+         <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.accessDeniedTitle}</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          You must be logged in to view your profile.
+          {t.accessDeniedDescription}
         </p>
-         <Button onClick={() => window.location.href='/login'} className="mt-6">Login</Button>
+         <Button onClick={() => window.location.href='/login'} className="mt-6">{t.loginButton}</Button>
       </div>
     );
   }
@@ -313,31 +312,31 @@ export default function ProfilePage() {
       <Dialog open={isMemberFormOpen} onOpenChange={setIsMemberFormOpen}>
           <DialogContent>
               <DialogHeader>
-                  <DialogTitle>{editingProfile ? `Edit ${editingProfile.isPrimary ? 'Your' : `${editingProfile.name}'s`} Profile` : 'Add a Family Member'}</DialogTitle>
+                  <DialogTitle>{editingProfile ? (editingProfile.isPrimary ? t.editYourProfile : t.editMemberProfile.replace('{name}', editingProfile.name)) : t.addMemberTitle}</DialogTitle>
               </DialogHeader>
               <Form {...memberForm}>
                   <form onSubmit={memberForm.handleSubmit(onMemberSubmit)} className="space-y-4">
                       <FormField control={memberForm.control} name="name" render={({ field }) => (
-                          <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.fullName}</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <FormField control={memberForm.control} name="relationship" render={({ field }) => (
-                          <FormItem><FormLabel>Relationship</FormLabel><FormControl><Input placeholder="e.g., Spouse, Son, Mother" {...field} disabled={editingProfile?.isPrimary} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.relationship}</FormLabel><FormControl><Input placeholder={t.form.relationshipPlaceholder} {...field} disabled={editingProfile?.isPrimary} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <FormField control={memberForm.control} name="bio" render={({ field }) => (
-                          <FormItem><FormLabel>Short Bio</FormLabel><FormControl><Textarea placeholder="A little about them" {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.shortBio}</FormLabel><FormControl><Textarea placeholder={t.form.shortBioPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <FormField control={memberForm.control} name="bloodGroup" render={({ field }) => (
-                          <FormItem><FormLabel>Blood Group</FormLabel><FormControl><Input placeholder="e.g., A+, O-" {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.bloodGroup}</FormLabel><FormControl><Input placeholder={t.form.bloodGroupPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                         <FormField control={memberForm.control} name="allergies" render={({ field }) => (
-                          <FormItem><FormLabel>Allergies</FormLabel><FormControl><Textarea placeholder="e.g., Peanuts, Pollen" {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.allergies}</FormLabel><FormControl><Textarea placeholder={t.form.allergiesPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                         <FormField control={memberForm.control} name="chronicDiseases" render={({ field }) => (
-                          <FormItem><FormLabel>Chronic Diseases</FormLabel><FormControl><Textarea placeholder="e.g., Diabetes, Hypertension" {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.chronicDiseases}</FormLabel><FormControl><Textarea placeholder={t.form.chronicDiseasesPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <DialogFooter>
-                          <DialogClose asChild><Button variant="ghost">Cancel</Button></DialogClose>
-                          <Button type="submit">Save Changes</Button>
+                          <DialogClose asChild><Button variant="ghost">{t.cancelButton}</Button></DialogClose>
+                          <Button type="submit">{t.saveButton}</Button>
                       </DialogFooter>
                   </form>
               </Form>
@@ -346,20 +345,20 @@ export default function ProfilePage() {
       <Dialog open={isDocFormOpen} onOpenChange={setIsDocFormOpen}>
           <DialogContent>
               <DialogHeader>
-                  <DialogTitle>Upload a New Document</DialogTitle>
+                  <DialogTitle>{t.uploadDocumentTitle}</DialogTitle>
               </DialogHeader>
               <Form {...docForm}>
                   <form onSubmit={docForm.handleSubmit(onDocSubmit)} className="space-y-4">
                       <FormField control={docForm.control} name="title" render={({ field }) => (
-                          <FormItem><FormLabel>Document Title</FormLabel><FormControl><Input placeholder="e.g., Blood Test Report" {...field} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.docTitle}</FormLabel><FormControl><Input placeholder={t.form.docTitlePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       <FormField control={docForm.control} name="file" render={({ field }) => (
-                          <FormItem><FormLabel>File</FormLabel><FormControl><Input type="file" {...docForm.register('file')} /></FormControl><FormMessage /></FormItem>
+                          <FormItem><FormLabel>{t.form.file}</FormLabel><FormControl><Input type="file" {...docForm.register('file')} /></FormControl><FormMessage /></FormItem>
                       )}/>
                       {uploadProgress !== null && <Progress value={uploadProgress} className="w-full" />}
                       <DialogFooter>
-                          <DialogClose asChild><Button variant="ghost" disabled={uploadProgress !== null}>Cancel</Button></DialogClose>
-                          <Button type="submit" disabled={uploadProgress !== null}>{uploadProgress !== null ? 'Uploading...' : 'Upload'}</Button>
+                          <DialogClose asChild><Button variant="ghost" disabled={uploadProgress !== null}>{t.cancelButton}</Button></DialogClose>
+                          <Button type="submit" disabled={uploadProgress !== null}>{uploadProgress !== null ? t.uploadingButton : t.uploadButton}</Button>
                       </DialogFooter>
                   </form>
               </Form>
@@ -378,11 +377,11 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold font-headline flex items-center gap-3">
               <Users className="h-7 w-7 text-primary" />
-              Family & Health Details
+              {t.familyHealthDetails}
             </h2>
              <Button onClick={() => handleOpenMemberForm()}>
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Add Member
+                {t.addMemberButton}
             </Button>
           </div>
           
@@ -397,7 +396,7 @@ export default function ProfilePage() {
               {profiles.length === 0 && (
                  <Card>
                     <CardContent className="text-center py-12">
-                      <p className="text-muted-foreground mb-4">You haven't added any profiles yet.</p>
+                      <p className="text-muted-foreground mb-4">{t.noProfiles}</p>
                     </CardContent>
                 </Card>
               )}
@@ -411,11 +410,11 @@ export default function ProfilePage() {
                 <div className="flex justify-between items-center">
                     <CardTitle className="font-headline flex items-center gap-3">
                         <FileText className="h-6 w-6 text-primary" />
-                        My Documents
+                        {t.documentsTitle}
                     </CardTitle>
                     <Button size="icon" variant="outline" onClick={() => setIsDocFormOpen(true)}>
                         <Upload className="h-4 w-4" />
-                        <span className="sr-only">Upload Document</span>
+                        <span className="sr-only">{t.uploadDocumentButton}</span>
                     </Button>
                 </div>
             </CardHeader>
@@ -448,14 +447,14 @@ export default function ProfilePage() {
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                <AlertDialogTitle>{t.deleteDocumentConfirmationTitle}</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    This will permanently delete the document "{doc.title}".
+                                                   {t.deleteDocumentConfirmationDescription.replace('{title}', doc.title)}
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                                                <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">{t.deleteButton}</AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -464,7 +463,7 @@ export default function ProfilePage() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center text-sm text-muted-foreground py-4">No documents uploaded yet.</p>
+                    <p className="text-center text-sm text-muted-foreground py-4">{t.noDocuments}</p>
                 )}
             </CardContent>
           </Card>

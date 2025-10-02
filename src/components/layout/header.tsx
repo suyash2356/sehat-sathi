@@ -45,6 +45,7 @@ export function Header() {
   const [emergencyDetails, setEmergencyDetails] = useState<EmergencyFormValues | null>(null);
 
   const isLandingPage = pathname === '/';
+  const t = translations[language];
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -65,8 +66,8 @@ export function Header() {
   const handleLogout = async () => {
     await signOut(auth);
     toast({
-      title: 'Signed Out',
-      description: 'You have been successfully signed out.',
+      title: t.logout.title,
+      description: t.logout.description,
     });
     router.push('/');
   };
@@ -75,8 +76,6 @@ export function Header() {
     setChatLanguage(lang);
     setLanguage(lang); 
   };
-  
-  const t = translations[language];
 
   const onEmergencySubmit = (values: EmergencyFormValues) => {
     setEmergencyDetails(values);
@@ -301,20 +300,20 @@ export function Header() {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button variant="ghost" size="icon" aria-label="Notifications">
+                <Button variant="ghost" size="icon" aria-label={t.notificationsAriaLabel}>
                   <Bell className="h-5 w-5" />
                 </Button>
                 <LanguageSelector />
               </>
             )}
             {user && !isLandingPage ? (
-              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t.logout.ariaLabel}>
                   <LogOut className="h-5 w-5" />
               </Button>
             ) : (
               pathname !== '/login' && (
                   <Button asChild variant="outline" size="sm">
-                  <Link href="/login">Login</Link>
+                  <Link href="/login">{t.login.title}</Link>
                   </Button>
               )
             )}
@@ -323,5 +322,3 @@ export function Header() {
     </header>
   );
 }
-
-    

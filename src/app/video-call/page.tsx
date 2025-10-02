@@ -10,12 +10,16 @@ import { useToast } from '@/hooks/use-toast';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
 
 const doctorImage = PlaceHolderImages.find(p => p.id === 'tele-consultation');
 
 export default function VideoCallPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { language } = useChatLanguage();
+  const t = translations[language].videoCall;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isMicMuted, setIsMicMuted] = useState(false);
@@ -35,8 +39,8 @@ export default function VideoCallPage() {
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Camera & Mic Access Denied',
-          description: 'Please enable camera and microphone permissions in your browser settings to use video call.',
+          title: t.permissionDeniedTitle,
+          description: t.permissionDeniedDescription,
         });
       }
     };
@@ -50,7 +54,7 @@ export default function VideoCallPage() {
         stream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [toast]);
+  }, [toast, t]);
 
   const toggleMic = () => {
      if (videoRef.current?.srcObject) {
@@ -74,8 +78,8 @@ export default function VideoCallPage() {
 
   const endCall = () => {
     toast({
-      title: 'Call Ended',
-      description: 'Your consultation has ended.',
+      title: t.callEndedTitle,
+      description: t.callEndedDescription,
     });
     router.push('/map');
   };
@@ -96,7 +100,7 @@ export default function VideoCallPage() {
                 />
             )}
             <div className="absolute bottom-4 left-4 bg-black/50 text-white text-sm px-3 py-1 rounded-full">
-              Dr. Sharma (Cardiologist)
+              {t.doctorName}
             </div>
           </div>
           
@@ -106,9 +110,9 @@ export default function VideoCallPage() {
              {hasCameraPermission === false && (
                 <div className="absolute inset-0 flex items-center justify-center p-4">
                     <Alert variant="destructive" className="max-w-sm">
-                        <AlertTitle>Camera Access Required</AlertTitle>
+                        <AlertTitle>{t.cameraRequiredTitle}</AlertTitle>
                         <AlertDescription>
-                            Please allow camera and microphone access in your browser to use this feature. You may need to refresh the page after granting permissions.
+                           {t.cameraRequiredDescription}
                         </AlertDescription>
                     </Alert>
                 </div>

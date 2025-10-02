@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -18,6 +19,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { Mail, KeyRound } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useChatLanguage } from '@/hooks/use-chat-language';
+import { translations } from '@/lib/translations';
 
 const authSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -34,6 +37,8 @@ export default function LoginPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [authType, setAuthType] = useState<'login' | 'signup'>('login');
+  const { language } = useChatLanguage();
+  const t = translations[language].login;
 
   const form = useForm<z.infer<typeof authSchema>>({
     resolver: zodResolver(authType === 'login' ? signInSchema : authSchema),
@@ -45,15 +50,15 @@ export default function LoginPage() {
     try {
       await signInWithPopup(auth, googleProvider);
       toast({
-        title: 'Sign-in Successful',
-        description: 'You have been successfully logged in with Google.',
+        title: t.googleSignInSuccessTitle,
+        description: t.googleSignInSuccessDescription,
       });
       router.push('/chatbot');
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       toast({
-        title: 'Google Sign-In Failed',
-        description: 'Could not sign you in with Google. Please try again.',
+        title: t.googleSignInFailedTitle,
+        description: t.googleSignInFailedDescription,
         variant: 'destructive',
       });
     } finally {
@@ -74,17 +79,17 @@ export default function LoginPage() {
       try {
         await createUserWithEmailAndPassword(auth, values.email, values.password);
         toast({
-          title: 'Account Created',
-          description: 'Your account has been successfully created. You are now logged in.',
+          title: t.signUpSuccessTitle,
+          description: t.signUpSuccessDescription,
         });
         router.push('/chatbot');
       } catch (error: any) {
-        let description = 'An unexpected error occurred. Please try again.';
+        let description = t.signUpFailedDescription;
         if (error.code === 'auth/email-already-in-use') {
-          description = 'This email is already in use. Please sign in instead.';
+          description = t.signUpFailedEmailInUse;
         }
         toast({
-          title: 'Sign-Up Failed',
+          title: t.signUpFailedTitle,
           description,
           variant: 'destructive',
         });
@@ -95,14 +100,14 @@ export default function LoginPage() {
       try {
         await signInWithEmailAndPassword(auth, values.email, values.password);
         toast({
-          title: 'Sign-In Successful',
-          description: 'You have been successfully logged in.',
+          title: t.signInSuccessTitle,
+          description: t.signInSuccessDescription,
         });
         router.push('/chatbot');
       } catch (error: any) {
         toast({
-          title: 'Sign-In Failed',
-          description: 'Invalid email or password. Please check your credentials and try again.',
+          title: t.signInFailedTitle,
+          description: t.signInFailedDescription,
           variant: 'destructive',
         });
       } finally {
@@ -117,10 +122,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl md:text-3xl font-bold font-headline">
-            {authType === 'login' ? 'Welcome Back' : 'Create an Account'}
+            {authType === 'login' ? t.titleLogin : t.titleSignup}
           </CardTitle>
           <CardDescription>
-            {authType === 'login' ? 'Sign in to continue to Sehat Sathi.' : 'Join Sehat Sathi to get health guidance.'}
+            {authType === 'login' ? t.subtitleLogin : t.subtitleSignup}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -131,7 +136,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> Email Address</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><Mail className="h-4 w-4"/> {t.emailLabel}</FormLabel>
                     <FormControl>
                         <Input type="email" placeholder="your.email@example.com" {...field} />
                     </FormControl>
@@ -144,9 +149,9 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> Password</FormLabel>
+                    <FormLabel className="flex items-center gap-2"><KeyRound className="h-4 w-4"/> {t.passwordLabel}</FormLabel>
                     <FormControl>
-                        <Input type="password" placeholder={authType === 'signup' ? 'At least 6 characters' : '••••••••'} {...field} />
+                        <Input type="password" placeholder={authType === 'signup' ? t.passwordPlaceholderSignup : '••••••••'} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -154,8 +159,8 @@ export default function LoginPage() {
               />
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting
-                  ? authType === 'login' ? 'Signing In...' : 'Creating Account...'
-                  : authType === 'login' ? 'Sign In' : 'Sign Up'
+                  ? authType === 'login' ? t.submittingLogin : t.submittingSignup
+                  : authType === 'login' ? t.buttonLogin : t.buttonSignup
                 }
               </Button>
             </form>
@@ -165,14 +170,14 @@ export default function LoginPage() {
           
            <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={isSubmitting}>
                 <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 109.8 512 0 402.2 0 261.8 0 121.3 109.8 8 244 8c66.8 0 126 25.4 169.2 67.2L347.5 151C318.8 123.5 284.3 108 244 108c-88.3 0-160 71.7-160 160s71.7 160 160 160c97.2 0 132.3-70.2 135-108.3H244v-64h244z"></path></svg>
-                Sign In with Google
+                {t.googleButton}
             </Button>
           
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {authType === 'login' ? "Don't have an account?" : "Already have an account?"}
+              {authType === 'login' ? t.promptSignup : t.promptLogin}
               <Button variant="link" size="sm" onClick={() => handleAuthTypeChange(authType === 'login' ? 'signup' : 'login')}>
-                {authType === 'login' ? 'Sign Up' : 'Sign In'}
+                {authType === 'login' ? t.linkSignup : t.linkLogin}
               </Button>
             </p>
           </div>
