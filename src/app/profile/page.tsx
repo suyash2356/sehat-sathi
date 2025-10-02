@@ -74,17 +74,29 @@ export default function ProfilePage() {
           });
         } else {
           // Prefill from auth if no profile exists
+          setUserProfile({
+            name: user.displayName || 'New User',
+            email: user.email!,
+          });
           form.reset({
             name: user.displayName || '',
+            bio: '',
+            bloodGroup: '',
+            allergies: '',
+            chronicDiseases: '',
           });
         }
+        setIsLoading(false);
+      }, (error) => {
+        console.error("Error fetching profile:", error);
+        toast({ title: 'Error', description: 'Could not fetch profile data.', variant: 'destructive'});
         setIsLoading(false);
       });
       return () => unsubscribe();
     } else {
         setIsLoading(false);
     }
-  }, [user, form]);
+  }, [user, form, toast]);
   
   async function onSubmit(values: ProfileFormValues) {
     if (!user) {
@@ -93,10 +105,13 @@ export default function ProfilePage() {
     }
     const docRef = doc(db, 'users', user.uid);
     try {
-      await setDoc(docRef, {
+      // Create a profile object that includes the email, but don't overwrite if it exists
+      const profileData: UserProfile = {
+        ...(userProfile || {}), // spread existing profile to preserve email etc.
         ...values,
-        email: user.email,
-      }, { merge: true });
+        email: user.email!, // ensure email is always set
+      };
+      await setDoc(docRef, profileData, { merge: true });
       toast({
         title: 'Profile Updated',
         description: 'Your health details have been saved.',
@@ -119,6 +134,18 @@ export default function ProfilePage() {
     </div>
   );
 
+  if (!user && !isLoading) {
+    return (
+      <div className="container py-12 md:py-16 text-center">
+         <h1 className="text-3xl md:text-4xl font-bold font-headline">Access Denied</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          You must be logged in to view your profile.
+        </p>
+         <Button onClick={() => window.location.href='/login'} className="mt-6">Login</Button>
+      </div>
+    );
+  }
+
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">
@@ -138,7 +165,7 @@ export default function ProfilePage() {
             </div>
             <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button variant="outline" size="sm" className="gap-2" disabled={isLoading}>
                         <Edit className="h-4 w-4" />
                         Edit Profile
                     </Button>
@@ -175,24 +202,26 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-                <div className="space-y-4">
-                    <Skeleton className="h-8 w-1/2" />
-                    <Skeleton className="h-6 w-3/4" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <Skeleton className="h-8 w-1/2" />
+                        <Skeleton className="h-5 w-3/4" />
+                        <Skeleton className="h-5 w-2/3 mt-2" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
+                        <div className="space-y-2"><Skeleton className="h-4 w-1/3" /><Skeleton className="h-6 w-2/3" /></div>
+                        <div className="space-y-2"><Skeleton className="h-4 w-1/3" /><Skeleton className="h-6 w-2/3" /></div>
+                        <div className="space-y-2"><Skeleton className="h-4 w-1/3" /><Skeleton className="h-6 w-full" /></div>
                     </div>
                 </div>
             ) : userProfile ? (
-                 <div className="space-y-4">
+                 <div className="space-y-6">
                     <div>
                         <h2 className="text-2xl font-bold">{userProfile.name}</h2>
                         <p className="text-muted-foreground">{userProfile.email}</p>
                         {userProfile.bio && <p className="mt-2 text-foreground/80">{userProfile.bio}</p>}
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
                         <HealthDetailItem label="Blood Group" value={userProfile.bloodGroup} />
                         <HealthDetailItem label="Allergies" value={userProfile.allergies} />
                         <HealthDetailItem label="Chronic Diseases" value={userProfile.chronicDiseases} />
@@ -239,3 +268,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
