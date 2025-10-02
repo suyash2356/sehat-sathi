@@ -55,7 +55,7 @@ export default function LoginPage() {
         title: t.googleSignInSuccessTitle,
         description: t.googleSignInSuccessDescription,
       });
-      router.push('/chatbot');
+      router.push('/health-guide');
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       toast({
@@ -85,7 +85,7 @@ export default function LoginPage() {
           title: t.signUpSuccessTitle,
           description: t.signUpSuccessDescription,
         });
-        router.push('/chatbot');
+        router.push('/health-guide');
       } catch (error: any) {
         let description = t.signUpFailedDescription;
         if (error.code === 'auth/email-already-in-use') {
@@ -106,7 +106,7 @@ export default function LoginPage() {
           title: t.signInSuccessTitle,
           description: t.signInSuccessDescription,
         });
-        router.push('/chatbot');
+        router.push('/health-guide');
       } catch (error: any) {
         toast({
           title: t.signInFailedTitle,
