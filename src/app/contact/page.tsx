@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Phone, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MessageSquare, Siren } from 'lucide-react';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 
@@ -34,7 +34,12 @@ export default function ContactPage() {
   });
 
   function onSubmit(values: z.infer<typeof contactSchema>) {
-    console.log(values);
+    const subject = `New Feedback from ${values.name} - Sehat Sathi`;
+    const body = `Name: ${values.name}\nEmail: ${values.email}\n\nMessage:\n${values.message}`;
+    const mailtoLink = `mailto:shriharikrishna2356@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    window.location.href = mailtoLink;
+
     form.reset();
     toast({
       title: t.successToastTitle,
@@ -119,16 +124,16 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-semibold">{t.supportEmail}</h4>
-                  <a href="mailto:support@sehatsathi.example.com" className="text-muted-foreground hover:text-primary transition-colors">support@sehatsathi.example.com</a>
+                  <a href="mailto:shriharikrishna2356@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">shriharikrishna2356@gmail.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-primary/10 rounded-full">
-                  <Phone className="h-6 w-6 text-primary"/>
+                <div className="p-3 bg-destructive/10 rounded-full">
+                  <Siren className="h-6 w-6 text-destructive"/>
                 </div>
                 <div>
                   <h4 className="font-semibold">{t.emergencyHelpline}</h4>
-                  <p className="text-muted-foreground">{t.emergencyNumber}</p>
+                  <a href="tel:112" className="text-muted-foreground font-bold text-lg hover:text-destructive transition-colors">{t.emergencyNumber}</a>
                 </div>
               </div>
             </div>
