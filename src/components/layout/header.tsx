@@ -214,9 +214,9 @@ export function Header() {
               <>
                 <Dialog open={isEmergencyFormOpen} onOpenChange={setIsEmergencyFormOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="destructive" size="sm" className="gap-2">
+                    <Button variant="destructive" size="icon" className="rounded-full">
                       <Siren className="h-5 w-5" />
-                      <span className="hidden md:inline">{t.emergency.buttonText}</span>
+                      <span className="sr-only">{t.emergency.buttonText}</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[425px]">
