@@ -44,6 +44,8 @@ export function Header() {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [emergencyDetails, setEmergencyDetails] = useState<EmergencyFormValues | null>(null);
 
+  const isLandingPage = pathname === '/';
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -206,99 +208,103 @@ export function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-1 md:gap-2">
-            <Dialog open={isEmergencyFormOpen} onOpenChange={setIsEmergencyFormOpen}>
-              <DialogTrigger asChild>
-                <Button variant="destructive" size="sm" className="gap-2">
-                  <Siren className="h-5 w-5" />
-                  <span className="hidden md:inline">{t.emergency.buttonText}</span>
+            {!isLandingPage && (
+              <>
+                <Dialog open={isEmergencyFormOpen} onOpenChange={setIsEmergencyFormOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive" size="sm" className="gap-2">
+                      <Siren className="h-5 w-5" />
+                      <span className="hidden md:inline">{t.emergency.buttonText}</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2 font-headline text-destructive">
+                        <Siren /> {t.emergency.formTitle}
+                      </DialogTitle>
+                      <DialogDescription>
+                        {t.emergency.formDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onEmergencySubmit)} className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="location"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {t.emergency.locationLabel}</FormLabel>
+                              <FormControl>
+                                <Textarea placeholder={t.emergency.locationPlaceholder} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="reason"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> {t.emergency.reasonLabel}</FormLabel>
+                              <FormControl>
+                                <Input placeholder={t.emergency.reasonPlaceholder} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="contact"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-2"><Phone className="h-4 w-4" /> {t.emergency.contactLabel}</FormLabel>
+                              <FormControl>
+                                <Input type="tel" placeholder={t.emergency.contactPlaceholder} {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <DialogFooter>
+                          <Button type="submit" variant="destructive" className="w-full">{t.emergency.submitButton}</Button>
+                        </DialogFooter>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+                <AlertDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2 font-headline">
+                        <AlertTriangle className="text-destructive" /> {t.emergency.confirmTitle}
+                      </AlertDialogTitle>
+                      <AlertDialogDescription asChild>
+                        <div>
+                          {t.emergency.confirmMessage}
+                          <div className="my-4 p-4 bg-destructive/10 border border-destructive/50 rounded-lg text-center">
+                              <div className="font-semibold text-destructive">{t.emergency.emergencyNumberText}</div>
+                              <div className="text-2xl font-bold tracking-widest text-destructive">112</div>
+                          </div>
+                          {t.emergency.confirmSubtext}
+                        </div>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t.emergency.cancelButton}</AlertDialogCancel>
+                      <AlertDialogAction onClick={confirmEmergencyCall} className="bg-destructive hover:bg-destructive/90">
+                        {t.emergency.confirmButton}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+                <Button variant="ghost" size="icon" aria-label="Notifications">
+                  <Bell className="h-5 w-5" />
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle className="flex items-center gap-2 font-headline text-destructive">
-                    <Siren /> {t.emergency.formTitle}
-                  </DialogTitle>
-                  <DialogDescription>
-                    {t.emergency.formDescription}
-                  </DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onEmergencySubmit)} className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {t.emergency.locationLabel}</FormLabel>
-                          <FormControl>
-                            <Textarea placeholder={t.emergency.locationPlaceholder} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="reason"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> {t.emergency.reasonLabel}</FormLabel>
-                          <FormControl>
-                            <Input placeholder={t.emergency.reasonPlaceholder} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="contact"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2"><Phone className="h-4 w-4" /> {t.emergency.contactLabel}</FormLabel>
-                          <FormControl>
-                            <Input type="tel" placeholder={t.emergency.contactPlaceholder} {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <DialogFooter>
-                      <Button type="submit" variant="destructive" className="w-full">{t.emergency.submitButton}</Button>
-                    </DialogFooter>
-                  </form>
-                </Form>
-              </DialogContent>
-            </Dialog>
-            <AlertDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2 font-headline">
-                    <AlertTriangle className="text-destructive" /> {t.emergency.confirmTitle}
-                  </AlertDialogTitle>
-                  <AlertDialogDescription asChild>
-                    <div>
-                      {t.emergency.confirmMessage}
-                      <div className="my-4 p-4 bg-destructive/10 border border-destructive/50 rounded-lg text-center">
-                          <div className="font-semibold text-destructive">{t.emergency.emergencyNumberText}</div>
-                          <div className="text-2xl font-bold tracking-widest text-destructive">112</div>
-                      </div>
-                      {t.emergency.confirmSubtext}
-                    </div>
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t.emergency.cancelButton}</AlertDialogCancel>
-                  <AlertDialogAction onClick={confirmEmergencyCall} className="bg-destructive hover:bg-destructive/90">
-                    {t.emergency.confirmButton}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <Button variant="ghost" size="icon" aria-label="Notifications">
-              <Bell className="h-5 w-5" />
-            </Button>
-            <LanguageSelector />
+                <LanguageSelector />
+              </>
+            )}
             {user ? (
             <Button variant="ghost" size="icon" onClick={handleLogout} aria-label="Sign out">
                 <LogOut className="h-5 w-5" />
