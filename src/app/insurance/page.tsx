@@ -13,6 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ShieldPlus, FileText, Upload, Download, Trash2 } from 'lucide-react';
+import { FileUpload } from '@/components/ui/file-upload';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -176,52 +177,45 @@ export default function InsurancePage() {
           <CardDescription>{t.description}</CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-            </div>
-          ) : documents && documents.length > 0 ? (
-            <div className="space-y-4">
-              {documents.map((doc) => (
-                <div key={doc.id} className="flex items-center justify-between p-3 rounded-md border">
-                    <div className="flex items-center gap-4 flex-1 overflow-hidden">
-                        <FileText className="h-6 w-6 text-primary flex-shrink-0" />
-                        <p className="font-semibold truncate">{doc.title}</p>
-                    </div>
-                    <div className="flex items-center gap-1 ml-2">
-                        <Button asChild variant="ghost" size="icon">
-                            <a href={doc.url} target="_blank" rel="noopener noreferrer" aria-label={`Download ${doc.title}`}><Download className="h-4 w-4" /></a>
-                        </Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" aria-label={`Delete ${doc.title}`}>
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>{t.deleteConfirmationTitle}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        {t.deleteConfirmationDescription.replace('{title}', doc.title)}
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">{t.deleteButton}</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
+          <FileUpload 
+            onFileSelect={(file) => {
+              console.log('Insurance document selected:', file.name);
+              // In production, this would upload to server
+            }}
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            maxSize={10}
+            multiple={true}
+          />
+          
+          {/* Demo insurance documents */}
+          <div className="mt-4 space-y-2">
+            <h4 className="font-semibold text-sm text-gray-600">Demo Insurance Documents (Not Real)</h4>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 rounded-md border">
+                <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                  <FileText className="h-6 w-6 text-primary flex-shrink-0" />
+                  <p className="font-semibold truncate">Health Insurance Policy</p>
                 </div>
-              ))}
+                <div className="flex items-center gap-1 ml-2">
+                  <Button variant="ghost" size="icon">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 rounded-md border">
+                <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                  <FileText className="h-6 w-6 text-primary flex-shrink-0" />
+                  <p className="font-semibold truncate">Claim Form</p>
+                </div>
+                <div className="flex items-center gap-1 ml-2">
+                  <Button variant="ghost" size="icon">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
-          ) : (
-             <div className="text-center py-12">
-                <p className="text-muted-foreground">{t.noDocuments}</p>
-             </div>
-          )}
+          </div>
         </CardContent>
       </Card>
     </div>

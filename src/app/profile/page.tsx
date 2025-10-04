@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { User, FileText, Users, Edit, Trash2, PlusCircle, Heart, Upload, BadgeCheck, Clock, Download } from 'lucide-react';
+import { FileUpload } from '@/components/ui/file-upload';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -404,52 +405,51 @@ export default function ProfilePage() {
                 </div>
             </CardHeader>
             <CardContent>
-                {isLoading ? (
-                    <div className="space-y-4">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                ) : documents && documents.length > 0 ? (
-                    <div className="space-y-4">
-                        {documents.map(doc => (
-                            <div key={doc.id} className="flex items-center justify-between p-2 rounded-md border">
-                                <div className="flex-1 overflow-hidden">
-                                    <p className="font-semibold truncate">{doc.title}</p>
-                                    <div className="text-xs text-muted-foreground flex items-center gap-2">
-                                        {doc.status === 'Verified' ? <BadgeCheck className="h-3 w-3 text-green-500" /> : <Clock className="h-3 w-3" />}
-                                        <Badge variant={doc.status === 'Verified' ? 'default' : 'secondary'} className="bg-opacity-20 text-xs">{doc.status}</Badge>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-1 ml-2">
-                                    <Button asChild variant="ghost" size="icon">
-                                        <a href={doc.url} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4" /></a>
-                                    </Button>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                                                <Trash2 className="h-4 w-4" />
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>{t.deleteDocumentConfirmationTitle}</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   {t.deleteDocumentConfirmationDescription.replace('{title}', doc.title)}
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDeleteDoc(doc)} className="bg-destructive hover:bg-destructive/90">{t.deleteButton}</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                <FileUpload 
+                    onFileSelect={(file) => {
+                        console.log('File selected:', file.name);
+                        // In production, this would upload to server
+                    }}
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    maxSize={10}
+                    multiple={true}
+                />
+                
+                {/* Demo documents */}
+                <div className="mt-4 space-y-2">
+                    <h4 className="font-semibold text-sm text-gray-600">Demo Documents (Not Real)</h4>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between p-2 rounded-md border">
+                            <div className="flex-1 overflow-hidden">
+                                <p className="font-semibold truncate">Health Insurance Card</p>
+                                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                    <BadgeCheck className="h-3 w-3 text-green-500" />
+                                    <Badge variant="default" className="bg-opacity-20 text-xs">Verified</Badge>
                                 </div>
                             </div>
-                        ))}
+                            <div className="flex items-center gap-1 ml-2">
+                                <Button variant="ghost" size="icon">
+                                    <Download className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between p-2 rounded-md border">
+                            <div className="flex-1 overflow-hidden">
+                                <p className="font-semibold truncate">Medical Report</p>
+                                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                                    <Clock className="h-3 w-3" />
+                                    <Badge variant="secondary" className="bg-opacity-20 text-xs">Pending</Badge>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1 ml-2">
+                                <Button variant="ghost" size="icon">
+                                    <Download className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-                ) : (
-                    <p className="text-center text-sm text-muted-foreground py-4">{t.noDocuments}</p>
-                )}
+                </div>
             </CardContent>
           </Card>
         </div>

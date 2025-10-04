@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useVideoCall } from '@/hooks/use-video-call';
 
 const bookingSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -60,6 +61,7 @@ export default function MapPage() {
   const { language } = useChatLanguage();
   const t = translations[language].services;
   const bookingFormRef = React.useRef<HTMLDivElement>(null);
+  const { createImmediateCall, createScheduledCall } = useVideoCall();
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
@@ -84,7 +86,7 @@ export default function MapPage() {
     }
   }, [callNow, form]);
 
-  function onSubmit(values: BookingFormValues) {
+  async function onSubmit(values: BookingFormValues) {
     console.log(values);
     
     if (values.appointmentType === 'hospital-visit') {
@@ -93,15 +95,35 @@ export default function MapPage() {
           description: "Your request has been sent to the hospital. You will be notified upon confirmation.",
         });
     } else { // Video call
+        const patientData = {
+          patientId: `patient_${Date.now()}`,
+          patientName: values.name,
+          patientPhone: values.phone,
+          issue: values.issue
+        };
+
         if (values.callNow) {
-            toast({
-              title: "Immediate Consultation Requested!",
-              description: "Connecting you to the next available doctor. This is a premium service.",
-            });
+            // Create immediate call
+            await createImmediateCall(patientData);
         } else {
-            toast({
-              title: "Video Consultation Scheduled!",
-              description: `Your appointment is requested for ${format(values.preferredDate!, 'PPP')} at ${values.preferredTime}. A confirmation link will be sent via SMS.`,
+            // Create scheduled call
+            const scheduledTime = new Date(values.preferredDate!);
+            const timeSlot = values.preferredTime!;
+            
+            // Parse time slot like "09:00 AM - 09:30 AM"
+            const [startTime] = timeSlot.split(' - ');
+            const [timePart, ampm] = startTime.split(' ');
+            const [hours, minutes] = timePart.split(':');
+            
+            let hour24 = parseInt(hours);
+            if (ampm === 'PM' && hour24 !== 12) hour24 += 12;
+            if (ampm === 'AM' && hour24 === 12) hour24 = 0;
+            
+            scheduledTime.setHours(hour24, parseInt(minutes), 0, 0);
+            
+            await createScheduledCall({
+              ...patientData,
+              scheduledTime
             });
         }
     }
