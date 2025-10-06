@@ -14,7 +14,7 @@ import { Video, Hospital, CalendarIcon, Clock, Zap, MapPin } from 'lucide-react'
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import GoogleMapEmbed, { type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -77,7 +77,7 @@ const locationData = {
     }
 };
 
-export default function MapPage() {
+function MapPageContent() {
   const { toast } = useToast();
   const { language } = useChatLanguage();
   const t = translations[language].services;
@@ -276,4 +276,12 @@ export default function MapPage() {
       </div>
     </div>
   );
+}
+
+export default function MapPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <MapPageContent />
+        </Suspense>
+    )
 }

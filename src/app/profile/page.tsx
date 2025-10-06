@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -14,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { User, FileText, Users, Edit, Trash2, PlusCircle, Heart, Upload, BadgeCheck, Clock, Download } from 'lucide-react';
-import { FileUpload } from '@/components/ui/file-upload';
 import { useChatLanguage } from '@/hooks/use-chat-language';
 import { translations } from '@/lib/translations';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +23,9 @@ import { useCollection, useDoc } from '@/hooks/use-firestore';
 import { collection, doc, setDoc, addDoc, deleteDoc, Timestamp, orderBy, query } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase';
+import dynamic from 'next/dynamic';
+
+const FileUpload = dynamic(() => import('@/components/ui/file-upload').then(mod => mod.FileUpload), { ssr: false });
 
 const memberSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -37,7 +38,7 @@ const memberSchema = z.object({
 
 const documentSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters.'}),
-  file: z.instanceof(FileList).refine(files => files?.length === 1, 'File is required.'),
+  file: z.any().refine(files => files?.length === 1, 'File is required.'),
 });
 
 type MemberFormValues = z.infer<typeof memberSchema>;
@@ -45,6 +46,7 @@ type DocumentFormValues = z.infer<typeof documentSchema>;
 
 export type UserProfileData = MemberFormValues & {
   email?: string;
+  id?: string;
 };
 
 export type UserProfile = UserProfileData & {
@@ -85,13 +87,14 @@ export default function ProfilePage() {
 
   const primaryProfile = useMemo<UserProfile | null>(() => {
     if (!user || !userProfileData) return null;
+    const { relationship, name, ...restData } = userProfileData;
     return {
       id: user.uid,
       isPrimary: true,
       name: userProfileData.name || user.displayName || 'New User',
       email: userProfileData.email || user.email || '',
-      relationship: userProfileData.relationship || 'Self',
-      ...userProfileData,
+      relationship: 'Self',
+      ...restData,
     };
   }, [user, userProfileData]);
   
@@ -99,6 +102,7 @@ export default function ProfilePage() {
     if (!familyMembersData) return [];
     return familyMembersData.map(member => ({
       ...member,
+      id: member.id || '',
       isPrimary: false,
     }));
   }, [familyMembersData]);
@@ -405,7 +409,7 @@ export default function ProfilePage() {
                 </div>
             </CardHeader>
             <CardContent>
-                <FileUpload 
+                 {typeof window !== 'undefined' && <FileUpload 
                     onFileSelect={(file) => {
                         console.log('File selected:', file.name);
                         // In production, this would upload to server
@@ -413,7 +417,7 @@ export default function ProfilePage() {
                     accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                     maxSize={10}
                     multiple={true}
-                />
+                />}
                 
                 {/* Demo documents */}
                 <div className="mt-4 space-y-2">

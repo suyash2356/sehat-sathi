@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -26,7 +25,7 @@ import { db, storage } from '@/lib/firebase';
 
 const documentSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters.'}),
-  file: z.instanceof(FileList).refine(files => files?.length === 1, 'File is required.'),
+  file: typeof window !== 'undefined' ? z.instanceof(FileList).refine(files => files?.length === 1, 'File is required.') : z.any(),
 });
 
 type DocumentFormValues = z.infer<typeof documentSchema>;
