@@ -47,7 +47,7 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({ hospitals, onBookAppoin
 
   useEffect(() => {
     const loadGoogleMapsScript = () => {
-      if (!(window as any).google && googleMapsApiKey && googleMapsApiKey !== "AIzaSyCHeB5PCutbQyh1-LGq1IJOCa4zYHsPIdE") {
+      if (!(window as any).google && googleMapsApiKey && googleMapsApiKey !== "YOUR_API_KEY") {
         if (!document.querySelector('script[src*="maps.googleapis.com"]')) {
             const script = document.createElement("script");
             script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&callback=initMap`;
@@ -152,7 +152,7 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({ hospitals, onBookAppoin
       {!googleMapsApiKey || googleMapsApiKey === "AIzaSyCHeB5PCutbQyh1-LGq1IJOCa4zYHsPIdE" ? (
         <div className="w-full h-full min-h-[400px] rounded-lg border bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center">
           <div className="text-center p-4">
-            <MapPin className="h-16 w-16 text-blue-500 mx-auto mb-4" />
+            <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               Interactive Map Unavailable
             </h3>
@@ -170,7 +170,7 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({ hospitals, onBookAppoin
       )}
        <style jsx global>{`
         .map-book-button {
-          background-color: #007bff;
+          background-color: hsl(205 78% 46%);
           color: white;
           border: none;
           padding: 8px 12px;
@@ -179,7 +179,7 @@ const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({ hospitals, onBookAppoin
           font-weight: bold;
         }
         .map-book-button:hover {
-          background-color: #0056b3;
+          background-color: hsl(205 78% 36%);
         }
       `}</style>
     </div>
