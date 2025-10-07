@@ -124,7 +124,7 @@ export default function InsurancePage() {
   return (
     <div className="container py-12 md:py-16">
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>{t.formTitle}</DialogTitle>
                 </DialogHeader>
@@ -165,15 +165,17 @@ export default function InsurancePage() {
       </div>
 
       <Card className="max-w-4xl mx-auto shadow-lg">
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle>{t.viewDocuments}</CardTitle>
-            <Button onClick={() => setIsFormOpen(true)}>
+        <CardHeader className="gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="space-y-1">
+                <CardTitle>{t.viewDocuments}</CardTitle>
+                <CardDescription>{t.description}</CardDescription>
+            </div>
+            <Button onClick={() => setIsFormOpen(true)} className="w-full sm:w-auto">
               <Upload className="mr-2 h-4 w-4" />
               {t.uploadDocument}
             </Button>
           </div>
-          <CardDescription>{t.description}</CardDescription>
         </CardHeader>
         <CardContent>
           <FileUpload 
@@ -186,35 +188,44 @@ export default function InsurancePage() {
             multiple={true}
           />
           
-          {/* Demo insurance documents */}
-          <div className="mt-4 space-y-2">
-            <h4 className="font-semibold text-sm text-gray-600">Demo Insurance Documents (Not Real)</h4>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 rounded-md border">
-                <div className="flex items-center gap-4 flex-1 overflow-hidden">
-                  <FileText className="h-6 w-6 text-primary flex-shrink-0" />
-                  <p className="font-semibold truncate">Health Insurance Policy</p>
-                </div>
-                <div className="flex items-center gap-1 ml-2">
-                  <Button variant="ghost" size="icon">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between p-3 rounded-md border">
-                <div className="flex items-center gap-4 flex-1 overflow-hidden">
-                  <FileText className="h-6 w-6 text-primary flex-shrink-0" />
-                  <p className="font-semibold truncate">Claim Form</p>
-                </div>
-                <div className="flex items-center gap-1 ml-2">
-                  <Button variant="ghost" size="icon">
-                    <Download className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+          {isLoading && (
+            <div className="mt-6 space-y-4">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-16 w-full" />
             </div>
-          </div>
+          )}
+
+          {!isLoading && documents && documents.length > 0 ? (
+            <div className="mt-6 space-y-3">
+              {documents.map(doc => (
+                <div key={doc.id} className="flex items-center justify-between p-3 rounded-md border">
+                  <div className="flex items-center gap-4 flex-1 overflow-hidden">
+                    <FileText className="h-6 w-6 text-primary flex-shrink-0" />
+                    <p className="font-semibold truncate">{doc.title}</p>
+                  </div>
+                  <div className="flex items-center gap-1 ml-2">
+                    <Button variant="ghost" size="icon" asChild>
+                        <a href={doc.url} target="_blank" rel="noopener noreferrer"><Download className="h-4 w-4" /></a>
+                    </Button>
+                    <AlertDialogTrigger asChild>
+                         <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive/80">
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader><AlertDialogTitle>{t.deletePrompt.title}</AlertDialogTitle><AlertDialogDescription>{t.deletePrompt.description}</AlertDialogDescription></AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>{t.cancelButton}</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDeleteDoc(doc)}>{t.deleteButton}</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+             !isLoading && <p className="text-center text-muted-foreground mt-8">{t.noDocuments}</p>
+          )}
         </CardContent>
       </Card>
     </div>
