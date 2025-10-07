@@ -165,27 +165,27 @@ function MapPageContent() {
   ];
 
   return (
-    <div className="container py-12 md:py-16">
-      <div className="text-center mb-12">
+    <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="text-center mb-10 md:mb-12">
         <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.locatorTitle}</h1>
-        <p className="mt-2 text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="mt-2 text-md md:text-lg text-muted-foreground max-w-3xl mx-auto">
           {t.locatorDescription}
         </p>
       </div>
       
-      <div className="grid gap-12">
+      <div className="grid gap-10 md:gap-12">
         <Card className="shadow-lg">
           <CardHeader>
-              <div className="flex items-center gap-4">
-                <MapPin className="h-8 w-8 text-primary" />
-                <CardTitle className="text-2xl font-headline">Find Hospitals Near You</CardTitle>
+              <div className="flex items-center gap-3 md:gap-4">
+                <MapPin className="h-7 w-7 md:h-8 md:w-8 text-primary" />
+                <CardTitle className="text-xl md:text-2xl font-headline">Find Hospitals Near You</CardTitle>
               </div>
-              <CardDescription className="pt-2">
+              <CardDescription className="pt-2 text-sm md:text-base">
                 Select your location to see nearby hospitals on the map and in a list below.
               </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-6">
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Select onValueChange={value => { setSelectedState(value); setSelectedDistrict(''); setSelectedVillage(''); }} value={selectedState}>
                   <SelectTrigger><SelectValue placeholder="Select State" /></SelectTrigger>
                   <SelectContent>{Object.keys(locationData).map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
@@ -200,7 +200,7 @@ function MapPageContent() {
               </Select>
             </div>
             <p className="text-sm text-center text-muted-foreground -mt-2">More states will be added soon.</p>
-            <div className="aspect-[16/9] rounded-lg overflow-hidden border">
+            <div className="aspect-video md:aspect-[16/9] rounded-lg overflow-hidden border">
                 <GoogleMapEmbed 
                     hospitals={filteredHospitals} 
                     onBookAppointment={handleBookAppointment}
@@ -213,17 +213,17 @@ function MapPageContent() {
         {filteredHospitals.length > 0 && (selectedState || selectedDistrict || selectedVillage) && (
             <Card className="shadow-lg">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-headline">Nearby Hospitals</CardTitle>
+                    <CardTitle className="text-xl md:text-2xl font-headline">Nearby Hospitals</CardTitle>
                 </CardHeader>
                 <CardContent className="grid gap-4">
                     {filteredHospitals.map(hospital => (
-                        <div key={hospital.id} className="flex items-center justify-between p-4 border rounded-lg">
-                            <div>
+                        <div key={hospital.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border rounded-lg">
+                            <div className="flex-grow">
                                 <h3 className="font-bold text-lg">{hospital.name}</h3>
                                 <p className="text-sm text-muted-foreground">{hospital.address}</p>
-                                <p className="text-sm">Specialties: {hospital.specialties}</p>
+                                <p className="text-sm mt-1">Specialties: {hospital.specialties}</p>
                             </div>
-                            <Button onClick={() => handleBookAppointment(hospital)}>Book Appointment</Button>
+                            <Button onClick={() => handleBookAppointment(hospital)} className="w-full sm:w-auto flex-shrink-0">Book Appointment</Button>
                         </div>
                     ))}
                 </CardContent>
@@ -233,11 +233,11 @@ function MapPageContent() {
         <div ref={bookingFormRef}>
             <Card className="shadow-lg overflow-hidden">
             <CardHeader>
-                <div className="flex items-center gap-4">
-                <Video className="h-8 w-8 text-primary" />
-                <CardTitle className="text-2xl font-headline">{t.bookingTitle}</CardTitle>
+                <div className="flex items-center gap-3 md:gap-4">
+                <Video className="h-7 w-7 md:h-8 md:w-8 text-primary" />
+                <CardTitle className="text-xl md:text-2xl font-headline">{t.bookingTitle}</CardTitle>
                 </div>
-                <CardDescription className="pt-2">{t.bookingDescription}</CardDescription>
+                <CardDescription className="pt-2 text-sm md:text-base">{t.bookingDescription}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -246,7 +246,7 @@ function MapPageContent() {
                         <FormItem className="space-y-3">
                           <FormLabel>{t.formAppointmentTypeLabel}</FormLabel>
                           <FormControl>
-                            <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-col space-y-1">
+                            <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-col space-y-2">
                               <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="video-call" /></FormControl><FormLabel className="font-normal">{t.formAppointmentTypeVideo}</FormLabel></FormItem>
                               <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="hospital-visit" /></FormControl><FormLabel className="font-normal">{t.formAppointmentTypeHospital}</FormLabel></FormItem>
                             </RadioGroup>
@@ -259,7 +259,7 @@ function MapPageContent() {
                     {appointmentType === 'hospital-visit' && (<FormField control={form.control} name="hospital" render={({ field }) => (<FormItem><FormLabel>{t.formHospitalLabel}</FormLabel><FormControl><Input placeholder={t.formHospitalPlaceholder} {...field} disabled /></FormControl><FormMessage /></FormItem>)}/>)}
                     {appointmentType === 'video-call' && (
                       <div className="space-y-6 rounded-lg border p-4">
-                        <FormField control={form.control} name="callNow" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm bg-primary/10"><div className="space-y-0.5"><FormLabel className="text-base flex items-center gap-2"><Zap className="text-amber-500" /> {t.formCallNowLabel}</FormLabel><FormDescription>{t.formCallNowDescription}</FormDescription></div><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)}/>
+                        <FormField control={form.control} name="callNow" render={({ field }) => (<FormItem className="flex flex-col sm:flex-row sm:items-center justify-between rounded-lg border p-3 shadow-sm bg-primary/10"><div className="space-y-0.5 mb-2 sm:mb-0"><FormLabel className="text-base flex items-center gap-2"><Zap className="text-amber-500" /> {t.formCallNowLabel}</FormLabel><FormDescription>{t.formCallNowDescription}</FormDescription></div><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)}/>
                         <div className={cn("space-y-6", callNow ? "opacity-50" : "")}>
                           <FormField control={form.control} name="preferredDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>{t.formDateLabel}</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")} disabled={callNow}>{field.value ? format(field.value, "PPP") : <span>{t.formDatePlaceholder}</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
                           <FormField control={form.control} name="preferredTime" render={({ field }) => (<FormItem><FormLabel>{t.formTimeLabel}</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value} disabled={callNow}><FormControl><SelectTrigger><SelectValue placeholder={t.formTimePlaceholder} /></SelectTrigger></FormControl><SelectContent>{timeSlots.map(slot => (<SelectItem key={slot} value={slot}>{slot}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
@@ -267,7 +267,7 @@ function MapPageContent() {
                       </div>
                     )}
                     <FormField control={form.control} name="issue" render={({ field }) => (<FormItem><FormLabel>{t.formIssueLabel}</FormLabel><FormControl><Textarea placeholder={t.formIssuePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                    <Button type="submit">{appointmentType === 'hospital-visit' ? t.bookingButton : (callNow ? 'Start Immediate Call' : 'Schedule Video Call')}</Button>
+                    <Button type="submit" className="w-full">{appointmentType === 'hospital-visit' ? t.bookingButton : (callNow ? 'Start Immediate Call' : 'Schedule Video Call')}</Button>
                 </form>
                 </Form>
             </CardContent>
@@ -280,7 +280,7 @@ function MapPageContent() {
 
 export default function MapPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
             <MapPageContent />
         </Suspense>
     )

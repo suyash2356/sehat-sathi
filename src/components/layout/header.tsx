@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -70,7 +69,7 @@ export function Header() {
 
   const handleLanguageChange = (lang: 'en' | 'hi' | 'mr') => {
     setChatLanguage(lang);
-    setLanguage(lang); 
+    setLanguage(lang);
   };
 
   const onEmergencySubmit = (values: EmergencyFormValues) => {
@@ -122,8 +121,8 @@ export function Header() {
   const LanguageSelector = () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="gap-2">
-          <Globe className="h-5 w-5" /> 
+        <Button variant="ghost" size="icon" className="h-10 w-10">
+          <Globe className="h-5 w-5" />
           <span className="sr-only">Select Language</span>
         </Button>
       </DropdownMenuTrigger>
@@ -143,20 +142,19 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
-        <div className="flex flex-1 items-center justify-start">
-          {!isLandingPage && (
+      <div className="container flex h-16 items-center justify-between px-2 sm:px-6">
+        
+        {/* Left Aligned Items: Takes up available space */}
+        <div className="flex flex-1 justify-start">
+          {!isLandingPage ? (
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                >
+                <Button variant="ghost" size="icon" className="h-10 w-10">
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Toggle Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="pr-0 flex flex-col">
+              <SheetContent side="left" className="pr-0 flex flex-col w-full max-w-sm">
                 <SheetHeader>
                     <SheetTitle>
                         <VisuallyHidden>Navigation Menu</VisuallyHidden>
@@ -194,22 +192,24 @@ export function Header() {
                 )}
               </SheetContent>
             </Sheet>
-          )}
-        </div>
-        
-        <div className="flex flex-1 items-center justify-center">
-          <Link href="/" className="flex items-center space-x-2">
-              <BotMessageSquare className="h-7 w-7 text-primary" />
-              <span className="text-xl font-bold font-headline">{t.appName}</span>
-          </Link>
+          ) : <div className="w-10"></div> /* Placeholder for alignment */}
         </div>
 
-        <div className="flex flex-1 items-center justify-end gap-1 md:gap-2">
+        {/* Centered App Name: Does not shrink, has horizontal padding */}
+        <div className="flex-shrink-0 px-2">
+            <Link href="/" className="flex items-center space-x-2" onClick={() => setIsOpen(false)}>
+                <BotMessageSquare className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                <span className="whitespace-nowrap text-lg sm:text-xl font-bold font-headline">{t.appName}</span>
+            </Link>
+        </div>
+
+        {/* Right Aligned Items: Takes up available space */}
+        <div className="flex flex-1 justify-end items-center gap-0.5">
             {!isLandingPage && (
               <>
                 <Dialog open={isEmergencyFormOpen} onOpenChange={setIsEmergencyFormOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="destructive" size="icon" className="rounded-full">
+                    <Button variant="destructive" size="icon" className="rounded-full h-9 w-9 flex-shrink-0">
                       <Siren className="h-5 w-5" />
                       <span className="sr-only">{t.emergency.buttonText}</span>
                     </Button>
@@ -225,48 +225,10 @@ export function Header() {
                     </DialogHeader>
                     <Form {...form}>
                       <form onSubmit={form.handleSubmit(onEmergencySubmit)} className="space-y-4">
-                        <FormField
-                          control={form.control}
-                          name="location"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {t.emergency.locationLabel}</FormLabel>
-                              <FormControl>
-                                <Textarea placeholder={t.emergency.locationPlaceholder} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="reason"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> {t.emergency.reasonLabel}</FormLabel>
-                              <FormControl>
-                                <Input placeholder={t.emergency.reasonPlaceholder} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="contact"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-2"><Phone className="h-4 w-4" /> {t.emergency.contactLabel}</FormLabel>
-                              <FormControl>
-                                <Input type="tel" placeholder={t.emergency.contactPlaceholder} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <DialogFooter>
-                          <Button type="submit" variant="destructive" className="w-full">{t.emergency.submitButton}</Button>
-                        </DialogFooter>
+                        <FormField control={form.control} name="location" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {t.emergency.locationLabel}</FormLabel><FormControl><Textarea placeholder={t.emergency.locationPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                        <FormField control={form.control} name="reason" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><AlertTriangle className="h-4 w-4" /> {t.emergency.reasonLabel}</FormLabel><FormControl><Input placeholder={t.emergency.reasonPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                        <FormField control={form.control} name="contact" render={({ field }) => (<FormItem><FormLabel className="flex items-center gap-2"><Phone className="h-4 w-4" /> {t.emergency.contactLabel}</FormLabel><FormControl><Input type="tel" placeholder={t.emergency.contactPlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
+                        <DialogFooter><Button type="submit" variant="destructive" className="w-full">{t.emergency.submitButton}</Button></DialogFooter>
                       </form>
                     </Form>
                   </DialogContent>
@@ -274,9 +236,7 @@ export function Header() {
                 <AlertDialog open={isConfirmationOpen} onOpenChange={setIsConfirmationOpen}>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="flex items-center gap-2 font-headline">
-                        <AlertTriangle className="text-destructive" /> {t.emergency.confirmTitle}
-                      </AlertDialogTitle>
+                      <AlertDialogTitle className="flex items-center gap-2 font-headline"><AlertTriangle className="text-destructive" /> {t.emergency.confirmTitle}</AlertDialogTitle>
                       <AlertDialogDescription asChild>
                         <div>
                           {t.emergency.confirmMessage}
@@ -290,20 +250,18 @@ export function Header() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>{t.emergency.cancelButton}</AlertDialogCancel>
-                      <AlertDialogAction onClick={confirmEmergencyCall} className="bg-destructive hover:bg-destructive/90">
-                        {t.emergency.confirmButton}
-                      </AlertDialogAction>
+                      <AlertDialogAction onClick={confirmEmergencyCall} className="bg-destructive hover:bg-destructive/90">{t.emergency.confirmButton}</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <Button variant="ghost" size="icon" aria-label={t.notificationsAriaLabel}>
+                <Button variant="ghost" size="icon" aria-label={t.notificationsAriaLabel} className="h-10 w-10">
                   <Bell className="h-5 w-5" />
                 </Button>
                 <LanguageSelector />
               </>
             )}
             {user && !isLandingPage ? (
-              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t.logout.ariaLabel}>
+              <Button variant="ghost" size="icon" onClick={handleLogout} aria-label={t.logout.ariaLabel} className="h-10 w-10">
                   <LogOut className="h-5 w-5" />
               </Button>
             ) : (
