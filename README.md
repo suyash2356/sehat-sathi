@@ -26,7 +26,7 @@ Our mission is to empower individuals in rural communities with the knowledge an
 Sehat Sathi is packed with features designed to provide comprehensive healthcare support:
 
 *   **🤖 AI Health Chatbot:** Get instant, 24/7 answers to your health queries in your local language (supports English, Hindi, and Marathi).
-*   **📹 Live Video Consultation:**
+*   **📹 Live Video Consultation:(In progress...)**
     *   Connect with healthcare professionals through secure, peer-to-peer WebRTC video calls.
     *   Supports both **immediate calls** for urgent queries and **scheduled calls** for planned consultations.
     *   Full in-call controls for muting audio and toggling video.
@@ -35,8 +35,8 @@ Sehat Sathi is packed with features designed to provide comprehensive healthcare
 *   **🗺️ Hospital & Services Locator:** An interactive map to find nearby hospitals, clinics, and government health centers.
 *   **📄 Insurance Document Management:** A secure, personal portal for users to upload, manage, and access their health insurance policies and documents.
 *   **🇮🇳 Government Scheme Information:** Provides easy-to-understand information about relevant government healthcare initiatives and programs.
-*   **🔐 Secure & Easy Authentication:** Simple and secure user authentication using a phone number, powered by Firebase.
-*   **🌐 Multilingual Interface:** The entire platform is available in English, Hindi, and Marathi to ensure maximum accessibility.
+*   **🔐 Secure & Easy Authentication:** Simple and secure user authentication using a email, powered by Firebase(Future we will integrate simple opt login).
+*   **🌐 Multilingual Interface:** The entire platform is available in English, Hindi, and Marathi to ensure maximum accessibility(Will Support more language in future).
 
 ## 🛠️ Tech Stack & Architecture
 
