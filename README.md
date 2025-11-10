@@ -1,7 +1,7 @@
 # Sehat Sathi: Your Health Assistant
 
 <p align="center">
-  <img src="file:///C:/Users/SUYASH/AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/TempState/55239AF1C37BFD60DE353C6394B7B8C8/WhatsApp%20Image%202025-10-08%20at%2009.22.34_c4bf3be8.jpg" alt="Sehat Sathi App Screenshot" width="700">
+  <img src="https://drive.google.com/file/d/1x3t9BBjN3bOTQEU2ejMUmpHavpHdMQLh/view?usp=sharing" alt="Sehat Sathi App Screenshot" width="700">
 </p>
 
 <p align="center">
