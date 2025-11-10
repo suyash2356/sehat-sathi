@@ -1,7 +1,7 @@
 # Sehat Sathi: Your Health Assistant
 
 <p align="center">
-  <img src="https://drive.google.com/file/d/1x3t9BBjN3bOTQEU2ejMUmpHavpHdMQLh/view?usp=drive_link" alt="Sehat Sathi App Short Video" width="700">
+  <img src="https://github.com/suyash2356/sehat-sathi/blob/main/Sehat%20Sathi%20(Health%20Assistant).mp4" alt="Sehat Sathi App Short Video" width="700">
 </p>
 
 <p align="center">
