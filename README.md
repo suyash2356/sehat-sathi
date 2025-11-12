@@ -7,7 +7,6 @@
 </p>
 
   <br>
-  <em>🎬 Click the image above to watch the Sehat Sathi app demo</em>
 </p>
 
 <p align="center">
