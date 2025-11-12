@@ -3,7 +3,7 @@
 <p align="center">
   <!-- 🎥 Replace YOUR_VIDEO_ID below with your YouTube video ID -->
  <p align="center">
-  <img src="https://github.com/suyash2356/sehat-sathi/blob/main/assets/demo.gif" alt="Sehat Sathi Demo GIF" width="700">
+  <img src="https://github.com/suyash2356/sehat-sathi/blob/main/SehatSathi-ezgif.com-video-to-gif-converter.gif" alt="Sehat Sathi Demo GIF" width="700">
 </p>
 
   <br>
