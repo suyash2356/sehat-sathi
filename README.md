@@ -1,7 +1,13 @@
 # Sehat Sathi: Your Health Assistant
 
 <p align="center">
-  <img src="https://github.com/suyash2356/sehat-sathi/blob/main/Sehat%20Sathi%20(Health%20Assistant).mp4" alt="Sehat Sathi App Short Video" width="700">
+  <!-- 🎥 Replace YOUR_VIDEO_ID below with your YouTube video ID -->
+ <p align="center">
+  <img src="https://github.com/suyash2356/sehat-sathi/blob/main/assets/demo.gif" alt="Sehat Sathi Demo GIF" width="700">
+</p>
+
+  <br>
+  <em>🎬 Click the image above to watch the Sehat Sathi app demo</em>
 </p>
 
 <p align="center">
@@ -13,79 +19,96 @@
 
 ## 🎯 The Problem It Solves
 
-Millions of people in rural communities lack access to timely and reliable medical advice. This critical gap—caused by barriers like distance, cost, and a lack of information—often leads to preventable health complications and perpetuates health inequality.
+Millions of people in rural communities lack access to timely and reliable medical advice.  
+This critical gap — caused by barriers like distance, cost, and a lack of information — often leads to preventable health complications and perpetuates health inequality.
+
+---
 
 ## ✨ Our Solution
 
-**Sehat Sathi** is a mobile-friendly web platform designed to break down these barriers. It provides instant, accessible, and easy-to-understand health guidance through a suite of powerful, user-friendly tools. By leveraging AI and supporting local languages, we put a virtual health assistant in everyone's pocket.
+**Sehat Sathi** is a mobile-friendly web platform designed to break down these barriers.  
+It provides instant, accessible, and easy-to-understand health guidance through a suite of powerful, user-friendly tools.  
+By leveraging **AI** and supporting **local languages**, we put a **virtual health assistant** in everyone's pocket.
 
-Our mission is to empower individuals in rural communities with the knowledge and tools to make informed decisions about their health, ensuring no one is left behind.
+Our mission is to empower individuals in rural communities with the knowledge and tools to make informed decisions about their health, ensuring **no one is left behind**.
+
+---
 
 ## 🚀 Key Features
 
 Sehat Sathi is packed with features designed to provide comprehensive healthcare support:
 
-*   **🤖 AI Health Chatbot:** Get instant, 24/7 answers to your health queries in your local language (supports English, Hindi, and Marathi).
-*   **📹 Live Video Consultation:(In progress...)**
-    *   Connect with healthcare professionals through secure, peer-to-peer WebRTC video calls.
-    *   Supports both **immediate calls** for urgent queries and **scheduled calls** for planned consultations.
-    *   Full in-call controls for muting audio and toggling video.
-    *   Real-time connection status, error handling, and browser notifications for call reminders.
-    *   Fully responsive design for a seamless experience on both mobile and desktop.
-*   **🗺️ Hospital & Services Locator:** An interactive map to find nearby hospitals, clinics, and government health centers.
-*   **📄 Insurance Document Management:** A secure, personal portal for users to upload, manage, and access their health insurance policies and documents.
-*   **🇮🇳 Government Scheme Information:** Provides easy-to-understand information about relevant government healthcare initiatives and programs.
-*   **🔐 Secure & Easy Authentication:** Simple and secure user authentication using a email, powered by Firebase(Future we will integrate simple opt login).
-*   **🌐 Multilingual Interface:** The entire platform is available in English, Hindi, and Marathi to ensure maximum accessibility(Will Support more language in future).
+* **🤖 AI Health Chatbot:**  
+  Get instant, 24/7 answers to your health queries in your local language (supports English, Hindi, and Marathi).
+
+* **📹 Live Video Consultation (In Progress):**  
+  - Connect with healthcare professionals through secure, peer-to-peer WebRTC video calls.  
+  - Supports both **instant** and **scheduled** consultations.  
+  - Includes full in-call controls for muting, video toggle, and connection status.  
+  - Responsive and works smoothly on mobile and desktop.
+
+* **🗺️ Hospital & Services Locator:**  
+  Interactive map to find nearby hospitals, clinics, and government health centers.
+
+* **📄 Insurance Document Management:**  
+  A secure, personal portal for uploading and managing health insurance documents.
+
+* **🇮🇳 Government Scheme Information:**  
+  Provides simple explanations of relevant healthcare schemes and programs.
+
+* **🔐 Secure Authentication:**  
+  Easy login with email (Firebase authentication).  
+  Future update: OTP-based login for seamless access.
+
+* **🌐 Multilingual Interface:**  
+  Available in **English, Hindi, and Marathi**, with more languages to be added soon.
+
+---
 
 ## 🛠️ Tech Stack & Architecture
 
-This project is built with a modern, robust, and scalable technology stack:
+This project is built with a **modern, scalable stack**:
 
-*   **Framework:** [**Next.js**](https://nextjs.org/) (React)
-*   **Backend & Database:** [**Firebase**](https://firebase.google.com/) (Firestore, Firebase Authentication, Cloud Storage)
-*   **Real-time Communication:** [**WebRTC**](https://webrtc.org/) for peer-to-peer video/audio and **Firebase** for signaling.
-*   **Styling:** [**Tailwind CSS**](https://tailwindcss.com/) with [**shadcn/ui**](https://ui.shadcn.com/) for beautiful, accessible components.
-*   **State Management:** React Hooks & Context API.
-*   **Form Handling:** React Hook Form with Zod for validation.
+* **Framework:** [Next.js](https://nextjs.org/) (React-based)
+* **Backend & Database:** [Firebase](https://firebase.google.com/) (Firestore, Authentication, Cloud Storage)
+* **Real-time Communication:** [WebRTC](https://webrtc.org/) (for video calls), Firebase (for signaling)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+* **State Management:** React Hooks & Context API
+* **Forms & Validation:** React Hook Form + Zod
 
-## ⚙️ Getting Started: Local Setup
+---
 
-Follow these instructions to get the project up and running on your local machine for development and testing.
+## ⚙️ Getting Started (Local Setup)
 
 ### Prerequisites
+* [Node.js](https://nodejs.org/en/) (v18+ recommended)  
+* npm, yarn, or pnpm  
+* A free [Firebase account](https://firebase.google.com/)
 
-*   [**Node.js**](https://nodejs.org/en/) (v18.x or newer recommended)
-*   **npm**, **yarn**, or **pnpm** package manager
-*   A **Firebase account** (you can create one for free)
+---
 
-### Installation Steps
+### Steps
 
-1.  **Clone the Repository**
+1. **Clone the Repository**
     ```bash
     git clone https://github.com/your-username/sehat-sathi.git
     cd sehat-sathi
     ```
 
-2.  **Install Project Dependencies**
+2. **Install Dependencies**
     ```bash
     npm install
     # or
     yarn install
     ```
 
-3.  **Set Up Your Firebase Project**
-    *   Go to the [Firebase Console](https://console.firebase.google.com/).
-    *   Click on **"Add project"** and follow the steps to create a new Firebase project.
-    *   Once your project is created, navigate to **Project settings** (click the gear icon ⚙️).
-    *   In the "General" tab, under "Your apps", click the web icon (`</>`) to create a new web app configuration.
-    *   Give your app a nickname (e.g., "Sehat Sathi Web") and click **"Register app"**.
-    *   Firebase will provide you with a `firebaseConfig` object. **Copy these keys.**
+3. **Set Up Firebase**
+   - Go to [Firebase Console](https://console.firebase.google.com/).  
+   - Click **“Add project”** → create a new one.  
+   - In **Project Settings → General → Your apps**, click **“</>”** to register your web app.  
+   - Copy your Firebase config object.
 
-4.  **Create Your Environment File**
-    *   In the root directory of your cloned project, create a new file named `.env.local`.
-    *   Paste your `firebaseConfig` keys into this file, formatted as follows:
-
+4. **Create `.env.local`**
     ```env
     NEXT_PUBLIC_FIREBASE_API_KEY=AIza...
     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
@@ -95,21 +118,30 @@ Follow these instructions to get the project up and running on your local machin
     NEXT_PUBLIC_FIREBASE_APP_ID=1:1234567890:web:abcde12345
     ```
 
-5.  **Enable Firebase Services**
-    In the Firebase Console for your project:
-    *   Go to **Authentication** -> **Sign-in method** tab -> Enable the **Phone** provider.
-    *   Go to **Firestore Database** -> Click **"Create database"** -> Start in **test mode** for easy setup.
-    *   Go to **Storage** -> Click **"Get started"** -> Start in **test mode**.
+5. **Enable Firebase Services**
+   - **Authentication:** Enable “Email/Password” and “Phone” (optional).  
+   - **Firestore:** Create database (start in test mode).  
+   - **Storage:** Enable and set to test mode for now.
 
-6.  **Run the Development Server**
+6. **Run Locally**
     ```bash
     npm run dev
     ```
-
-    Open [http://localhost:3000](http://localhost:3000) in your browser. You should now see the Sehat Sathi application running locally!
+    Visit [http://localhost:3000](http://localhost:3000)
 
 ---
 
-### 📜 Disclaimer
+## 📜 Disclaimer
 
-This application is intended to provide general health guidance and information. It is not a substitute for professional medical advice, diagnosis, or treatment. For emergencies, please visit a certified doctor or the nearest hospital immediately.
+This app is meant to provide **general health guidance and information** only.  
+It is **not a substitute for professional medical advice, diagnosis, or treatment**.  
+In case of an emergency, please contact a certified doctor or nearby hospital immediately.
+
+---
+
+## 💌 Contact
+
+If you have suggestions, feedback, or collaboration ideas:  
+📧 **suyashbabad09@gmail.com**
+
+---
