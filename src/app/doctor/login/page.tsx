@@ -93,23 +93,25 @@ export default function DoctorLoginPage() {
 
         if (doctorSnap.exists()) {
             const doctorData = doctorSnap.data();
+            // Case 1: Doctor is fully verified.
             if (doctorData.isVerified) {
                 router.push('/doctor/dashboard');
-            } else if (doctorData.profileStatus === 'pending') {
+            // Case 2: Profile submitted, but pending verification.
+            } else if (doctorData.profileSubmitted || doctorData.profileStatus === 'pending') {
                 router.push('/doctor/pending-verification');
+            // Case 3: Profile not yet submitted.
             } else {
                 router.push('/doctor/complete-profile');
             }
         } else {
-            // This path handles users who signed up but somehow missed the profile creation step.
-            // It ensures their profile is created and they can proceed.
+            // Fallback for users who signed up but never created a profile document.
             await setDoc(doc(db, "doctors", user.uid), { 
                 isVerified: false, 
                 profileSubmitted: false,
                 email: values.email,
                 profileStatus: 'new'
             });
-            toast({ title: "Welcome!", description: "Let's get your profile set up.", });
+            toast({ title: "Welcome!", description: "Please complete your profile to get started." });
             router.push('/doctor/complete-profile');
         }
     } catch (error: any) {
