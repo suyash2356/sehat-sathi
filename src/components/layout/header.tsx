@@ -284,7 +284,7 @@ export function Header() {
         </div>
 
         {/* Right Section */}
-        <div className="flex flex-1 justify-end items-center gap-0.5">
+        <div className="flex flex-1 justify-end items-center gap-2">
           {!isLandingPage && (
             <>
               {/* Emergency Button */}
@@ -412,9 +412,14 @@ export function Header() {
             </Button>
           ) : (
             pathname !== '/login' && (
-              <Button asChild variant="outline" size="sm">
-                <Link href="/login">{t.login.title}</Link>
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button asChild variant="secondary" size="sm">
+                  <Link href="/doctor/login">For Doctors</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/login">{t.login.title}</Link>
+                </Button>
+              </div>
             )
           )}
         </div>

@@ -1,287 +1,179 @@
 'use client';
 
+import { useState, useMemo } from 'react';
+import { GoogleMap, useLoadScript, MarkerF, InfoWindow } from '@react-google-maps/api';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
+
+// UI Components
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useToast } from '@/hooks/use-toast';
-import { Video, Hospital, CalendarIcon, Clock, Zap, MapPin } from 'lucide-react';
-import { useChatLanguage } from '@/hooks/use-chat-language';
-import { translations } from '@/lib/translations';
-import GoogleMapEmbed, { type Hospital as HospitalType } from '@/components/services/GoogleMapEmbed';
-import React, { useState, useMemo, Suspense } from 'react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
-import { Calendar } from '@/components/ui/calendar';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useVideoCall } from '@/hooks/use-video-call';
+import { useToast } from '@/hooks/use-toast';
+
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ['places'];
 
 const bookingSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  phone: z.string().regex(/^\d{10}$/, { message: 'Please enter a valid 10-digit phone number.' }),
-  issue: z.string().min(10, { message: 'Please describe your issue in at least 10 characters.' }),
-  appointmentType: z.enum(['hospital-visit', 'video-call'], {
-    required_error: 'Please select an appointment type.',
-  }),
-  hospital: z.string().optional(),
-  preferredDate: z.date().optional(),
-  preferredTime: z.string().optional(),
-  callNow: z.boolean().optional(),
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  phone: z.string().regex(/^\d{10}$/, "Please enter a valid 10-digit phone number."),
+  issue: z.string().min(10, "Please describe your issue in at least 10 characters."),
+  doctorName: z.string().optional(), // New field for the doctor's name
+  callType: z.enum(['video', 'voice', 'in-person'], { required_error: "Please select a call type." }),
+  callNow: z.boolean().default(false),
+  appointmentDate: z.string().optional(),
+  appointmentTime: z.string().optional(),
 }).refine(data => {
-    if (data.appointmentType === 'hospital-visit' && !data.hospital) {
-        return false;
-    }
+    if (!data.callNow) return !!data.appointmentDate && !!data.appointmentTime;
     return true;
-}, {
-    message: 'Please select a hospital for a hospital visit.',
-    path: ['hospital'],
-}).refine(data => {
-    if (data.appointmentType === 'video-call' && !data.callNow && (!data.preferredDate || !data.preferredTime)) {
-        return false;
-    }
-    return true;
-}, {
-    message: 'Please select a preferred date and time for your video call.',
-    path: ['preferredDate'],
-});
+}, { message: "Date and time are required for scheduled calls.", path: ["appointmentDate"] });
 
-
-type BookingFormValues = z.infer<typeof bookingSchema>;
-
-const allHospitals: (HospitalType & { state: string; district: string; village: string; })[] = [
-    { id: 1, name: 'Community Health Centre, Ranka', address: 'Ranka, Garhwa, Jharkhand', lat: 23.97, lng: 83.75, specialties: 'General Medicine', timing: '24/7 Emergency', contact: '104', state: 'Jharkhand', district: 'Garhwa', village: 'Ranka' },
-    { id: 2, name: 'Community Health Centre, Bhandaria', address: 'Bhandaria, Garhwa, Jharkhand', lat: 23.73, lng: 83.98, specialties: 'Primary Care', timing: '9 AM - 5 PM', contact: '104', state: 'Jharkhand', district: 'Garhwa', village: 'Bhandaria' },
-    { id: 3, name: 'Community Health Center, Itkhori', address: 'Itkhori, Chatra, Jharkhand', lat: 24.30, lng: 84.82, specialties: 'General Medicine', timing: '24/7 Emergency', contact: '104', state: 'Jharkhand', district: 'Chatra', village: 'Itkhori' },
-    { id: 4, name: 'Community Health Center, Hunterganj', address: 'Hunterganj, Chatra, Jharkhand', lat: 24.40, lng: 84.58, specialties: 'Primary Care', timing: '9 AM - 5 PM', contact: '104', state: 'Jharkhand', district: 'Chatra', village: 'Hunterganj' },
-    { id: 5, name: 'Rural Hospital, Akkalkuwa', address: 'Akkalkuwa, Nandurbar, Maharashtra', lat: 21.56, lng: 74.05, specialties: 'General Medicine', timing: '24/7 Emergency', contact: '104', state: 'Maharashtra', district: 'Nandurbar', village: 'Akkalkuwa' },
-    { id: 6, name: 'Rural Hospital, Dhadgaon', address: 'Dhadgaon, Nandurbar, Maharashtra', lat: 21.78, lng: 74.32, specialties: 'Primary Care', timing: '9 AM - 5 PM', contact: '104', state: 'Maharashtra', district: 'Nandurbar', village: 'Dhadgaon' },
-    { id: 7, name: 'Sub-District Hospital, Bhamragad', address: 'Bhamragad, Gadchiroli, Maharashtra', lat: 19.25, lng: 80.35, specialties: 'General Medicine', timing: '24/7 Emergency', contact: '104', state: 'Maharashtra', district: 'Gadchiroli', village: 'Bhamragad' },
-    { id: 8, name: 'Community Health Center, Etapalli', address: 'Etapalli, Gadchiroli, Maharashtra', lat: 19.41, lng: 80.29, specialties: 'Primary Care', timing: '9 AM - 5 PM', contact: '104', state: 'Maharashtra', district: 'Gadchiroli', village: 'Etapalli' },
-];
-
-const locationData = {
-    'Jharkhand': {
-        'Garhwa': ['Ranka', 'Bhandaria'],
-        'Chatra': ['Itkhori', 'Hunterganj']
-    },
-    'Maharashtra': {
-        'Nandurbar': ['Akkalkuwa', 'Dhadgaon'],
-        'Gadchiroli': ['Bhamragad', 'Etapalli']
-    }
-};
-
-function MapPageContent() {
-  const { toast } = useToast();
-  const { language } = useChatLanguage();
-  const t = translations[language].services;
-  const bookingFormRef = React.useRef<HTMLDivElement>(null);
-  const { createImmediateCall, createScheduledCall } = useVideoCall();
-
-  const [selectedState, setSelectedState] = useState<string>('');
-  const [selectedDistrict, setSelectedDistrict] = useState<string>('');
-  const [selectedVillage, setSelectedVillage] = useState<string>('');
-
-  const districts = selectedState ? Object.keys(locationData[selectedState as keyof typeof locationData] || {}) : [];
-  const villages = selectedState && selectedDistrict ? locationData[selectedState as keyof typeof locationData][selectedDistrict as keyof typeof locationData[keyof typeof locationData]] || [] : [];
-
-  const filteredHospitals = useMemo(() => {
-    if (!selectedState && !selectedDistrict && !selectedVillage) {
-      return allHospitals;
-    }
-    return allHospitals.filter(h => 
-      (!selectedState || h.state === selectedState) &&
-      (!selectedDistrict || h.district === selectedDistrict) &&
-      (!selectedVillage || h.village === selectedVillage)
-    );
-  }, [selectedState, selectedDistrict, selectedVillage]);
-
-  const form = useForm<BookingFormValues>({
-    resolver: zodResolver(bookingSchema),
-    defaultValues: {
-      name: '',
-      phone: '',
-      issue: '',
-      hospital: '',
-      appointmentType: 'video-call',
-      callNow: false,
-    },
+export default function MapPage() {
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    libraries,
   });
-  
-  const appointmentType = form.watch('appointmentType');
-  const callNow = form.watch('callNow');
 
-  React.useEffect(() => {
-    if (callNow) {
-      form.clearErrors(['preferredDate', 'preferredTime']);
-      form.setValue('preferredDate', undefined);
-      form.setValue('preferredTime', undefined);
-    }
-  }, [callNow, form]);
+  const router = useRouter();
+  const { toast } = useToast();
+  const [selectedState, setSelectedState] = useState('Maharashtra');
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedVillage, setSelectedVillage] = useState<string | null>(null);
+  const [selectedHospital, setSelectedHospital] = useState<any | null>(null);
 
-  async function onSubmit(values: BookingFormValues) {
-    if (values.appointmentType === 'hospital-visit') {
-        toast({
-          title: t.bookingToastTitle,
-          description: "Your request has been sent to the hospital. You will be notified upon confirmation.",
-        });
-    } else { 
-        const patientData = { patientId: `patient_${Date.now()}`, patientName: values.name, patientPhone: values.phone, issue: values.issue };
-        if (values.callNow) {
-            await createImmediateCall(patientData);
-        } else {
-            const scheduledTime = new Date(values.preferredDate!);
-            const [startTime] = values.preferredTime!.split(' - ');
-            const [timePart, ampm] = startTime.split(' ');
-            const [hours, minutes] = timePart.split(':');
-            let hour24 = parseInt(hours);
-            if (ampm === 'PM' && hour24 !== 12) hour24 += 12;
-            if (ampm === 'AM' && hour24 === 12) hour24 = 0;
-            scheduledTime.setHours(hour24, parseInt(minutes), 0, 0);
-            await createScheduledCall({ ...patientData, scheduledTime });
-        }
-    }
-    form.reset();
-  }
-  
-  const handleBookAppointment = (hospital: HospitalType) => {
-    form.setValue('hospital', hospital.name);
-    form.setValue('appointmentType', 'hospital-visit');
-    bookingFormRef.current?.scrollIntoView({ behavior: 'smooth' });
-    toast({ title: "Hospital Selected", description: `Scroll down to fill the booking form for ${hospital.name}.` });
-  }
+  const bookingForm = useForm<z.infer<typeof bookingSchema>>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: { name: '', phone: '', issue: '', doctorName: '', callType: 'video', callNow: false, appointmentDate: '', appointmentTime: '' },
+  });
 
-  const timeSlots = [
-    "09:00 AM - 09:30 AM", "09:30 AM - 10:00 AM", "10:00 AM - 10:30 AM",
-    "10:30 AM - 11:00 AM", "11:00 AM - 11:30 AM", "11:30 AM - 12:00 PM",
-    "02:00 PM - 02:30 PM", "02:30 PM - 03:00 PM", "03:00 PM - 03:30 PM",
-    "03:30 PM - 04:00 PM",
+  const callNow = bookingForm.watch('callNow');
+
+  const hospitals = [
+    { id: 1, name: 'Sadar Hospital, Hazaribagh', address: 'Hazaribagh, Jharkhand', lat: 23.99, lng: 85.36, specialties: 'General, Maternity', timing: '24/7', contact: '104', state: 'Jharkhand', district: 'Hazaribagh', village: 'Hazaribagh', doctors: [{name: 'Dr. Ramesh Kumar', specialization: 'General Physician'}, {name: 'Dr. Priya Singh', specialization: 'Gynecologist'}]}, 
+    { id: 2, name: 'Community Health Center, Ichak', address: 'Ichak, Hazaribagh, Jharkhand', lat: 24.08, lng: 85.38, specialties: 'Primary Care', timing: '9 AM - 5 PM', contact: '104', state: 'Jharkhand', district: 'Hazaribagh', village: 'Ichak', doctors: [{name: 'Dr. Alok Verma', specialization: 'Primary Care'}]},
+    { id: 9, name: 'Rural Hospital, Khed', address: 'Khed, Pune, Maharashtra', lat: 18.75, lng: 73.86, specialties: 'General Medicine, Maternity', timing: '24/7', contact: '104', state: 'Maharashtra', district: 'Pune', village: 'Khed', doctors: [{name: 'Dr. Suresh Patil', specialization: 'General Medicine'}, {name: 'Dr. Meena Desai', specialization: 'Obstetrician'}] },
+    { id: 10, name: 'Sub-District Hospital, Baramati', address: 'Baramati, Pune, Maharashtra', lat: 18.15, lng: 74.58, specialties: 'Surgery, Pediatrics', timing: '24/7 Emergency', contact: '104', state: 'Maharashtra', district: 'Pune', village: 'Baramati', doctors: [{name: 'Dr. Vikram Rathod', specialization: 'General Surgeon'}, {name: 'Dr. Anjali Joshi', specialization: 'Pediatrician'}] },
   ];
 
+  const filteredDistricts = useMemo(() => Array.from(new Set(hospitals.filter(h => h.state === selectedState).map(h => h.district))), [selectedState, hospitals]);
+  const filteredVillages = useMemo(() => Array.from(new Set(hospitals.filter(h => h.district === selectedDistrict).map(h => h.village))), [selectedDistrict, hospitals]);
+  const filteredHospitals = useMemo(() => {
+    let result = hospitals.filter(h => h.state === selectedState);
+    if (selectedDistrict) result = result.filter(h => h.district === selectedDistrict);
+    if (selectedVillage) result = result.filter(h => h.village === selectedVillage);
+    return result;
+  }, [selectedState, selectedDistrict, selectedVillage, hospitals]);
+
+  const mapCenter = useMemo(() => {
+    if (selectedHospital) return { lat: selectedHospital.lat, lng: selectedHospital.lng };
+    if (filteredHospitals.length > 0) return { lat: filteredHospitals[0].lat, lng: filteredHospitals[0].lng };
+    return { lat: 19.7515, lng: 75.7139 };
+  }, [selectedHospital, filteredHospitals]);
+
+  async function onBookingSubmit(values: z.infer<typeof bookingSchema>) {
+    if (!selectedHospital) {
+      toast({ title: "No Hospital Selected", description: "Please select a hospital before booking.", variant: "destructive" });
+      return;
+    }
+    const bookingDetails = { ...values, hospitalName: selectedHospital.name, hospitalAddress: selectedHospital.address };
+    console.log("Booking Request Details:", bookingDetails);
+    if (values.callNow) {
+      toast({ title: "Starting Emergency Call...", description: `Connecting you to ${selectedHospital.name}.` });
+      router.push('/video-call');
+    } else {
+      localStorage.setItem('scheduledCall', JSON.stringify(bookingDetails));
+      toast({ title: "Appointment Scheduled", description: `Your appointment at ${selectedHospital.name} is booked.` });
+      bookingForm.reset();
+    }
+  }
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps...</div>;
+
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
-      <div className="text-center mb-10 md:mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold font-headline">{t.locatorTitle}</h1>
-        <p className="mt-2 text-md md:text-lg text-muted-foreground max-w-3xl mx-auto">
-          {t.locatorDescription}
-        </p>
+    <div className="flex flex-col h-screen">
+      <div className="grid md:grid-cols-4 flex-grow min-h-0">
+        <div className="col-span-1 p-4 bg-gray-100 dark:bg-gray-800 overflow-y-auto">
+          <h2 className="text-xl font-bold mb-4">Find a Hospital</h2>
+          <div className="space-y-4">
+            <Select value={selectedState} onValueChange={setSelectedState}><SelectTrigger><SelectValue placeholder="Select State" /></SelectTrigger><SelectContent><SelectItem value="Maharashtra">Maharashtra</SelectItem><SelectItem value="Jharkhand">Jharkhand</SelectItem></SelectContent></Select>
+            <Select value={selectedDistrict || ''} onValueChange={d => { setSelectedDistrict(d); setSelectedVillage(null); setSelectedHospital(null); }}><SelectTrigger><SelectValue placeholder="Select District" /></SelectTrigger><SelectContent>{filteredDistricts.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent></Select>
+            <Select value={selectedVillage || ''} onValueChange={v => {setSelectedVillage(v); setSelectedHospital(null);}}><SelectTrigger><SelectValue placeholder="Select Village" /></SelectTrigger><SelectContent>{filteredVillages.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}</SelectContent></Select>
+          </div>
+          <div className="mt-6">
+            <h3 className="font-bold">Hospitals Found ({filteredHospitals.length})</h3>
+            <ul className="mt-2 space-y-2 max-h-60 overflow-y-auto">{filteredHospitals.map(h => <li key={h.id} onClick={() => setSelectedHospital(h)} className={`p-2 rounded-md cursor-pointer ${selectedHospital?.id === h.id ? 'bg-blue-200 dark:bg-blue-800' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}><p className="font-semibold">{h.name}</p><p className="text-sm text-gray-600 dark:text-gray-400">{h.address}</p></li>)}</ul>
+          </div>
+        </div>
+
+        <div className="col-span-3 h-full min-h-[400px]">
+          <GoogleMap mapContainerClassName="w-full h-full" center={mapCenter} zoom={12}>
+            {filteredHospitals.map(h => <MarkerF key={h.id} position={{ lat: h.lat, lng: h.lng }} onClick={() => setSelectedHospital(h)} />)}
+            {selectedHospital && 
+              <InfoWindow position={{ lat: selectedHospital.lat, lng: selectedHospital.lng }} onCloseClick={() => setSelectedHospital(null)}>
+                <Card className="max-w-sm">
+                  <CardHeader><CardTitle>{selectedHospital.name}</CardTitle><CardDescription>{selectedHospital.address}</CardDescription></CardHeader>
+                  <CardContent className="text-sm">
+                    <p><strong>Specialties:</strong> {selectedHospital.specialties}</p>
+                    <p><strong>Timing:</strong> {selectedHospital.timing}</p>
+                    <p><strong>Contact:</strong> {selectedHospital.contact}</p>
+                    <div className="mt-2 pt-2 border-t">
+                        <h4 className="font-bold">Doctors Available:</h4>
+                        {selectedHospital.doctors && selectedHospital.doctors.length > 0 ? (
+                            <ul className="list-disc list-inside">{selectedHospital.doctors.map((doc: any, i: number) => <li key={i}>{doc.name} ({doc.specialization})</li>)}</ul>
+                        ) : <p>No doctors listed.</p>}
+                    </div>
+                  </CardContent>
+                </Card>
+              </InfoWindow>}
+          </GoogleMap>
+        </div>
       </div>
-      
-      <div className="grid gap-10 md:gap-12">
-        <Card className="shadow-lg">
-          <CardHeader>
-              <div className="flex items-center gap-3 md:gap-4">
-                <MapPin className="h-7 w-7 md:h-8 md:w-8 text-primary" />
-                <CardTitle className="text-xl md:text-2xl font-headline">Find Hospitals Near You</CardTitle>
-              </div>
-              <CardDescription className="pt-2 text-sm md:text-base">
-                Select your location to see nearby hospitals on the map and in a list below.
-              </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <Select onValueChange={value => { setSelectedState(value); setSelectedDistrict(''); setSelectedVillage(''); }} value={selectedState}>
-                  <SelectTrigger><SelectValue placeholder="Select State" /></SelectTrigger>
-                  <SelectContent>{Object.keys(locationData).map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
-              </Select>
-              <Select onValueChange={value => { setSelectedDistrict(value); setSelectedVillage(''); }} value={selectedDistrict} disabled={!selectedState}>
-                  <SelectTrigger><SelectValue placeholder="Select District" /></SelectTrigger>
-                  <SelectContent>{districts.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
-              </Select>
-              <Select onValueChange={setSelectedVillage} value={selectedVillage} disabled={!selectedDistrict}>
-                  <SelectTrigger><SelectValue placeholder="Select Village" /></SelectTrigger>
-                  <SelectContent>{villages.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}</SelectContent>
-              </Select>
-            </div>
-            <p className="text-sm text-center text-muted-foreground -mt-2">More states will be added soon.</p>
-            <div className="aspect-video md:aspect-[16/9] rounded-lg overflow-hidden border">
-                <GoogleMapEmbed 
-                    hospitals={filteredHospitals} 
-                    onBookAppointment={handleBookAppointment}
-                    translations={{ specialties: t.mapSpecialties, timings: t.mapTimings, contact: t.mapContact, bookAppointment: t.mapButton }}
-                />
-            </div>
-          </CardContent>
-        </Card>
 
-        {filteredHospitals.length > 0 && (selectedState || selectedDistrict || selectedVillage) && (
-            <Card className="shadow-lg">
-                <CardHeader>
-                    <CardTitle className="text-xl md:text-2xl font-headline">Nearby Hospitals</CardTitle>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    {filteredHospitals.map(hospital => (
-                        <div key={hospital.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border rounded-lg">
-                            <div className="flex-grow">
-                                <h3 className="font-bold text-lg">{hospital.name}</h3>
-                                <p className="text-sm text-muted-foreground">{hospital.address}</p>
-                                <p className="text-sm mt-1">Specialties: {hospital.specialties}</p>
-                            </div>
-                            <Button onClick={() => handleBookAppointment(hospital)} className="w-full sm:w-auto flex-shrink-0">Book Appointment</Button>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-        )}
-
-        <div ref={bookingFormRef}>
-            <Card className="shadow-lg overflow-hidden">
+      <div className="w-full p-4 sm:p-6 bg-white dark:bg-gray-900 border-t">
+        <Card className="max-w-6xl mx-auto">
             <CardHeader>
-                <div className="flex items-center gap-3 md:gap-4">
-                <Video className="h-7 w-7 md:h-8 md:w-8 text-primary" />
-                <CardTitle className="text-xl md:text-2xl font-headline">{t.bookingTitle}</CardTitle>
-                </div>
-                <CardDescription className="pt-2 text-sm md:text-base">{t.bookingDescription}</CardDescription>
+                <CardTitle>Book an Appointment</CardTitle>
+                {selectedHospital ? 
+                    <CardDescription>You are booking for: <span className="font-bold text-primary">{selectedHospital.name}</span>.</CardDescription> :
+                    <CardDescription>Please select a hospital from the list to activate the booking form.</CardDescription>
+                }
             </CardHeader>
             <CardContent>
-                <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    <FormField control={form.control} name="appointmentType" render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel>{t.formAppointmentTypeLabel}</FormLabel>
-                          <FormControl>
-                            <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-col space-y-2">
-                              <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="video-call" /></FormControl><FormLabel className="font-normal">{t.formAppointmentTypeVideo}</FormLabel></FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="hospital-visit" /></FormControl><FormLabel className="font-normal">{t.formAppointmentTypeHospital}</FormLabel></FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                    )}/>
-                    <FormField control={form.control} name="name" render={({ field }) => (<FormItem><FormLabel>{t.formNameLabel}</FormLabel><FormControl><Input placeholder={t.formNamePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                    <FormField control={form.control} name="phone" render={({ field }) => (<FormItem><FormLabel>{t.formPhoneLabel}</FormLabel><FormControl><Input type="tel" placeholder={t.formPhonePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                    {appointmentType === 'hospital-visit' && (<FormField control={form.control} name="hospital" render={({ field }) => (<FormItem><FormLabel>{t.formHospitalLabel}</FormLabel><FormControl><Input placeholder={t.formHospitalPlaceholder} {...field} disabled /></FormControl><FormMessage /></FormItem>)}/>)}
-                    {appointmentType === 'video-call' && (
-                      <div className="space-y-6 rounded-lg border p-4">
-                        <FormField control={form.control} name="callNow" render={({ field }) => (<FormItem className="flex flex-col sm:flex-row sm:items-center justify-between rounded-lg border p-3 shadow-sm bg-primary/10"><div className="space-y-0.5 mb-2 sm:mb-0"><FormLabel className="text-base flex items-center gap-2"><Zap className="text-amber-500" /> {t.formCallNowLabel}</FormLabel><FormDescription>{t.formCallNowDescription}</FormDescription></div><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)}/>
-                        <div className={cn("space-y-6", callNow ? "opacity-50" : "")}>
-                          <FormField control={form.control} name="preferredDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>{t.formDateLabel}</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")} disabled={callNow}>{field.value ? format(field.value, "PPP") : <span>{t.formDatePlaceholder}</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)}/>
-                          <FormField control={form.control} name="preferredTime" render={({ field }) => (<FormItem><FormLabel>{t.formTimeLabel}</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value} disabled={callNow}><FormControl><SelectTrigger><SelectValue placeholder={t.formTimePlaceholder} /></SelectTrigger></FormControl><SelectContent>{timeSlots.map(slot => (<SelectItem key={slot} value={slot}>{slot}</SelectItem>))}</SelectContent></Select><FormMessage /></FormItem>)}/>
+                <Form {...bookingForm}>
+                    <form onSubmit={bookingForm.handleSubmit(onBookingSubmit)} className="space-y-4">
+                        <fieldset disabled={!selectedHospital} className="space-y-4">
+                            <div className="grid sm:grid-cols-4 gap-4">
+                                <FormField control={bookingForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="e.g., John Doe" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={bookingForm.control} name="phone" render={({ field }) => (<FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input placeholder="10-digit mobile number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={bookingForm.control} name="issue" render={({ field }) => (<FormItem><FormLabel>Health Issue</FormLabel><FormControl><Input placeholder="Briefly describe your issue" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                <FormField control={bookingForm.control} name="doctorName" render={({ field }) => (<FormItem><FormLabel>Doctor&apos;s Name (Optional)</FormLabel><FormControl><Input placeholder="Enter doctor name" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                            </div>
+                            <div className="grid sm:grid-cols-3 gap-4 items-end">
+                               <FormField control={bookingForm.control} name="callType" render={({ field }) => (<FormItem><FormLabel>Call Type</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select call type" /></SelectTrigger></FormControl><SelectContent><SelectItem value="video">Video Call</SelectItem><SelectItem value="voice">Voice Call</SelectItem><SelectItem value="in-person">In-Person</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+                                <FormField control={bookingForm.control} name="callNow" render={({ field }) => (<FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-4 h-fit"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><div className="space-y-1 leading-none"><FormLabel>Urgent: Call Now</FormLabel></div></FormItem>)} />
+                                {!callNow && (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <FormField control={bookingForm.control} name="appointmentDate" render={({ field }) => (<FormItem><FormLabel>Date</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                        <FormField control={bookingForm.control} name="appointmentTime" render={({ field }) => (<FormItem><FormLabel>Time</FormLabel><FormControl><Input type="time" {...field} /></FormControl><FormMessage /></FormItem>)} />
+                                    </div>
+                                )}
+                            </div>
+                        </fieldset>
+                        <div className="flex justify-end">
+                           <Button type="submit" size="lg" disabled={!selectedHospital || bookingForm.formState.isSubmitting}>
+                            {callNow ? 'Start Emergency Call' : 'Schedule Appointment'}
+                           </Button>
                         </div>
-                      </div>
-                    )}
-                    <FormField control={form.control} name="issue" render={({ field }) => (<FormItem><FormLabel>{t.formIssueLabel}</FormLabel><FormControl><Textarea placeholder={t.formIssuePlaceholder} {...field} /></FormControl><FormMessage /></FormItem>)}/>
-                    <Button type="submit" className="w-full">{appointmentType === 'hospital-visit' ? t.bookingButton : (callNow ? 'Start Immediate Call' : 'Schedule Video Call')}</Button>
-                </form>
+                    </form>
                 </Form>
             </CardContent>
-            </Card>
-        </div>
+        </Card>
       </div>
     </div>
   );
-}
-
-export default function MapPage() {
-    return (
-        <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
-            <MapPageContent />
-        </Suspense>
-    )
 }
